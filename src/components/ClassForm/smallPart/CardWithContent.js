@@ -356,6 +356,17 @@ export default function CardWithContent(props) {
                         onChange={(e, i) => handleInputChange(e, 'cover')}
                     />
 
+                    <TextField
+                        key={`CardTime`}
+                        label={`Time`}
+                        placeholder="Please provide Time"
+                    />
+                    <TextField
+                        key={`CardNumber`}
+                        label={`Number of participants`}
+                        placeholder="This can be blank"
+                    />
+
                     <div className={'cardQuestion'}>
                         <div>
                             {iQuestion.map((item, i) => {
