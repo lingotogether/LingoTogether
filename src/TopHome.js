@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Home from './components/Home';
 import { Wordings } from './wording';
@@ -17,7 +17,7 @@ function TopHome(props) {
     };
 
     return (
-        <>
+        <Fragment>
             <div className="container">
                 <div id="top-slide">
                     <div className="row reverse">
@@ -353,7 +353,7 @@ function TopHome(props) {
                     </div>
                 </div>
             </div>
-        </>
+        </Fragment>
     );
 }
 

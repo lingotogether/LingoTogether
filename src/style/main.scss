@@ -96,9 +96,22 @@ nav {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    .beads {
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100px;
+        color: orange;
+        font-weight: bold;
+        .score {
+            text-transform: lowercase;
+        }
+    }
     .logo img {
         display: inline-block;
         width: 100px;
+        clear: both;
     }
     ul {
         float: right;
@@ -116,6 +129,10 @@ nav {
                 text-transform: none;
                 color: $color4;
             }
+            .beads {
+                clear: both;
+                float: left;
+            }            
         }
     }
 }
