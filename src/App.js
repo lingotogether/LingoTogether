@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -74,7 +74,7 @@ function App(props) {
     };
 
     return (
-        <>
+        <Fragment>
             <div id="header">
                 <nav className={cx('navbar', { mobileNavbar: !noShow }, { mobile: isMobile })}>
                     <div className="logo">
@@ -82,6 +82,16 @@ function App(props) {
                             <img src={require('./img/lingo-2-removebg.png')} alt="logo" />
                         </a>
                     </div>
+                    {
+                        isAuthenticated && (
+                            <div className="beads">
+                                Earned Beads<br/>
+                                <span className="score">
+                                    { CurrentUser ? CurrentUser.memberData.HostPoint || 0 : 0 } pts
+                                </span>
+                            </div>
+                        )
+                    }
                     {isMobile ? (
                         <div className="mNavbar">
                             <ul className="hamberIconContainer">
@@ -114,7 +124,7 @@ function App(props) {
                 <Route path="/admin" component={MemberList} />
                 <Route path="/TopHome" component={TopHome} />
             </Switch>
-        </>
+        </Fragment>
     );
 }
 

@@ -12,17 +12,16 @@ export const aboutUs2 = `-Improved Virtual Communication and Collaboration.<br/>
 export const aboutUs3 = `-Learn on any connected device<br/> -Learning can take place
                                     almost anywhere.<br/> 任何城市皆是外語聊天室<br/>`;
 
-export const rulesIntroE = `Monthly mission：receive 5 Beads<br/> If fails , you will lose the opportunity for practice next mouth:(<br/>
+export const rulesIntroE = `Monthly mission: earn 5 beads each month!*<br/> If fails , you will lose the opportunity for practice next mouth:(<br/>
                             You are welcome to come back in the following month:) <br />
                             *Each month is calculated from the participant's date of registration<br/>`;
 export const rulesIntroC = ` 每月任務：獲得5點<br/>點數結算日期依照您註冊時間計算<br/>
-                                未達成5點，您將失去下個月練習機會:(<br/>但歡迎您再下個月的歸來<br/>Monthly mission: earn 5 beads each month!*<br/>`;
+                                未達成5點，您將失去下個月練習機會:(<br/>但歡迎您再下個月的歸來<br/>`;
 
-export const rulesE = `- upload questions 24 hours ahead<br/>- If there are more than 5 participants，please
-                                    divided them into several groups<br/> - If you are unable to host please find a substitute host<br/>`;
+export const rulesE = `- upload questions 24 hours ahead<br/>- If you are unable to host please find a substitute host<br/>`;
 
-export const rulesC = `- 24小時前上傳討論題目<br/> - 主持討論<br/> -
-                                    如人數超過5人，可安排分組及邀請協助主持<br/> -如果無法主持，請自行找代班主持人`;
+export const rulesC = `- 24小時前上傳討論題目<br/> - 主持討論<br/>
+                                     -如果無法主持，請自行找代班主持人`;
 
 export const steps2 = `請密切注意Skype及Line<br/> • 組員會和你約個時間聊聊天<br/> •
                             會談中將使用skype螢幕分享功能<br/> • 僅使用語音功能（不使用視訊）<br/>`;

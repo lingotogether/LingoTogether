@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -56,7 +56,7 @@ function Navbar(props) {
     }, []);
 
     return (
-        <>
+        <Fragment>
             <ul className={cx({ mobileBar: isMobile })}>
                 {CurrentUser && VIPactive ? (
                     <li className="sayHiString">
@@ -67,7 +67,7 @@ function Navbar(props) {
                     </li>
                 ) : null}
                 {!VIPactive ? (
-                    <>
+                    <Fragment>                     
                         <li className={cx('nav-0', { active: nowActive === 0 })}>
                             <a href="/TopHome#Outlets" onClick={() => LocationHash(0, '#Outlets')}>
                                 About us
@@ -99,7 +99,7 @@ function Navbar(props) {
                                 加入我們
                             </a>
                         </li>
-                    </>
+                    </Fragment>
                 ) : null}
                 {!isAuthenticated ? (
                     <li
@@ -115,7 +115,7 @@ function Navbar(props) {
                 ) : null}
 
                 {!isAuthenticated ? (
-                    <>
+                    <Fragment>
                         <li
                             className={cx('nav-1', { active: nowActive === 7 })}
                             onClick={() => LocationHash(7, '')}
@@ -126,7 +126,7 @@ function Navbar(props) {
                                 註冊
                             </Link>
                         </li>
-                    </>
+                    </Fragment>
                 ) : null}
                 {isAdminAccount ? (
                     <li
@@ -137,7 +137,7 @@ function Navbar(props) {
                     </li>
                 ) : null}
                 {isAuthenticated ? (
-                    <>
+                    <Fragment>
                         <li
                             className={cx('nav-1', { active: nowActive === 5 })}
                             onClick={() => LocationHash(5, '')}
@@ -158,10 +158,10 @@ function Navbar(props) {
                                 登出
                             </a>
                         </li>
-                    </>
+                    </Fragment>
                 ) : null}
             </ul>
-        </>
+        </Fragment>
     );
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Home from './components/Home';
 import { Wordings } from './wording';
@@ -17,7 +17,7 @@ function TopHome(props) {
     };
 
     return (
-        <>
+        <Fragment>
             <div className="container">
                 <div id="top-slide">
                     <div className="row reverse">
@@ -146,9 +146,9 @@ function TopHome(props) {
                         <div className="col-6">
                             <Grid item xs={12}>
                                 <p>
-                                    <b>Time: Everyday10:00pm-10:50pm(GMT+8)</b>
+                                    <b>Time: Schedule your own time(GMT+8)</b>
                                 </p>
-                                <p>Host：2 beads / Assist Host：1.5 beads / Participant：1 point</p>
+                                <p>Host：2 beads / Participant：1 point</p>
                                 <Grid container spacing={3}>
                                     <Grid item xs={6}>
                                         <h2 className="title">Being a Host</h2>
@@ -158,9 +158,10 @@ function TopHome(props) {
                                     <Grid item xs={6}>
                                         <h2 className="title">Being a participant</h2>
                                         <hr />
-                                        - checkin to the chat room on time.
-                                        <br />- if you would like to cancel the discussion, click
-                                        "join" again.
+                                        <p>- Login and click the QR code next to the calender to get into the chat room</p>
+                                        <p>- Show up on time</p>
+                                        <p>- if you would like to cancel the discussion, click
+                                        "join" again.</p>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -168,9 +169,9 @@ function TopHome(props) {
                         <div className="col-6">
                             <Grid item xs={12}>
                                 <p>
-                                    <b>時間： 每日10:00pm - 10:50pm(台灣時間）</b>
+                                    <b>時間： 自由選擇時間(台灣時間)</b>
                                 </p>
-                                <p>主持人：2 beads / 助理主持人：1.5 beads / 參加者：1 point</p>
+                                <p>主持人：2 beads / 參加者：1 point</p>
                                 <Grid container spacing={3}>
                                     <Grid item xs={6}>
                                         <h2 className="title">擔任主持人</h2>
@@ -180,6 +181,7 @@ function TopHome(props) {
                                     <Grid item xs={6}>
                                         <h2 className="title">參加討論者</h2>
                                         <hr />
+                                        <p>- 登錄帳號點擊日曆旁QR code進入聊天室</p>
                                         <p>- 準時出現在聊天室</p>
                                         <p>- 想要取消當次討論，再點擊一次“join”</p>
                                     </Grid>
@@ -351,7 +353,7 @@ function TopHome(props) {
                     </div>
                 </div>
             </div>
-        </>
+        </Fragment>
     );
 }
 
