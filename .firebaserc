@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "lingo-a8ca9"
+    "default": "lingotogether-735b6",
+    "production": "lingotogether-735b6"
   }
 }
