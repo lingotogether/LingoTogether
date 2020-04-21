@@ -204,7 +204,7 @@ export const logoutUser = () => dispatch => {
         .signOut()
         .then(() => {
             dispatch(receiveLogout());
-            setTimeout((window.location.href = '/TopHome'), 2000);
+            setTimeout((window.location.href = '/'), 2000);
         })
         .catch(error => {
             //Do something with the error if you want!
