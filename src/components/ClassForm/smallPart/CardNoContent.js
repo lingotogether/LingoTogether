@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
@@ -10,7 +10,6 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import { cBoxController, saveBookingData, saveALLMemberData } from '../../../actions'
-// import { db } from '../../../firebase/firebase'
 
 import ClearIcon from '@material-ui/icons/Clear'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
@@ -18,6 +17,9 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import InputLabel from '@material-ui/core/InputLabel'
 
 import dayjs from 'dayjs'
+
+import { parseTime } from '../../../utils/helpers'
+
 const useStyles = makeStyles(theme => ({
     card: {
         maxWidth: 345,
@@ -42,32 +44,36 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function CardWithContent(props) {
-    const { Status, Title, date, PhotoOrVideo, Material, questions, CurrentUser, dispatch } = props
+    const { 
+        Status, Title, date, PhotoOrVideo, Material, 
+        questions, CurrentUser, dispatch
+    } = props
     const HOST_POINT = 2.5
 
     const classes = useStyles()
 
-    const [Editing, setEditing] = React.useState(false)
+    const [Editing, setEditing] = useState(false)
     const defaultQuestion = ['', '', '']
-    const [iQuestion, setiQuestion] = React.useState(questions || defaultQuestion)
-    const [iStatus, setiStatus] = React.useState(Status)
-    const [QuestionObj] = React.useState({})
-    const [AddQuestionObj, setAddQuestionObj] = React.useState({})
-    const [iTitle, setiTitle] = React.useState(Title)
-    const [iPhotoOrVideo, setiPhotoOrVideo] = React.useState(
+    const [iQuestion, setiQuestion] = useState(questions || defaultQuestion)
+    const [iStatus, setiStatus] = useState(Status)
+    const [QuestionObj] = useState({})
+    const [AddQuestionObj, setAddQuestionObj] = useState({})
+    const [iTitle, setiTitle] = useState(Title)
+    const [iPhotoOrVideo, setiPhotoOrVideo] = useState(
         PhotoOrVideo || 'https://miro.medium.com/max/3600/1*ORHmMQBfcVlNMvW_FOt-uA.png'
     )
-    const [iMaterial, setiMaterial] = React.useState(Material)
-    const [AddQuestion, setAddQuestion] = React.useState([])
+    const [iMaterial, setiMaterial] = useState(Material)
+    const [AddQuestion, setAddQuestion] = useState([])
 
-    const [timing] = React.useState('2200')
-    const [selectLevel, setSelectLevel] = React.useState(1)
+    const [timing, setTiming] = useState('2200')
+    const [selectLevel, setSelectLevel] = useState(1)
+    const [numberOfParticipants, setNumberOfParticipants] = useState(0)
 
     const handleSelectLevel = e => {
         setSelectLevel(Number(e.target.value))
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         console.log(AddQuestion)
     }, [AddQuestion, AddQuestionObj])
 
@@ -76,7 +82,6 @@ export default function CardWithContent(props) {
         switch (type) {
             case 'title':
                 setiTitle(value)
-
                 break
             case 'url':
                 setiMaterial(value)
@@ -122,6 +127,7 @@ export default function CardWithContent(props) {
                 PhotoOrVideo: iPhotoOrVideo,
                 Material: iMaterial,
                 time: timing,
+                maxParticipants: numberOfParticipants,
                 sysTime: isysTime,
                 isHost: true,
                 classLv: selectLevel,
@@ -240,7 +246,7 @@ export default function CardWithContent(props) {
                         onChange={(e, i) => handleInputChange(e, 'title')}
                     />
                 }
-                subheader={`${date} 22:00`}
+                subheader={`${date} ${parseTime(timing)}`}
             />
             <div className="EdtingCardContent">
                 <TextField
@@ -289,17 +295,18 @@ export default function CardWithContent(props) {
                     <select 
                         name="classLevel"
                         key="classLevel"
+                        onChange={e => setTiming(`${e.target.value}00`)}
                     >
-                        <option value="0">12:00 am</option>
-                        <option value="1">1:00 am</option>
-                        <option value="2">2:00 am</option>
-                        <option value="3">3:00 am</option>
-                        <option value="4">4:00 am</option>
-                        <option value="5">5:00 am</option>
-                        <option value="6">6:00 am</option>
-                        <option value="7">7:00 am</option>
-                        <option value="8">8:00 am</option>
-                        <option value="9">9:00 am</option>
+                        <option value="00">12:00 am</option>
+                        <option value="01">1:00 am</option>
+                        <option value="02">2:00 am</option>
+                        <option value="03">3:00 am</option>
+                        <option value="04">4:00 am</option>
+                        <option value="05">5:00 am</option>
+                        <option value="06">6:00 am</option>
+                        <option value="07">7:00 am</option>
+                        <option value="08">8:00 am</option>
+                        <option value="09">9:00 am</option>
                         <option value="10">10:00 am</option>
                         <option value="11">11:00 am</option>
                         <option value="12">12:00 pm</option>
@@ -325,6 +332,7 @@ export default function CardWithContent(props) {
                     <select 
                         name="classLevel"
                         key="classLevel"
+                        onChange={e => setNumberOfParticipants(parseInt(e.target.value))}
                     >
                         <option value="3">3</option>
                         <option value="4">4</option>
@@ -334,7 +342,7 @@ export default function CardWithContent(props) {
                         <option value="8">8</option>
                         <option value="9">9</option>
                         <option value="10">10</option>
-                        <option value="11">Unlimited</option>
+                        <option value="666">Unlimited</option>
                     </select>                 
                 </div>
 
