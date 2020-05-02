@@ -1,20 +1,20 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { Fragment, useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
 
-import CardContent from '@material-ui/core/CardContent';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
-import Fab from '@material-ui/core/Fab';
-import EditIcon from '@material-ui/icons/Edit';
-import { hendleDBactions } from '../../../actions/handleDB';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { cBoxController, saveBookingData, saveALLMemberData } from '../../../actions';
-import DeleteIcon from '@material-ui/icons/Delete';
+import CardContent from '@material-ui/core/CardContent'
+import Avatar from '@material-ui/core/Avatar'
+import Typography from '@material-ui/core/Typography'
+import { red } from '@material-ui/core/colors'
+import Fab from '@material-ui/core/Fab'
+import EditIcon from '@material-ui/icons/Edit'
+import { hendleDBactions } from '../../../actions/handleDB'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import { cBoxController, saveBookingData, saveALLMemberData } from '../../../actions'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     avatar: {
         backgroundColor: red[500],
     },
-}));
+}))
 
 export default function CardWithContent(props) {
     const {
@@ -56,73 +56,73 @@ export default function CardWithContent(props) {
         dispatch,
         isAdminAccount,
         whoJoinEmail,
-    } = props;
+    } = props
 
-    const classes = useStyles();
-    const [iwhoJoin, setiWhoJoin] = React.useState(whoJoin || []);
-    const [iwhoJoinEmail, setiiwhoJoinEmail] = React.useState(whoJoinEmail || []);
-    const [isJoin, setIsJoin] = React.useState(false);
-    const [isHost, setIsHost] = React.useState(false);
-    const [CanBeUpdated, SetCanBeUpdated] = React.useState(false);
-    const [Editing, setEditing] = React.useState(false);
-    const [iQuestion, setiQuestion] = React.useState(questions);
-    const [iLevel, setiLevel] = React.useState(classLv);
+    const classes = useStyles()
+    const [iwhoJoin, setiWhoJoin] = useState(whoJoin || [])
+    const [iwhoJoinEmail] = useState(whoJoinEmail || [])
+    const [isJoin, setIsJoin] = useState(false)
+    const [isHost, setIsHost] = useState(false)
+    const [CanBeUpdated, SetCanBeUpdated] = useState(false)
+    const [Editing, setEditing] = useState(false)
+    const [iQuestion, setiQuestion] = useState(questions)
+    const [iLevel, setiLevel] = useState(classLv)
 
-    const [iTitle, setiTitle] = React.useState(Title);
-    const [iPhotoOrVideo, setiPhotoOrVideo] = React.useState(
+    const [iTitle, setiTitle] = useState(Title)
+    const [iPhotoOrVideo, setiPhotoOrVideo] = useState(
         PhotoOrVideo || 'https://miro.medium.com/max/3600/1*ORHmMQBfcVlNMvW_FOt-uA.png'
-    );
-    const [iMaterial, setiMaterial] = React.useState(Material);
+    )
+    const [iMaterial, setiMaterial] = useState(Material)
 
-    const level = ['初級', '中級', '進階'];
+    const level = ['初級', '中級', '進階']
 
     React.useEffect(() => {
         if (CurrentUser && isAdminAccount) {
-            setIsHost(true);
-            SetCanBeUpdated(true);
+            setIsHost(true)
+            SetCanBeUpdated(true)
         } else {
             if (!CurrentUser) {
-                setIsJoin(false);
-                setIsHost(false);
-                SetCanBeUpdated(false);
+                setIsJoin(false)
+                setIsHost(false)
+                SetCanBeUpdated(false)
             } else {
                 if (whoJoin) {
-                    let targetI;
+                    let targetI
 
                     if (whoJoinEmail) {
-                        targetI = whoJoinEmail.indexOf(CurrentUser.email);
+                        targetI = whoJoinEmail.indexOf(CurrentUser.email)
                     } else {
-                        targetI = whoJoin.indexOf(CurrentUser.memberData.UserName);
+                        targetI = whoJoin.indexOf(CurrentUser.memberData.UserName)
                     }
-                    console.log('targetI', targetI);
-                    targetI === -1 ? setIsJoin(false) : setIsJoin(true);
+                    console.log('targetI', targetI)
+                    targetI === -1 ? setIsJoin(false) : setIsJoin(true)
                 } else {
-                    setIsJoin(false);
+                    setIsJoin(false)
                 }
 
                 if (CreateUserID === CurrentUser.uid) {
-                    SetCanBeUpdated(true);
-                    setIsHost(true);
+                    SetCanBeUpdated(true)
+                    setIsHost(true)
                 }
             }
         }
-    }, []);
+    }, [])
 
     const handleJoinClick = event => {
-        if (!CurrentUser) return;
-        const { memberData, email } = CurrentUser;
-        const { UserName } = memberData;
-        let cloneWhoJoin = JSON.parse(JSON.stringify(iwhoJoin));
-        let cloneWhoJoinEmail = JSON.parse(JSON.stringify(iwhoJoinEmail));
-        // const targetI = cloneWhoJoin.indexOf(CurrentUser.uid);
-        const targetI = cloneWhoJoin.indexOf(UserName);
-        const targetEmail = cloneWhoJoinEmail.indexOf(email);
-        console.log(222333, cloneWhoJoinEmail);
-        console.log(1233427468, targetI, targetEmail);
+        if (!CurrentUser) return
+        const { memberData, email } = CurrentUser
+        const { UserName } = memberData
+        let cloneWhoJoin = JSON.parse(JSON.stringify(iwhoJoin))
+        let cloneWhoJoinEmail = JSON.parse(JSON.stringify(iwhoJoinEmail))
+        // const targetI = cloneWhoJoin.indexOf(CurrentUser.uid)
+        const targetI = cloneWhoJoin.indexOf(UserName)
+        const targetEmail = cloneWhoJoinEmail.indexOf(email)
+        console.log(222333, cloneWhoJoinEmail)
+        console.log(1233427468, targetI, targetEmail)
         if (!isJoin) {
-            cloneWhoJoin.push(UserName);
-            cloneWhoJoinEmail.push(email);
-            setIsJoin(true);
+            cloneWhoJoin.push(UserName)
+            cloneWhoJoinEmail.push(email)
+            setIsJoin(true)
             hendleDBactions(
                 'memberCard',
                 CurrentUser.email,
@@ -131,12 +131,12 @@ export default function CardWithContent(props) {
                     GainedPoint: CurrentUser.memberData.GainedPoint + 1,
                 },
                 'UPDATE'
-            );
-            // alert('Congratulations! +1 Bread! ');
+            )
+            // alert('Congratulations! +1 Bread! ')
         } else {
-            cloneWhoJoin.splice(targetI, 1);
-            cloneWhoJoinEmail.splice(email, 1);
-            setIsJoin(false);
+            cloneWhoJoin.splice(targetI, 1)
+            cloneWhoJoinEmail.splice(email, 1)
+            setIsJoin(false)
             hendleDBactions(
                 'memberCard',
                 CurrentUser.email,
@@ -145,54 +145,54 @@ export default function CardWithContent(props) {
                     GainedPoint: CurrentUser.memberData.GainedPoint - 1,
                 },
                 'UPDATE'
-            );
-            // alert('Ooops! -1 Bread! ');
+            )
+            // alert('Ooops! -1 Bread! ')
         }
-        const updateOBJ = { whoJoin: cloneWhoJoin, whoJoinEmail: cloneWhoJoinEmail };
-        hendleDBactions('booking', DataID, updateOBJ, 'UPDATE');
-        setiWhoJoin(cloneWhoJoin);
+        const updateOBJ = { whoJoin: cloneWhoJoin, whoJoinEmail: cloneWhoJoinEmail }
+        hendleDBactions('booking', DataID, updateOBJ, 'UPDATE')
+        setiWhoJoin(cloneWhoJoin)
         // reset DB data
         setTimeout(function() {
-            hendleDBactions('booking', '', '', '', resetBookingData);
-            hendleDBactions('memberCard', '', '', '', resetMemberData);
-        }, 9000);
-    };
+            hendleDBactions('booking', '', '', '', resetBookingData)
+            hendleDBactions('memberCard', '', '', '', resetMemberData)
+        }, 9000)
+    }
     const resetBookingData = d => {
-        console.log(748998713);
-        dispatch(saveBookingData(d));
-    };
+        console.log(748998713)
+        dispatch(saveBookingData(d))
+    }
     const resetMemberData = d => {
-        console.log(748998713);
-        dispatch(saveALLMemberData(d));
-    };
+        console.log(748998713)
+        dispatch(saveALLMemberData(d))
+    }
     const handleInputChange = (e, type) => {
-        const { value } = e.currentTarget;
+        const { value } = e.currentTarget
         switch (type) {
             case 'title':
-                setiTitle(value);
-                break;
+                setiTitle(value)
+                break
             case 'url':
-                setiMaterial(value);
-                break;
+                setiMaterial(value)
+                break
             case 'cover':
-                setiPhotoOrVideo(value);
-                break;
+                setiPhotoOrVideo(value)
+                break
             case 'QArr':
-                const index = e.target.getAttribute('name');
-                let cloneiQuestion = iQuestion.concat([]);
-                cloneiQuestion.splice(index, 1, e.target.value);
-                setiQuestion(cloneiQuestion);
-                break;
+                const index = e.target.getAttribute('name')
+                let cloneiQuestion = iQuestion.concat([])
+                cloneiQuestion.splice(index, 1, e.target.value)
+                setiQuestion(cloneiQuestion)
+                break
             default:
-                return;
+                return
         }
-    };
+    }
     const handleDeleteData = () => {
         if (window.confirm('Are you sure you want to permanently delete this data?')) {
-            hendleDBactions('booking', DataID, {}, 'DELETE');
-            setEditing(false);
+            hendleDBactions('booking', DataID, {}, 'DELETE')
+            setEditing(false)
 
-            dispatch(cBoxController(false));
+            dispatch(cBoxController(false))
             hendleDBactions(
                 'memberCard',
                 CurrentUser.email,
@@ -201,20 +201,20 @@ export default function CardWithContent(props) {
                     HostPoint: CurrentUser.memberData.HostPoint - 2.5,
                 },
                 'UPDATE'
-            );
+            )
 
             setTimeout(function() {
-                hendleDBactions('booking', '', '', '', resetBookingData);
-                hendleDBactions('memberCard', '', '', '', resetMemberData);
-            }, 3000);
+                hendleDBactions('booking', '', '', '', resetBookingData)
+                hendleDBactions('memberCard', '', '', '', resetMemberData)
+            }, 3000)
         } else {
-            alert('Error, please contact to our cuscomer service via Line');
-            setEditing(true);
+            alert('Error, please contact to our cuscomer service via Line')
+            setEditing(true)
         }
-    };
+    }
 
     const handleEditingSave = () => {
-        setEditing(false);
+        setEditing(false)
         hendleDBactions(
             'booking',
             DataID,
@@ -225,29 +225,29 @@ export default function CardWithContent(props) {
                 Material: iMaterial,
             },
             'UPDATE'
-        );
+        )
 
-        resetBookingData();
+        resetBookingData()
 
-        setiLevel(classLv);
-    };
+        setiLevel(classLv)
+    }
 
     const handleClickEditing = open => {
         if (open) {
-            setEditing(true);
-            setiLevel('Edit');
+            setEditing(true)
+            setiLevel('Edit')
         } else {
-            setEditing(false);
-            setiLevel(classLv);
+            setEditing(false)
+            setiLevel(classLv)
         }
-    };
+    }
 
     const iconclassName =
         props.classLv === 0
             ? 'AvatarIcon green'
             : props.classLv === 2
             ? 'AvatarIcon yellow'
-            : 'AvatarIcon';
+            : 'AvatarIcon'
 
     return (
         <Card className={classes.card}>
@@ -277,7 +277,7 @@ export default function CardWithContent(props) {
                 subheader={date + '  ' + time}
             />
             {isHost ? null : (
-                <>
+                <Fragment>
                     <label className="container">
                         Join
                         <input
@@ -288,7 +288,7 @@ export default function CardWithContent(props) {
                         />
                         <span className="checkmark"></span>
                     </label>
-                </>
+                </Fragment>
             )}
             {CanBeUpdated ? (
                 <div className="updateTools">
@@ -385,10 +385,10 @@ export default function CardWithContent(props) {
                                         required
                                         name={i.toString()}
                                         onChange={e => {
-                                            handleInputChange(e, 'QArr');
+                                            handleInputChange(e, 'QArr')
                                         }}
                                     />
-                                );
+                                )
                             })}
                         </div>
                         <Button
@@ -405,7 +405,7 @@ export default function CardWithContent(props) {
                             size="small"
                             onClick={() => handleClickEditing(false)}
                         >
-                            Cancle
+                            Cancel
                         </Button>
                     </div>
                 </div>
@@ -418,11 +418,11 @@ export default function CardWithContent(props) {
                     </Typography>
                     <ul>
                         {iQuestion.map((item, i) => {
-                            return <li paragraph key={`readMore${i}`}>{`${i + 1}. ${item}`}</li>;
+                            return <li paragraph key={`readMore${i}`}>{`${i + 1}. ${item}`}</li>
                         })}
                     </ul>
                 </CardContent>
             )}
         </Card>
-    );
+    )
 }
