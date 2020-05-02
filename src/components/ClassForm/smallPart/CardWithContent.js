@@ -13,15 +13,11 @@ import EditIcon from '@material-ui/icons/Edit'
 import { hendleDBactions } from '../../../actions/handleDB'
 import TextField from '@material-ui/core/TextField'
 import InputLabel from '@material-ui/core/InputLabel'
-// import FormControl from '@material-ui/core/FormControl'
-// import MenuItem from '@material-ui/core/MenuItem'
-// import Select from '@material-ui/core/Select'
 import Button from '@material-ui/core/Button'
 import { cBoxController, saveBookingData, saveALLMemberData } from '../../../actions'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 import { parseTime } from '../../../utils/helpers'
-import { timeOptions, participantsOptions } from '../../../utils/options'
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -129,6 +125,9 @@ export default function CardWithContent(props) {
 
     const handleJoinClick = event => {
         if (!CurrentUser) return
+
+        const limit = maxParticipants ? maxParticipants : Number.MAX_VALUE
+
         const { memberData, email } = CurrentUser
         const { UserName } = memberData
         let cloneWhoJoin = JSON.parse(JSON.stringify(iwhoJoin))
@@ -139,6 +138,11 @@ export default function CardWithContent(props) {
         console.log(222333, cloneWhoJoinEmail)
         console.log(1233427468, targetI, targetEmail)
         if (!isJoin) {
+
+            if(iwhoJoin.length >= limit) {
+                return alert('Max participants')
+            }
+
             cloneWhoJoin.push(UserName)
             cloneWhoJoinEmail.push(email)
             setIsJoin(true)

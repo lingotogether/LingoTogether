@@ -87,7 +87,7 @@ function App(props) {
                             <div className="beads">
                                 Earned Beads<br/>
                                 <span className="score">
-                                    { CurrentUser ? CurrentUser.memberData.HostPoint || 0 : 0 } pts
+                                    { CurrentUser ? CurrentUser.memberData.GainedPoint || 0 : 0 } pts
                                 </span>
                             </div>
                         )
