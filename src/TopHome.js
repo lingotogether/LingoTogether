@@ -267,7 +267,7 @@ function TopHome(props) {
                         </div>
                         <div className="col-6">
                             <h3>Questions？Get extra help !</h3>
-                            <b>有問題？ 獲得而外協助 </b>
+                            <b>有問題？ 獲得額外協助 </b>
                             <hr />
                             <div>
                                 <p>Forget your password? 忘記密碼? </p>

@@ -60,9 +60,9 @@ class Home extends Component {
         } = this.props;
 
         const skRoom = {
-            b: 'https://join.skype.com/NlAuDN2juIwU',
-            m: 'https://join.skype.com/TkN4x9KKLS3u',
-            a: 'https://join.skype.com/McjLCg9YvKH7',
+            b: 'https://join.skype.com/Who4S01c1PJA',
+            m: 'https://join.skype.com/V6cKAUtrQ5CA',
+            a: 'https://join.skype.com/UZKhFaomllWf',
         };
 
         const skOnclick = url => {
@@ -100,13 +100,13 @@ class Home extends Component {
                     <div className="skQRcode">
                         <ul>
                             <li onClick={() => skOnclick(skRoom.b)}>
-                                <img src={require('../img/sk1.png')} alt="basic" />
+                                <img src={require('../img/Ba_room.png')} alt="basic" />
                             </li>
                             <li onClick={() => skOnclick(skRoom.m)}>
-                                <img src={require('../img/sk2.png')} alt="m" />
+                                <img src={require('../img/In_room.png')} alt="m" />
                             </li>
                             <li onClick={() => skOnclick(skRoom.a)}>
-                                <img src={require('../img/sk3.png')} alt="a" />
+                                <img src={require('../img/Adv_room.png')} alt="a" />
                             </li>
                         </ul>
                     </div>
