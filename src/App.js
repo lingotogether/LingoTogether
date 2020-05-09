@@ -84,12 +84,20 @@ function App(props) {
                     </div>
                     {
                         isAuthenticated && (
-                            <div className="beads">
-                                Earned Beads<br/>
-                                <span className="score">
-                                    { CurrentUser ? CurrentUser.memberData.GainedPoint || 0 : 0 } pts
-                                </span>
-                            </div>
+                            <Fragment>
+                                <div className="beads">
+                                    Host Beads<br/>
+                                    <span className="score">
+                                        { CurrentUser ? CurrentUser.memberData.HostPoint || 0 : 0 } pts
+                                    </span>
+                                </div>
+                                <div className="beads">
+                                    Gained Beads<br/>
+                                    <span className="score">
+                                        { CurrentUser ? CurrentUser.memberData.GainedPoint || 0 : 0 } pts
+                                    </span>
+                                </div>
+                            </Fragment>
                         )
                     }
                     {isMobile ? (

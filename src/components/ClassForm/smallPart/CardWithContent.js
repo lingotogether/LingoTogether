@@ -267,6 +267,11 @@ export default function CardWithContent(props) {
         }
     }
 
+    const getProperMaxParticipants = maxParticipants => {
+        if(maxParticipants === 666) return 'Unlimited'
+        return maxParticipants
+    }
+
     const iconclassName =
         props.classLv === 0
             ? 'AvatarIcon green'
@@ -348,7 +353,7 @@ export default function CardWithContent(props) {
                     </CardContent>
                     <CardContent>
                         <div className="ParticipantText">
-                            <span className="CardLabel"># of participants: </span> {iNumberOfParticipants || '(None)'}
+                            <span className="CardLabel"># of participants: </span> {getProperMaxParticipants(iNumberOfParticipants) || '(None)'}
                         </div>
                     </CardContent>
                     <CardContent>
