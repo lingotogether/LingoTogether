@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { loginUser } from '../actions';
+import { loginUser, resetPassword } from '../actions';
 import { withStyles } from '@material-ui/styles';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -58,6 +58,14 @@ class Login extends Component {
         dispatch(loginUser(email, password));
     };
 
+    handleResetPassword = () => {
+        const { email } = this.state
+        if(email === '') {
+            return alert('Please enter your email address first to reset password.')
+        }
+        resetPassword(email)
+    }
+
     render() {
         const { classes, loginError, isAuthenticated } = this.props;
         if (isAuthenticated) {
@@ -106,6 +114,14 @@ class Login extends Component {
                         >
                             Login In
                         </Button>
+                        <br/>
+                        <a 
+                            href="# " 
+                            onClick={this.handleResetPassword}
+                            style={{ color: '#999' }}
+                        >
+                            Forgot password ?
+                        </a>
                     </Paper>
                 </Container>
             );

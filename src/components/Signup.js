@@ -71,7 +71,7 @@ class Signup extends Component {
         const emailLowerCase = email.toLowerCase();
         let updateOBJ = {
             Email: emailLowerCase,
-            LineID: LineID,
+            //LineID: LineID,
             JoinDate: new Date(),
             LastUpdateTime: new Date(),
             Level: Level,
@@ -97,7 +97,7 @@ class Signup extends Component {
         if (
             email === '' ||
             password === '' ||
-            LineID === '' ||
+           // LineID === '' ||
             Level === '' ||
             SkypeID === '' ||
             userName === ''

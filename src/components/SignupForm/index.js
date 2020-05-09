@@ -64,13 +64,18 @@ export default function SignupForm(props) {
     const LabelOBJ = {
         userName: 'Name 英文名子',
         Level: 'Your English level? 自身英文程度',
-        LineID: 'LINE ID LINE帳號',
+        //LineID: 'LINE ID LINE帳號',
         SkypeID: 'Skype ID Skype 帳號',
 
         // 'Motivations of joining Lingotogether ? 參加LT的原因 ?',
         // 'Briefly introduce yourself. 簡短自我介紹 ',
     };
-    const type = ['userName', 'Level', 'LineID', 'SkypeID'];
+    const type = [
+        'userName', 
+        'Level', 
+        //'LineID', 
+        'SkypeID'
+    ];
     const level = ['Basic 初級', 'Intermediate 中級', 'Advanced 進階', 'Other'];
 
     const classes = useStyles();
