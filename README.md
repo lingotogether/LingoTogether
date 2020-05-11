@@ -25,7 +25,7 @@ How to set up firebase CLI for hosting, via https://firebase.google.com/docs/hos
 
 ### Staging
 
-When the commits is pushed to `master` branch, it will automatically deploy to Heroku for staging and testing purpose.
+When the commits are pushed to `master` branch, it will automatically deploy to Heroku for staging and testing purpose.
 (via https://lingotogether.herokuapp.com)
 
 ### Production
