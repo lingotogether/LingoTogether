@@ -62,7 +62,7 @@ const Home = (props) => {
         const bookingHour = booking.time.substring(0, 2)
         const currentHour = dayjs().format('HH')
         const currentTime = dayjs().format('HHmm')
-        const lastTime = bookingHour + '10'
+        const lastTime = bookingHour + '15'
 
         const isRightLevel = booking.classLv === level
 
