@@ -1,124 +1,172 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { logoutUser } from '../actions';
-import Calendar from '../components/Calendar';
-import '../style/VIPHome.scss';
-import ClassForm from '../components/ClassForm';
-import { cBoxController } from '../actions/auth';
-import { hendleDBactions } from '../actions/handleDB';
+import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
+import dayjs from 'dayjs'
+import Calendar from '../components/Calendar'
+import ClassForm from '../components/ClassForm'
+import { cBoxController } from '../actions/auth'
+import { hendleDBactions } from '../actions/handleDB'
+import { saveBookingData, saveALLMemberData } from '../actions'
+import '../style/VIPHome.scss'
 
-const cx = require('classnames');
-class Home extends Component {
-    constructor(props) {
-        super(props);
+const cx = require('classnames')
 
-        this.state = {
-            GainedPoint: this.props.CurrentUser?.memberData.GainedPoint || 0,
-            HostPoint: this.props.CurrentUser?.memberData.HostPoint || 0,
-            CurrentUser: this.props.CurrentUser,
-        };
+const Home = (props) => {
+
+    const [ CurrentUser, setCurrentUser ] = useState(props.CurrentUser)
+
+    useEffect(() => {
+        props.CurrentUser?.email &&
+            hendleDBactions(
+                'memberCard',
+                props.CurrentUser.email,
+                '',
+                'getMemberCardByEmail',
+                (d) => console.log(d)
+            )
+        setCurrentUser(props.CurrentUser)     
+    }, [props.cBoxShow, props.CurrentUser])
+
+    const {
+        isLoggingOut,
+        logoutError,
+        cBoxShow,
+        BookingDateData,
+        initBookingData,
+        isAdminAccount,
+        deviceIsMobile,
+        isAuthenticated,
+        dispatch,
+    } = props
+
+    const skRoomUrl = {
+        '0': 'https://join.skype.com/Who4S01c1PJA',
+        '1': 'https://join.skype.com/V6cKAUtrQ5CA',
+        '2': 'https://join.skype.com/UZKhFaomllWf',
     }
-    handleLogout = () => {
-        const { dispatch } = this.props;
-        dispatch(logoutUser());
-    };
 
-    componentDidUpdate(prevProps) {
-        const setNewMemberPoint = d => {
-            this.setState({
-                GainedPoint: d.GainedPoint,
-                HostPoint: d.HostPoint,
-            });
-        };
-        if (prevProps.cBoxShow !== this.props.cBoxShow) {
-            this.props.CurrentUser?.email &&
+    const resetMemberData = d => {
+        console.log(748998713)
+        props.dispatch(saveALLMemberData(d))
+    }
+
+    const resetBookingData = d => {
+        console.log(748998713)
+        props.dispatch(saveBookingData(d))
+    }
+
+    const updatePoints = (booking, level) => {
+        const isHost = booking.CreateUserID === props.CurrentUser.uid
+        const today = dayjs().format('YYYY/MM/DD')
+       // const today = '2020/05/30'
+        const bookingDate = booking.date
+        const bookingHour = booking.time.substring(0, 2)
+        const currentHour = dayjs().format('HH')
+        const currentTime = dayjs().format('HHmm')
+        const lastTime = bookingHour + '10'
+
+        const isRightLevel = booking.classLv === level
+
+        //是否準時 & 正確的level
+        if(
+            bookingDate === today &&
+            currentHour === bookingHour &&
+            currentTime <= lastTime &&
+            isRightLevel
+        ) {
+            if(isHost) {
                 hendleDBactions(
                     'memberCard',
-                    this.props.CurrentUser.email,
-                    '',
-                    'getMemberCardByEmail',
-                    setNewMemberPoint
-                );
+                    CurrentUser.email,
+                    {
+                        ...CurrentUser.memberData,
+                        HostPoint: CurrentUser.memberData.HostPoint + 2.5,
+                    },
+                    'UPDATE'
+                )
+            } else {
+                //是否點Join
+                if(booking.whoJoinEmail.includes(props.CurrentUser.email)) {
+                    hendleDBactions(
+                        'memberCard',
+                        CurrentUser.email,
+                        {
+                            ...CurrentUser.memberData,
+                            GainedPoint: CurrentUser.memberData.GainedPoint + 1,
+                        },
+                        'UPDATE'
+                    ) 
+                    alert('Congratulations! +1 Bread! ')                   
+                }
+            }
+        }
+        hendleDBactions('memberCard', '', '', '', resetMemberData)
+        hendleDBactions('booking', '', '', '', resetBookingData)
+    }
 
-            this.setState({
-                CurrentUser: this.props.CurrentUser,
-            });
+    const skOnclick = level => {
+        if (window.confirm('Please remember to LEAVE the room after your discussion!')) {
+            hendleDBactions(
+                'booking',
+                '',
+                '',
+                'getBookingByUid',
+                booking => {
+                    updatePoints(booking, level)
+                }
+            )
+            window.open(skRoomUrl[level])
+        } else {
+            return
         }
     }
 
-    render() {
-        const {
-            isLoggingOut,
-            logoutError,
-            cBoxShow,
-            BookingDateData,
-            initBookingData,
-            isAdminAccount,
-            deviceIsMobile,
-            isAuthenticated,
-            dispatch,
-        } = this.props;
-
-        const skRoom = {
-            b: 'https://join.skype.com/Who4S01c1PJA',
-            m: 'https://join.skype.com/V6cKAUtrQ5CA',
-            a: 'https://join.skype.com/UZKhFaomllWf',
-        };
-
-        const skOnclick = url => {
-            if (window.confirm('Please remember to LEAVE the room after your discussion!')) {
-                window.open(url);
-            } else {
-                return;
-            }
-        };
-        return (
-            <div className={cx('VIPhome', { mobile: deviceIsMobile })}>
-                <div
-                    className={cx('mask', { cardActive: cBoxShow })}
-                    onClick={() => {
-                        dispatch(cBoxController(false));
-                    }}
-                ></div>
-                <div className="classForm">
-                    {cBoxShow ? (
-                        <ClassForm
-                            {...BookingDateData}
-                            CurrentUser={this.state.CurrentUser}
-                            {...this.props}
-                            isAdminAccount={isAdminAccount}
-                        />
-                    ) : null}
-                </div>
-                <div className="calendar viphomes">
-                    <Calendar
-                        initBookingData={initBookingData}
-                        CurrentUser={this.state.CurrentUser}
+    return (
+        <div className={cx('VIPhome', { mobile: deviceIsMobile })}>
+            <div
+                className={cx('mask', { cardActive: cBoxShow })}
+                onClick={() => {
+                    dispatch(cBoxController(false))
+                }}
+            ></div>
+            <div className="classForm">
+                {cBoxShow ? (
+                    <ClassForm
+                        {...BookingDateData}
+                        CurrentUser={CurrentUser}
+                        {...props}
+                        isAdminAccount={isAdminAccount}
                     />
-                </div>
-                {isAuthenticated ? (
-                    <div className="skQRcode">
-                        <ul>
-                            <li onClick={() => skOnclick(skRoom.b)}>
-                                <img src={require('../img/Ba_room.png')} alt="basic" />
-                            </li>
-                            <li onClick={() => skOnclick(skRoom.m)}>
-                                <img src={require('../img/In_room.png')} alt="m" />
-                            </li>
-                            <li onClick={() => skOnclick(skRoom.a)}>
-                                <img src={require('../img/Adv_room.png')} alt="a" />
-                            </li>
-                        </ul>
-                    </div>
                 ) : null}
-
-                {isLoggingOut && <p>Logging Out....</p>}
-                {logoutError && <p>Error logging out</p>}
             </div>
-        );
-    }
+            <div className="calendar viphomes">
+                <Calendar
+                    initBookingData={initBookingData}
+                    CurrentUser={CurrentUser}
+                />
+            </div>
+            {isAuthenticated ? (
+                <div className="skQRcode">
+                    <ul>
+                        <li onClick={() => skOnclick(0)}>
+                            <img src={require('../img/Ba_room.png')} alt="basic" />
+                        </li>
+                        <li onClick={() => skOnclick(1)}>
+                            <img src={require('../img/In_room.png')} alt="m" />
+                        </li>
+                        <li onClick={() => skOnclick(2)}>
+                            <img src={require('../img/Adv_room.png')} alt="a" />
+                        </li>
+                    </ul>
+                </div>
+            ) : null}
+
+            {isLoggingOut && <p>Logging Out....</p>}
+            {logoutError && <p>Error logging out</p>}
+        </div>
+    )
 }
-function mapStateToProps(state) {
+
+const mapStateToProps = state => {
     return {
         isLoggingOut: state.auth.isLoggingOut,
         logoutError: state.auth.logoutError,
@@ -130,6 +178,6 @@ function mapStateToProps(state) {
         deviceIsMobile: state.auth.deviceIsMobile,
         isAuthenticated: state.auth.isAuthenticated,
         initALLMemberData: state.auth.initALLMemberData,
-    };
+    }
 }
-export default connect(mapStateToProps)(Home); //home 啟動時，那些store放的資料要當作props
+export default connect(mapStateToProps)(Home) //home 啟動時，那些store放的資料要當作props

@@ -146,16 +146,6 @@ export default function CardWithContent(props) {
             cloneWhoJoin.push(UserName)
             cloneWhoJoinEmail.push(email)
             setIsJoin(true)
-            hendleDBactions(
-                'memberCard',
-                CurrentUser.email,
-                {
-                    ...CurrentUser.memberData,
-                    GainedPoint: CurrentUser.memberData.GainedPoint + 1,
-                },
-                'UPDATE'
-            )
-            // alert('Congratulations! +1 Bread! ')
         } else {
             cloneWhoJoin.splice(targetI, 1)
             cloneWhoJoinEmail.splice(email, 1)

@@ -10,15 +10,13 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import { cBoxController, saveBookingData, saveALLMemberData } from '../../../actions'
-
 import ClearIcon from '@material-ui/icons/Clear'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import CancelIcon from '@material-ui/icons/Cancel'
 import InputLabel from '@material-ui/core/InputLabel'
-
 import dayjs from 'dayjs'
-
 import { parseTime } from '../../../utils/helpers'
+import { timeOptions, participantsOptions } from '../../../utils/options'
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -43,12 +41,11 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-export default function CardWithContent(props) {
+const CardNoContent = (props) => {
     const { 
         Status, Title, date, PhotoOrVideo, Material, 
         questions, CurrentUser, dispatch
     } = props
-    const HOST_POINT = 2.5
 
     const classes = useStyles()
 
@@ -135,15 +132,6 @@ export default function CardWithContent(props) {
             'SET'
         )
 
-        hendleDBactions(
-            'memberCard',
-            CurrentUser.email,
-            {
-                ...CurrentUser.memberData,
-                HostPoint: CurrentUser.memberData.HostPoint + HOST_POINT,
-            },
-            'UPDATE'
-        )
         dispatch(cBoxController(false))
         hendleDBactions('booking', '', '', '', resetBookingData)
         hendleDBactions('memberCard', '', '', '', resetMemberData)
@@ -297,30 +285,22 @@ export default function CardWithContent(props) {
                         key="classLevel"
                         onChange={e => setTiming(`${e.target.value}00`)}
                     >
-                        <option value="00">12:00 am</option>
-                        <option value="01">1:00 am</option>
-                        <option value="02">2:00 am</option>
-                        <option value="03">3:00 am</option>
-                        <option value="04">4:00 am</option>
-                        <option value="05">5:00 am</option>
-                        <option value="06">6:00 am</option>
-                        <option value="07">7:00 am</option>
-                        <option value="08">8:00 am</option>
-                        <option value="09">9:00 am</option>
-                        <option value="10">10:00 am</option>
-                        <option value="11">11:00 am</option>
-                        <option value="12">12:00 pm</option>
-                        <option value="13">1:00 pm</option>
-                        <option value="14">2:00 pm</option>
-                        <option value="15">3:00 pm</option>
-                        <option value="16">4:00 pm</option>
-                        <option value="17">5:00 pm</option>
-                        <option value="18">6:00 pm</option>
-                        <option value="19">7:00 pm</option>
-                        <option value="20">8:00 pm</option>
-                        <option value="21">9:00 pm</option>
-                        <option value="22">10:00 pm</option>
-                        <option value="23">11:00 pm</option>
+                    {
+                        timeOptions.map((timeOption, index) => {
+
+                            const indexStr = index.toString()
+                            const value = 
+                                indexStr.length === 1 
+                                ? `0${indexStr}`
+                                : indexStr
+
+                            return (
+                                <option key={index} value={value}>
+                                    {timeOption}
+                                </option>
+                            )
+                        })
+                    }
                     </select>                 
                 </div>
 
@@ -334,15 +314,19 @@ export default function CardWithContent(props) {
                         key="classLevel"
                         onChange={e => setNumberOfParticipants(parseInt(e.target.value))}
                     >
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="666">Unlimited</option>
+                    {
+                        participantsOptions.map((option, index) => {
+                            return (
+                                <option key={index} value={option}>
+                                {
+                                    option === '666'
+                                    ? 'Unlimited'
+                                    : option
+                                }
+                                </option>
+                            )
+                        })
+                    }
                     </select>                 
                 </div>
 
@@ -350,7 +334,7 @@ export default function CardWithContent(props) {
                     <div className="QCols">
                         {defaultQuestion.map((item, i) => {
                             return (
-                                <div className="QColsChild">
+                                <div key={i} className="QColsChild">
                                     <TextField
                                         key={`Questiion${i + 1}`}
                                         label={`Questiion${i + 1}`}
@@ -449,3 +433,5 @@ export default function CardWithContent(props) {
         </Card>
     )
 }
+
+export default CardNoContent
