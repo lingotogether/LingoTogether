@@ -238,6 +238,18 @@ export const signupUser = (email, password, userData) => dispatch => {
         });
 };
 
+export const resetPassword = email => {
+    myFirebase
+        .auth()
+        .sendPasswordResetEmail(email, {
+            url: 'https://lingotogether.com',
+            handleCodeInApp: true
+        }).then(() => {
+            alert('Password reset link has sent. Please check your email address to reset password')
+        })
+        .catch(err => alert(err.message))
+}
+
 // export const signupWithGoogle = () => {
 //     myFirebase.auth().signInWithPopup(provider).then(function (result) {
 //         // This gives you a Google Access Token. You can use it to access the Google API.

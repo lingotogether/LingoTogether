@@ -146,16 +146,6 @@ export default function CardWithContent(props) {
             cloneWhoJoin.push(UserName)
             cloneWhoJoinEmail.push(email)
             setIsJoin(true)
-            hendleDBactions(
-                'memberCard',
-                CurrentUser.email,
-                {
-                    ...CurrentUser.memberData,
-                    GainedPoint: CurrentUser.memberData.GainedPoint + 1,
-                },
-                'UPDATE'
-            )
-            // alert('Congratulations! +1 Bread! ')
         } else {
             cloneWhoJoin.splice(targetI, 1)
             cloneWhoJoinEmail.splice(email, 1)
@@ -267,6 +257,11 @@ export default function CardWithContent(props) {
         }
     }
 
+    const getProperMaxParticipants = maxParticipants => {
+        if(maxParticipants === 666) return 'Unlimited'
+        return maxParticipants
+    }
+
     const iconclassName =
         props.classLv === 0
             ? 'AvatarIcon green'
@@ -348,7 +343,7 @@ export default function CardWithContent(props) {
                     </CardContent>
                     <CardContent>
                         <div className="ParticipantText">
-                            <span className="CardLabel"># of participants: </span> {iNumberOfParticipants || '(None)'}
+                            <span className="CardLabel"># of participants: </span> {getProperMaxParticipants(iNumberOfParticipants) || '(None)'}
                         </div>
                     </CardContent>
                     <CardContent>

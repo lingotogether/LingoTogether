@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
-import { loginUser, resetPassword } from '../actions'
 import { withStyles } from '@material-ui/styles'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -10,6 +8,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import Container from '@material-ui/core/Container'
+import SignupForm from './SignupForm'
+import { hendleDBactions } from '../../actions/handleDB'
+import { signupUser } from '../../actions'
+import '../../style/SignupMember.scss'
 
 const styles = () => ({
     '@global': {
@@ -39,23 +41,84 @@ const styles = () => ({
     },
 })
 
-const Login = ({ dispatch, classes, loginError, isAuthenticated }) => {
+const Signup = ({ classes, dispatch, isAuthenticated }) => {
 
     const [ email, setEmail ] = useState('')
-    const [ password, setPassword ] = useState('') 
+    const [ password, setPassword ] = useState('')
+    const [ level, setLevel ] = useState(1)
+    const [ skypeID, setSkypeID ] = useState('')
+    const [ userName, setUserName ] = useState('')
 
-    if (isAuthenticated) {
-        return <Redirect to="/TopHome" />
-    } else {
-        return (
-            <Container component="main" maxWidth="xs">
+    const handleSubmit = () => {
+        if (isAuthenticated) {
+            alert("You've logged in, if you want to create a new account, please log out first")
+            return
+        }
+        const emailLowerCase = email.toLowerCase()
+
+        const updateOBJ = {
+            Email: emailLowerCase,
+            JoinDate: new Date(),
+            LastUpdateTime: new Date(),
+            Level: level,
+            SkypeID: skypeID,
+            UserName: userName,
+            GainedPoint: 0,
+            HostPoint: 0,
+            isPassed: false,
+            Status: 0,
+        }
+
+        if (isValid()) {
+            hendleDBactions('memberCard', emailLowerCase, updateOBJ, 'SET')
+
+            dispatch(signupUser(email, password, updateOBJ))
+        }
+    }
+
+    const isValid = () => {
+        if (
+            email === '' ||
+            password === '' ||
+            level === '' ||
+            skypeID === '' ||
+            userName === ''
+        ) {
+            alert('Please fill in the form completely!')
+            return false
+        } else {
+            return true
+        }
+    }
+
+    const handleOnChange = (e, type) => {
+        const { value } = e.target
+        switch(type) {
+            case 'userName':
+                setUserName(value)
+                break
+            case 'skypeID':
+                setSkypeID(value)
+                break
+            case 'level':
+                setLevel(value)
+                break
+            default:
+                break
+        }
+    }
+
+    return (
+        <div className="SignUpPage">
+            <Container component="main">
                 <Paper className={classes.paper}>
                     <Avatar className={classes.avatar}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Login in
+                        Sign up
                     </Typography>
+
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -75,38 +138,25 @@ const Login = ({ dispatch, classes, loginError, isAuthenticated }) => {
                         id="password"
                         onChange={({ target }) => setPassword(target.value)}
                     />
-                    {loginError && (
-                        <Typography component="p" className={classes.errorText}>
-                            Incorrect email or password.
-                        </Typography>
-                    )}
+                    <SignupForm
+                        handleOnChange={handleOnChange}
+                        levelVal={level}
+                    />
+
                     <Button
                         type="button"
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={() => dispatch(loginUser(email, password))}
+                        onClick={handleSubmit}
                     >
-                        Login In
+                        Sign Up
                     </Button>
-                    <br/>
-                    <a 
-                        href="# " 
-                        onClick={() => {
-                            if(email === '') {
-                                return alert('Please enter your email address first to reset password.')
-                            }
-                            resetPassword(email)
-                        }}
-                        style={{ color: '#999' }}
-                    >
-                        Forgot password ?
-                    </a>
                 </Paper>
             </Container>
-        )
-    }
+        </div>
+    )
 }
 
 const mapStateToProps = state => {
@@ -117,4 +167,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default withStyles(styles)(connect(mapStateToProps)(Login))
+export default withStyles(styles)(connect(mapStateToProps)(Signup))
