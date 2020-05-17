@@ -55,9 +55,9 @@ const Home = (props) => {
     }
 
     const updatePoints = (booking, level) => {
-        const isHost = booking.CreateUserID === props.CurrentUser.uid
+        const isHost = booking.CreateUserID === CurrentUser.uid
         const today = dayjs().format('YYYY/MM/DD')
-       // const today = '2020/05/30'
+        //const today = '2020/05/30'
         const bookingDate = booking.date
         const bookingHour = booking.time.substring(0, 2)
         const currentHour = dayjs().format('HH')
@@ -74,33 +74,36 @@ const Home = (props) => {
             isRightLevel
         ) {
             if(isHost) {
+                if(!CurrentUser.memberData.pendingHost) return
                 hendleDBactions(
                     'memberCard',
                     CurrentUser.email,
                     {
                         ...CurrentUser.memberData,
                         HostPoint: CurrentUser.memberData.HostPoint + 2.5,
+                        pendingHost: false
                     },
                     'UPDATE'
                 )
             } else {
+                if(!CurrentUser.memberData.pendingGained) return 
                 //是否點Join
-                if(booking.whoJoinEmail.includes(props.CurrentUser.email)) {
+                if(booking.whoJoinEmail.includes(CurrentUser.email)) {
                     hendleDBactions(
                         'memberCard',
                         CurrentUser.email,
                         {
                             ...CurrentUser.memberData,
                             GainedPoint: CurrentUser.memberData.GainedPoint + 1,
+                            pendingGained: false
                         },
                         'UPDATE'
                     ) 
-                    alert('Congratulations! +1 Bread! ')                   
+                    //alert('Congratulations! +1 Bread! ')                   
                 }
             }
         }
         hendleDBactions('memberCard', '', '', '', resetMemberData)
-        hendleDBactions('booking', '', '', '', resetBookingData)
     }
 
     const skOnclick = level => {
@@ -115,6 +118,7 @@ const Home = (props) => {
                 }
             )
             window.open(skRoomUrl[level])
+            hendleDBactions('booking', '', '', '', resetBookingData)
         } else {
             return
         }

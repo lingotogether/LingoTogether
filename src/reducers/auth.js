@@ -47,7 +47,7 @@ export default (
                 loginError: false,
             };
         case LOGIN_SUCCESS:
-            const isAdmin = action.user.email === 'admin@lingo.com';
+            const isAdmin = action.user.email === 'admin@lingo.com' || action.user.email === 'charliee1009@gmail.com';
             return {
                 ...state,
                 isLoggingIn: false,

@@ -132,6 +132,16 @@ const CardNoContent = (props) => {
             'SET'
         )
 
+        hendleDBactions(
+            'memberCard',
+            CurrentUser.email,
+            {
+                ...CurrentUser.memberData,
+                pendingHost: true
+            },
+            'UPDATE'
+        )
+
         dispatch(cBoxController(false))
         hendleDBactions('booking', '', '', '', resetBookingData)
         hendleDBactions('memberCard', '', '', '', resetMemberData)
