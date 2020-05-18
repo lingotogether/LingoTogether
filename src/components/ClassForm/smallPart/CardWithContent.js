@@ -164,7 +164,7 @@ export default function CardWithContent(props) {
                 CurrentUser.email,
                 {
                     ...CurrentUser.memberData,
-                    GainedPoint: CurrentUser.memberData.GainedPoint - 1,
+                    pendingGained: false,
                 },
                 'UPDATE'
             )
@@ -220,7 +220,7 @@ export default function CardWithContent(props) {
                 CurrentUser.email,
                 {
                     ...CurrentUser.memberData,
-                    HostPoint: CurrentUser.memberData.HostPoint - 2.5,
+                    pendingHost: false,
                 },
                 'UPDATE'
             )
