@@ -157,7 +157,7 @@ export default function CardWithContent(props) {
             )
         } else {
             cloneWhoJoin.splice(targetI, 1)
-            cloneWhoJoinEmail.splice(email, 1)
+            cloneWhoJoinEmail.splice(targetEmail, 1)
             setIsJoin(false)
             hendleDBactions(
                 'memberCard',
