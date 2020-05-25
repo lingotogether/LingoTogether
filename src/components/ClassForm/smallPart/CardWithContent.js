@@ -146,29 +146,10 @@ export default function CardWithContent(props) {
             cloneWhoJoin.push(UserName)
             cloneWhoJoinEmail.push(email)
             setIsJoin(true)
-            hendleDBactions(
-                'memberCard',
-                CurrentUser.email,
-                {
-                    ...CurrentUser.memberData,
-                    pendingGained: true
-                },
-                'UPDATE'
-            )
         } else {
             cloneWhoJoin.splice(targetI, 1)
             cloneWhoJoinEmail.splice(targetEmail, 1)
             setIsJoin(false)
-            hendleDBactions(
-                'memberCard',
-                CurrentUser.email,
-                {
-                    ...CurrentUser.memberData,
-                    pendingGained: false,
-                },
-                'UPDATE'
-            )
-            // alert('Ooops! -1 Bread! ')
         }
         const updateOBJ = { whoJoin: cloneWhoJoin, whoJoinEmail: cloneWhoJoinEmail }
         hendleDBactions('booking', DataID, updateOBJ, 'UPDATE')

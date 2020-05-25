@@ -56,15 +56,26 @@ const Home = (props) => {
 
     const updatePoints = (booking, level) => {
         const isHost = booking.CreateUserID === CurrentUser.uid
-        const today = dayjs().format('YYYY/MM/DD')
-        //const today = '2020/05/30'
+        //const today = dayjs().format('YYYY/MM/DD')
+        const today = '2020/05/30'
         const bookingDate = booking.date
         const bookingHour = booking.time.substring(0, 2)
         const currentHour = dayjs().format('HH')
         const currentTime = dayjs().format('HHmm')
-        const lastTime = bookingHour + '15'
+        const lastTime = bookingHour + '50'
 
         const isRightLevel = booking.classLv === level
+
+        const allowAddPoint = () => {
+            if(!CurrentUser.memberData.pointed_at) return true
+            const pointedAt = CurrentUser.memberData.pointed_at.toDate()
+            const limitTime = new Date(pointedAt.getTime() + 15*60000)
+
+            //current time is within pointAt time to pointedAt time + 15 => not allow
+            return pointedAt > new Date() || new Date() > limitTime
+        }
+
+        if(!allowAddPoint()) return
 
         //是否準時 & 正確的level
         if(
@@ -74,19 +85,17 @@ const Home = (props) => {
             isRightLevel
         ) {
             if(isHost) {
-                if(!CurrentUser.memberData.pendingHost) return
                 hendleDBactions(
                     'memberCard',
                     CurrentUser.email,
                     {
                         ...CurrentUser.memberData,
                         HostPoint: CurrentUser.memberData.HostPoint + 2.5,
-                        pendingHost: false
+                        pointed_at: new Date()
                     },
                     'UPDATE'
                 )
             } else {
-                if(!CurrentUser.memberData.pendingGained) return 
                 //是否點Join
                 if(booking.whoJoinEmail.includes(CurrentUser.email)) {
                     hendleDBactions(
@@ -95,7 +104,7 @@ const Home = (props) => {
                         {
                             ...CurrentUser.memberData,
                             GainedPoint: CurrentUser.memberData.GainedPoint + 1,
-                            pendingGained: false
+                            pointed_at: new Date()
                         },
                         'UPDATE'
                     ) 
@@ -104,6 +113,7 @@ const Home = (props) => {
             }
         }
         hendleDBactions('memberCard', '', '', '', resetMemberData)
+        hendleDBactions('booking', '', '', '', resetBookingData)
     }
 
     const skOnclick = level => {
@@ -114,11 +124,11 @@ const Home = (props) => {
                 '',
                 'getBookingByUid',
                 booking => {
+                    if(booking.noData) return 
                     updatePoints(booking, level)
                 }
             )
             window.open(skRoomUrl[level])
-            hendleDBactions('booking', '', '', '', resetBookingData)
         } else {
             return
         }
