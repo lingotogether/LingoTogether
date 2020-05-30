@@ -1,0 +1,22 @@
+.profile-icon {
+	border: 1px solid #a5cf69;
+	color: #a5cf69;
+	border-radius: 50%;
+	height: 50px;
+	width: 50px;
+}
+
+.profile-icon:hover {
+	border: 1px solid orange;
+	color: orange;
+}
+
+.profile-icon .username-initial {
+	line-height: 50px;
+	font-weight: bold;
+	font-size: 28px;
+}
+
+.profile-link:hover {
+	color: orange;
+}
