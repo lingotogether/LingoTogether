@@ -160,7 +160,7 @@ function Navbar(props) {
                             </a>
                             */
                         }
-                            <Profile CurrentUser={CurrentUser}/>
+                            <Profile dispatch={dispatch} CurrentUser={CurrentUser}/>
                         </li>
                     </Fragment>
                 ) : null}

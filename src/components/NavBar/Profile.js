@@ -1,22 +1,30 @@
 import React, { Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { logoutUser } from '../../actions/'
 import { Menu, MenuItem } from '@material-ui/core'
 import '../../style/profile.css'
 
-
-const CustomMenuItem = ({ title, to }) => {
+const CustomMenuItem = ({ title, to,onClick }) => {
 	return (
-		<MenuItem>
-			<Link to={to} className="profile-link">
+		<MenuItem onClick={onClick}>
+			<Link 
+				to={to} 
+				className="profile-link"
+			>
 				{ title }
 			</Link>
 		</MenuItem>
 	)
 }
 
-const Profile = ({ CurrentUser }) => {
+const Profile = ({ CurrentUser, dispatch }) => {
 
 	const [anchorEl, setAnchorEl] = useState(null)
+
+	const handleLogout = () => {
+		console.log('here')
+		dispatch(logoutUser())
+	}
 
 	const username = 
 		CurrentUser && CurrentUser.memberData && CurrentUser.memberData.UserName
@@ -37,22 +45,18 @@ const Profile = ({ CurrentUser }) => {
 			<Menu
 				keepMounted
 				anchorEl={anchorEl}
-			    anchorOrigin={{
-			      vertical: 'bottom',
-			      horizontal: 'center',
-			    }}
-			    transformOrigin={{
-			      vertical: 'top',
-			      horizontal: 'center',
-			    }}
 				open={Boolean(anchorEl)}
 				onClose={() => setAnchorEl(null)}
 			>
-				<CustomMenuItem title="Received beads" to="/"/>
-				<CustomMenuItem title="Monthly mission" to="/"/>
-				<CustomMenuItem title="Practice calender" to="/"/>
-				<CustomMenuItem title="Settings" to="/"/>
-				<CustomMenuItem title="Logout" to="/"/>
+				<CustomMenuItem title="Received beads" to="/received-beads"/>
+				<CustomMenuItem title="Monthly mission" to="/monthly-mission"/>
+				<CustomMenuItem title="Practice calender" to="/practice-calendar"/>
+				<CustomMenuItem title="Settings" to="/" disabled={true}/>
+				<CustomMenuItem 
+					title="Logout" 
+					to="/"
+					onClick={handleLogout}
+				/>
 			</Menu>
 		</Fragment>
 	)

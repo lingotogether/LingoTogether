@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import Home from '../components/Home';
 const ProtectedRoute = ({
     component: Component, //home
     isAuthenticated,
@@ -12,8 +11,9 @@ const ProtectedRoute = ({
         render={props =>
             isAuthenticated ? (
                 <Fragment>
-                    {/* <h1>456</h1> */}
-                    <Home {...props} />
+                {
+                    <Component {...props} />
+                }
                 </Fragment>
             ) : (
                 <Redirect
