@@ -20,3 +20,12 @@
 .profile-link:hover {
 	color: orange;
 }
+
+.profile-title {
+	color: #1d9e82;
+}
+
+.profile-content {
+	font-weight: bold;
+	color: orange;
+}

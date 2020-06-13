@@ -4,7 +4,7 @@ import { logoutUser } from '../../actions/'
 import { Menu, MenuItem } from '@material-ui/core'
 import '../../style/profile.css'
 
-const CustomMenuItem = ({ title, to,onClick }) => {
+const CustomMenuItem = ({ title, to, onClick }) => {
 	return (
 		<MenuItem onClick={onClick}>
 			<Link 
