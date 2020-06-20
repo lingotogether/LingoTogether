@@ -148,7 +148,7 @@ function TopHome(props) {
                                 <p>
                                     <b>Time: Schedule your own time(GMT+8)</b>
                                 </p>
-                                <p>Host：2 beads / Participant：1 point</p>
+                                <p>Host：2 beads / Participant：1 bead</p>
                                 <Grid container spacing={3}>
                                     <Grid item xs={6}>
                                         <h2 className="title">Being a Host</h2>
@@ -158,7 +158,7 @@ function TopHome(props) {
                                     <Grid item xs={6}>
                                         <h2 className="title">Being a participant</h2>
                                         <hr />
-                                        <p>- Login and click the QR code next to the calender to get into the chat room</p>
+                                        <p>- Login and click the icon next to the calender to get into the chat room</p>
                                         <p>- Show up on time</p>
                                         <p>- if you would like to cancel the discussion, click
                                         "join" again.</p>
@@ -171,7 +171,7 @@ function TopHome(props) {
                                 <p>
                                     <b>時間： 自由選擇時間(台灣時間)</b>
                                 </p>
-                                <p>主持人：2 beads / 參加者：1 point</p>
+                                <p>主持人：2 beads / 參加者：1 bead</p>
                                 <Grid container spacing={3}>
                                     <Grid item xs={6}>
                                         <h2 className="title">擔任主持人</h2>
@@ -181,7 +181,7 @@ function TopHome(props) {
                                     <Grid item xs={6}>
                                         <h2 className="title">參加討論者</h2>
                                         <hr />
-                                        <p>- 登錄帳號點擊日曆旁QR code進入聊天室</p>
+                                        <p>- 登錄帳號點擊日曆旁圖示進入聊天室</p>
                                         <p>- 準時出現在聊天室</p>
                                         <p>- 想要取消當次討論，再點擊一次“join”</p>
                                     </Grid>
@@ -270,9 +270,6 @@ function TopHome(props) {
                             <b>有問題？ 獲得額外協助 </b>
                             <hr />
                             <div>
-                                <p>Forget your password? 忘記密碼? </p>
-                                <p>Can't log in ? 無法登入? </p>
-                                <p>Take a leave? 請假? </p>
                                 <p> Contact us on:聯絡我們吧: </p>
                                 <ul className="contactUs">
                                     <li>
