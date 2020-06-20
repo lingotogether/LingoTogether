@@ -77,6 +77,7 @@ function App(props) {
                         </a>
                     </div>
                     {
+                        /*
                         isAuthenticated && (
                             <Fragment>
                                 <div className="beads">
@@ -93,6 +94,7 @@ function App(props) {
                                 </div>
                             </Fragment>
                         )
+                        */
                     }
                     {isMobile ? (
                         <div className="mNavbar">

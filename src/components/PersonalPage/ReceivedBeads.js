@@ -15,7 +15,7 @@ import { makeStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles((theme) => ({
 	root: {
 		flexGrow: 1,
-		padding: theme.spacing(0, 3)
+		padding: theme.spacing(0, 30)
 	},
 	tableHeader: {
 		fontWeight: 'bold'
@@ -80,6 +80,7 @@ const ReceivedBeads = ({ CurrentUser, initBookingData }) => {
 					</span>
 				</Grid>
 				<Grid item xs={12}>
+					<h2>Past records</h2>
 					<TableContainer>
 						<Table aria-label="simple table">
 							<TableHead>
@@ -88,12 +89,13 @@ const ReceivedBeads = ({ CurrentUser, initBookingData }) => {
 									<TableCell className={classes.tableHeader} align="right">Level</TableCell>
 									<TableCell className={classes.tableHeader} align="right">Title</TableCell>
 									<TableCell className={classes.tableHeader} align="right">Status</TableCell>
-									<TableCell className={classes.tableHeader} align="right">Beads</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
 								{
-									personalBooks.map((book, index) => {
+									personalBooks.length === 0 
+									? '( No result )'
+									: personalBooks.map((book, index) => {
 										const isHost = book.CreateUserID === CurrentUser.uid
 										return (
 											<TableRow key={index}>
@@ -103,7 +105,6 @@ const ReceivedBeads = ({ CurrentUser, initBookingData }) => {
 												<TableCell align="right">{classLvMap[book.classLv]}</TableCell>
 												<TableCell align="right">{book.Title}</TableCell>
 												<TableCell align="right">{isHost ? 'Host' : 'Participant'}</TableCell>
-												<TableCell align="right">{isHost ? '+2' : '+1'}</TableCell>
 											</TableRow>
 										)
 									})

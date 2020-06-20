@@ -49,9 +49,14 @@ const Profile = ({ CurrentUser, dispatch }) => {
 				onClose={() => setAnchorEl(null)}
 			>
 				<CustomMenuItem title="Received beads" to="/received-beads"/>
-				<CustomMenuItem title="Monthly mission" to="/monthly-mission"/>
-				<CustomMenuItem title="Practice calender" to="/practice-calendar"/>
-				<CustomMenuItem title="Settings" to="/" disabled={true}/>
+				{
+					/*
+						TODO
+						<CustomMenuItem title="Monthly mission" to="/monthly-mission"/>
+						<CustomMenuItem title="Practice calender" to="/practice-calendar"/>
+						<CustomMenuItem title="Settings" to="/" disabled={true}/>						
+					*/
+				}
 				<CustomMenuItem 
 					title="Logout" 
 					to="/"
