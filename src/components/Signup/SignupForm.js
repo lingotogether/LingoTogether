@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 
 const SignupForm = ({ handleOnChange, levelVal }) => {
     const labelObj = {
-        userName: 'Name 英文名子',
+        userName: 'Name 英文名字',
         level: 'Your English level? 自身英文程度',
         skypeID: 'Skype ID Skype 帳號',
     }
@@ -41,7 +41,7 @@ const SignupForm = ({ handleOnChange, levelVal }) => {
     return (
         <div className="memberForm">
             {type.map((item, i) => {
-                if (i === 1) {
+                if (item === 'level') {
                     return (
                         <FormControl
                             variant="outlined"

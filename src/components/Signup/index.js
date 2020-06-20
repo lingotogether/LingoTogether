@@ -48,6 +48,7 @@ const Signup = ({ classes, dispatch, isAuthenticated }) => {
     const [ level, setLevel ] = useState(1)
     const [ skypeID, setSkypeID ] = useState('')
     const [ userName, setUserName ] = useState('')
+    const [ infoSource, setInfoSource ] = useState('')
 
     const handleSubmit = () => {
         if (isAuthenticated) {
@@ -63,6 +64,7 @@ const Signup = ({ classes, dispatch, isAuthenticated }) => {
             Level: level,
             SkypeID: skypeID,
             UserName: userName,
+            InfoSource: infoSource,
             GainedPoint: 0,
             HostPoint: 0,
             isPassed: false,
@@ -141,6 +143,15 @@ const Signup = ({ classes, dispatch, isAuthenticated }) => {
                     <SignupForm
                         handleOnChange={handleOnChange}
                         levelVal={level}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        id="info_source"
+                        label="How did you hear about lingotogether? 您是在哪裡得知lingotogether?"
+                        aria-label="How did you hear about lingotogether?"
+                        onChange={({ target }) => setInfoSource(target.value)}
                     />
 
                     <Button
