@@ -269,7 +269,14 @@ export default function CardWithContent(props) {
                 }
                 title={
                     !Editing ? (
-                        iTitle
+                        <a 
+                            href={iMaterial} 
+                            style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                        >
+                            iTitle
+                        </a>
                     ) : (
                         <TextField
                             key={`CardTitleEditing`}
