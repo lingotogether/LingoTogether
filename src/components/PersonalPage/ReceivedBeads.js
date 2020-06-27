@@ -1,28 +1,29 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import dayjs from 'dayjs'
-import { 
-	Grid,
-	Table, 
-	TableBody, 
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow
-} from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { parseTime } from '../../utils/helpers'
+import { cBoxController, BookingDateData } from '../../actions'
+import ClassForm from '../ClassForm'
+import '../../style/VIPHome.scss'
+import '../../style/CalendarMain.scss'
+
+const cx = require('classnames')
 
 const useStyles = makeStyles((theme) => ({
 	root: {
 		flexGrow: 1,
-		padding: theme.spacing(0, 30)
-	},
-	tableHeader: {
-		fontWeight: 'bold'
+		padding: theme.spacing(0, 15)
 	}
 }))
 
-const ReceivedBeads = ({ CurrentUser, initBookingData }) => {
+const ReceivedBeads = (props) => {
+
+	const {
+		CurrentUser, initBookingData, dispatch, cBoxShow, 
+		bookingData, isAdminAccount, deviceIsMobile
+	} = props
 
 	const classes = useStyles()
 
@@ -31,6 +32,11 @@ const ReceivedBeads = ({ CurrentUser, initBookingData }) => {
 		'In.',
 		'Adv.'
 	]
+
+	const onClickDate = (e, book) => {
+        dispatch(cBoxController(true))
+        dispatch(BookingDateData(book))
+	}
 
 	const personalBooks = initBookingData.filter(book => {
 		const isHost = book.CreateUserID === CurrentUser.uid
@@ -47,62 +53,95 @@ const ReceivedBeads = ({ CurrentUser, initBookingData }) => {
 	const formatedDate = JoinDate ? JoinDate.toDate() : null
 
 	return (
-		<div className={classes.root}>
-			<Grid container spacing={1}>
-				<Grid item xs={12}>
-					<h1 className='profile-title'>
-						Received Beads
-					</h1>
-				</Grid>
-				<Grid item xs={12}>
-					<span className='profile-content'>
-						{ isNaN(totalPoint) ? 0 : totalPoint } {' '}
-						beads have received since {' '}
-						{ dayjs(formatedDate).format('MM/DD/YYYY') }
-					</span>
-				</Grid>
-				<Grid item xs={12}>
-					<span className='profile-content'>
-						Gained beads: { GainedPoint } pts<br/>
-						Host beads: { HostPoint } pts
-					</span>
-				</Grid>
-				<Grid item xs={12}>
-					<h2>Past records</h2>
-					<TableContainer>
-						<Table aria-label="simple table">
-							<TableHead>
-								<TableRow>
-									<TableCell className={classes.tableHeader}>Date</TableCell>
-									<TableCell className={classes.tableHeader} align="right">Level</TableCell>
-									<TableCell className={classes.tableHeader} align="right">Title</TableCell>
-									<TableCell className={classes.tableHeader} align="right">Status</TableCell>
-								</TableRow>
-							</TableHead>
-							<TableBody>
+		<Fragment>
+			<div className={cx('VIPhome', { mobile: deviceIsMobile })}>
+	            <div
+	                className={cx('mask', { cardActive: cBoxShow })}
+	                onClick={() => {
+	                    dispatch(cBoxController(false))
+	                }}
+	            ></div>
+	            <div className="classForm">
+	                {cBoxShow ? (
+	                    <ClassForm
+	                        {...bookingData}
+	                        CurrentUser={CurrentUser}
+	                        {...props}
+	                        isAdminAccount={isAdminAccount}
+	                    />
+	                ) : null}
+	            </div>
+				<div className={classes.root}>
+					<Grid container spacing={1}>
+						<Grid item xs={12}>
+							<h1 className='profile-title'>
+								Received Beads
+							</h1>
+						</Grid>
+						<Grid item xs={12}>
+							<span className='profile-content'>
+								{ isNaN(totalPoint) ? 0 : totalPoint } {' '}
+								beads have received since {' '}
+								{ dayjs(formatedDate).format('MM/DD/YYYY') }
+							</span>
+						</Grid>
+						<Grid item xs={12}>
+							<span className='profile-content'>
+								Gained beads: { GainedPoint } pts<br/>
+								Host beads: { HostPoint } pts
+							</span>
+						</Grid>
+						<Grid item xs={12}>
+							<h2>Past records</h2>
+							<div className='table'>
+								<ul className='calendars_listmode'>
 								{
 									personalBooks.length === 0 
 									? '( No result )'
 									: personalBooks.map((book, index) => {
+										let dd = book.date.split('/')
 										const isHost = book.CreateUserID === CurrentUser.uid
 										return (
-											<TableRow key={index}>
-												<TableCell component="th" scope="row">
-												{ book.date }
-												</TableCell>
-												<TableCell align="right">{classLvMap[book.classLv]}</TableCell>
-												<TableCell align="right">{book.Title}</TableCell>
-												<TableCell align="right">{isHost ? 'Host' : 'Participant'}</TableCell>
-											</TableRow>
+						                    <li
+						                        className='oneDate calendars_listmode'
+						                        key={index}
+						                        id={dd[2]}
+						                        onClick={e => onClickDate(e, book)}
+						                    >
+						                        <div className="inner-li">
+						                            <div className="li-left">
+						                            	<span className='weekday'>
+						                            	{ book.date }
+						                            	</span>
+						                            </div>
+						                            <div className="li-middle">
+						                                <div className="content">
+						                                    <span>{parseTime(book.time)}</span>
+
+						                                    <span>
+						                                        [{isHost ? 'Host' : 'Participant'}] {book.Title}
+						                                    </span>
+						                                </div>
+						                                <div
+						                                    className={`btn-deco 
+						                                    ${book.classLv === 0 ? 'green' : ''}  
+						                                    ${book.classLv === 2 ? 'yellow' : ''}`}
+						                                >
+						                                    {classLvMap[book.classLv]}
+						                                </div>
+						                            </div>
+						                        </div>
+						                    </li>
 										)
 									})
 								}
-							</TableBody>
-						</Table>
-					</TableContainer>
-				</Grid>
-			</Grid>
-		</div>
+								</ul>
+							</div>
+						</Grid>
+					</Grid>
+				</div>
+			</div>
+		</Fragment>
 	)
 }
 
@@ -113,7 +152,10 @@ const mapStateToProps = state => {
         CurrentUser: state.auth.CurrentUser,
         initALLMemberData: state.auth.initALLMemberData,
         isAdminAccount: state.auth.isAdminAccount,
-        initBookingData: state.auth.initBookingData
+        initBookingData: state.auth.initBookingData,
+        cBoxShow: state.auth.cBoxShow,
+        bookingData: state.auth.BookingDateData,
+        deviceIsMobile: state.auth.deviceIsMobile
     }
 }
 

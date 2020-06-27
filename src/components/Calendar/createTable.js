@@ -44,7 +44,7 @@ export const CreateTable = (
                 let item = ThisMonthDetails[saveJ]
 
                 let dd = item.date.split('/') //dd is arr
-                let W = new Date(dd.join('-')).getDay()
+                let W = new Date(item.date).getDay()
                 table.push(
                     <li
                         className={`oneDate  ${activeID === dd[2] ? 'active' : ''} ${
