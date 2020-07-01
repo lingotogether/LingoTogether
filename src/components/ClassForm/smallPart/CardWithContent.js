@@ -275,7 +275,7 @@ export default function CardWithContent(props) {
                             target="_blank" 
                             rel="noopener noreferrer"
                         >
-                            iTitle
+                            { iTitle }
                         </a>
                     ) : (
                         <TextField
