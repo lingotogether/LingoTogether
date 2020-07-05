@@ -56,8 +56,7 @@ const Home = (props) => {
 
     const updatePoints = (booking, level) => {
         const isHost = booking.CreateUserID === CurrentUser.uid
-        //const today = dayjs().format('YYYY/MM/DD')
-        const today = '2020/05/30'
+        const today = dayjs().format('YYYY/MM/DD')
         const bookingDate = booking.date
         const bookingHour = booking.time.substring(0, 2)
         const currentHour = dayjs().format('HH')
