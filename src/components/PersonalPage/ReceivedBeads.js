@@ -45,9 +45,9 @@ const ReceivedBeads = (props) => {
 	})
 
 	const { 
-		GainedPoint, 
-		HostPoint, 
-		JoinDate 
+		GainedPoint,
+		HostPoint,
+		JoinDate
 	} = CurrentUser.memberData
 	const totalPoint = GainedPoint + HostPoint 
 	const formatedDate = JoinDate ? JoinDate.toDate() : null
