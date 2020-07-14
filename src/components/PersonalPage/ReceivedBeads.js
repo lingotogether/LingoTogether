@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { parseTime } from '../../utils/helpers'
-import { cBoxController, BookingDateData } from '../../actions'
+import { cBoxController, BookingDateData, createBeadsRecordData } from '../../actions'
 import ClassForm from '../ClassForm'
 import '../../style/VIPHome.scss'
 import '../../style/CalendarMain.scss'
@@ -21,8 +21,8 @@ const useStyles = makeStyles((theme) => ({
 const ReceivedBeads = (props) => {
 
 	const {
-		CurrentUser, initBookingData, dispatch, cBoxShow, 
-		bookingData, isAdminAccount, deviceIsMobile
+		CurrentUser, dispatch, cBoxShow, beadsRecordData, initALLMemberData, 
+		isAdminAccount, deviceIsMobile, initBookingData // , bookingData
 	} = props
 
 	const classes = useStyles()
@@ -35,21 +35,38 @@ const ReceivedBeads = (props) => {
 
 	const onClickDate = (e, book) => {
         dispatch(cBoxController(true))
-        dispatch(BookingDateData(book))
+        // dispatch(BookingDateData(book))
 	}
 
-	const personalBooks = initBookingData.filter(book => {
-		const isHost = book.CreateUserID === CurrentUser.uid
-		const isParticipate = book.whoJoinEmail ? book.whoJoinEmail.includes(CurrentUser.email) : false
-		return isHost || isParticipate
+	// for (let book of initBookingData) {
+
+	// 	const Email = initALLMemberData.filter(data => {
+	// 		return data['UserName'] === book['CreateUserName']
+	// 	}).map(data => data['Email'])[0]
+
+	// 	const bookingDate = dayjs(book.date + book.time, "YYYY/MM/DDhhmm")
+
+	// 	createBeadsRecordData({
+	// 		Bead: 20,
+	// 		Date: bookingDate.unix(),
+	// 		FromEmail: "system",
+	// 		Level: book.classLv,
+	// 		Status: "Host punctual",
+	// 		Title: "Being a host",
+	// 		ToEmail: Email,
+	// 	})
+	// }
+
+	const personalBeadsRecord = beadsRecordData.filter(record => {
+		return record.FromEmail === CurrentUser.email || record.ToEmail === CurrentUser.email
 	})
 
-	const { 
+	const {
 		GainedPoint,
 		HostPoint,
 		JoinDate
 	} = CurrentUser.memberData
-	const totalPoint = GainedPoint + HostPoint 
+	const totalPoint = GainedPoint + HostPoint
 	const formatedDate = JoinDate ? JoinDate.toDate() : null
 
 	return (
@@ -64,7 +81,7 @@ const ReceivedBeads = (props) => {
 	            <div className="classForm">
 	                {cBoxShow ? (
 	                    <ClassForm
-	                        {...bookingData}
+	                        // {...bookingData}
 	                        CurrentUser={CurrentUser}
 	                        {...props}
 	                        isAdminAccount={isAdminAccount}
@@ -86,57 +103,49 @@ const ReceivedBeads = (props) => {
 							</span>
 						</Grid>
 						<Grid item xs={12}>
-							<span className='profile-content'>
-								Gained beads: { GainedPoint } pts<br/>
-								Host beads: { HostPoint } pts
-							</span>
-						</Grid>
-						<Grid item xs={12}>
 							<h2>Past records</h2>
-							<div className='table'>
-								<ul className='calendars_listmode'>
+							<table className='profile-table'>
+								<tr className="row-title">
+									<th>Date</th>
+									<th>Level</th>
+									<th>Title</th>
+									<th>Status</th>
+									<th>From</th>
+								</tr>
 								{
-									personalBooks.length === 0 
+									personalBeadsRecord.length === 0 
 									? '( No result )'
-									: personalBooks.map((book, index) => {
-										let dd = book.date.split('/')
-										const isHost = book.CreateUserID === CurrentUser.uid
-										return (
-						                    <li
-						                        className='oneDate calendars_listmode'
-						                        key={index}
-						                        id={dd[2]}
-						                        onClick={e => onClickDate(e, book)}
-						                    >
-						                        <div className="inner-li">
-						                            <div className="li-left">
-						                            	<span className='weekday'>
-						                            	{ book.date }
-						                            	</span>
-						                            </div>
-						                            <div className="li-middle">
-						                                <div className="content">
-						                                    <span>{parseTime(book.time)}</span>
+									: personalBeadsRecord.map((record, index) => {
 
-						                                    <span>
-						                                        [{isHost ? 'Host' : 'Participant'}] {book.Title}
-						                                    </span>
-						                                </div>
-						                                <div
-						                                    className={`btn-deco 
-						                                    ${book.classLv === 0 ? 'green' : ''}  
-						                                    ${book.classLv === 2 ? 'yellow' : ''}`}
-						                                >
-						                                    {classLvMap[book.classLv]}
-						                                </div>
-						                            </div>
-						                        </div>
-						                    </li>
+										const recordDate = record.Date.toDate()
+										const FromUser = initALLMemberData.filter(data => {
+											return data['Email'] === record.FromEmail || data['Email'] === record.ToEmail
+										}).map(data => data['UserName'])[0]
+
+										return (
+											<tr className="row">
+												<td>
+													{ dayjs(recordDate).format('MM/DD/YYYY') }
+													<br/>
+													{ dayjs(recordDate).format('hh:mm') }
+												</td>
+												<td>
+													<div
+														className={`btn-deco 
+														${record.Level === 0 ? 'green' : ''}  
+														${record.Level === 2 ? 'yellow' : ''}`}
+													>
+														{classLvMap[record.Level]}
+													</div>
+												</td>
+												<td>{ record.Title }</td>
+												<td>{ record.Status }</td>
+												<td>{ FromUser }</td>
+											</tr>
 										)
 									})
 								}
-								</ul>
-							</div>
+							</table>
 						</Grid>
 					</Grid>
 				</div>
@@ -155,7 +164,10 @@ const mapStateToProps = state => {
         initBookingData: state.auth.initBookingData,
         cBoxShow: state.auth.cBoxShow,
         bookingData: state.auth.BookingDateData,
-        deviceIsMobile: state.auth.deviceIsMobile
+		deviceIsMobile: state.auth.deviceIsMobile,
+
+		// New feature
+		beadsRecordData: state.auth.beadsRecordData,
     }
 }
 

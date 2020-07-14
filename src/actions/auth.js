@@ -28,6 +28,10 @@ export const SAVE_ALL_MEMBER_DATA = 'SAVE_ALL_MEMBER_DATA';
 
 export const SET_DEVICE = 'SET_DEVICE';
 
+// New feature
+export const SAVE_BEADS_RECORD_DATA = 'SAVE_BEADS_RECORD_DATA';
+
+
 // Login methods
 const requestLogin = () => {
     return {
@@ -138,6 +142,15 @@ export const saveALLMemberData = initALLMemberData => {
     };
 };
 
+export const saveBeadsRecordData = initBeadsRecord => {
+    // console.log('Aisu Test', initBeadsRecord);
+    console.log('initBeadsRecord', initBeadsRecord);
+    return {
+        type: SAVE_BEADS_RECORD_DATA,
+        initBeadsRecord,
+    };
+};
+
 export const deviceIsMobile = isMobile => {
     return {
         type: SET_DEVICE,
@@ -155,16 +168,17 @@ export const verifyAuth = () => dispatch => {
                 if (!data.uid) {
                     data.uid = user.uid;
                     hendleDBactions('memberCard', data.Email, data, 'UPDATE', receiveMemberData);
-                    dispatch(setCurrentUser({ ...user, memberData: data }));
                 }
                 dispatch(setCurrentUser({ ...user, memberData: data }));
             };
             chectCompleteInfo(user, receiveMemberData);
+            initBeadsRecord(dispatch);
             dispatch(receiveLogin(user));
         } else {
             // alert('Please Sign up or Login');
         }
-        //  dispatch(verifySuccess());
+
+        // dispatch(verifySuccess());
         initALLMemberData(dispatch);
 
         // hendleDBactions('memberCard', '', {}, 'receiveALLMemberData', receiveALLMemberData);
@@ -182,6 +196,13 @@ const chectCompleteInfo = (user, receiveMemberData) => {
     hendleDBactions('memberCard', user.email, {}, 'getMemberCardByEmail', receiveMemberData);
 };
 
+const initBeadsRecord =  dispatch => {
+    const receiveBeadsRecordData = ALLdata => {
+        dispatch(saveBeadsRecordData(ALLdata));
+    };
+    hendleDBactions('beadsRecord', '', {}, 'receiveBeadsRecordData', receiveBeadsRecordData);
+};
+
 export const loginUser = (email, password) => dispatch => {
     dispatch(requestLogin());
     myFirebase
@@ -191,10 +212,17 @@ export const loginUser = (email, password) => dispatch => {
             dispatch(receiveLogin(user));
         })
         .catch(error => {
-            //Do something with the error if you want!
+            // Do something with the error if you want!
             dispatch(loginError());
         });
 };
+
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+export const createBeadsRecordData = ObjData => {
+    hendleDBactions('booking', '', ObjData, 'SET', );
+};
+
 
 export const logoutUser = () => dispatch => {
     alert('Logging out');
@@ -207,7 +235,7 @@ export const logoutUser = () => dispatch => {
             setTimeout((window.location.href = '/'), 2000);
         })
         .catch(error => {
-            //Do something with the error if you want!
+            // Do something with the error if you want!
             dispatch(logoutError(error));
         });
 };

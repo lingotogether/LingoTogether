@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { logoutUser } from '../../actions/'
 import { Menu, MenuItem } from '@material-ui/core'
-import '../../style/profile.css'
+import '../../style/profile.scss'
 
 const CustomMenuItem = ({ title, to, onClick }) => {
 	return (
@@ -49,16 +49,16 @@ const Profile = ({ CurrentUser, dispatch }) => {
 				onClose={() => setAnchorEl(null)}
 			>
 				<CustomMenuItem title="Received beads" to="/received-beads"/>
+				<CustomMenuItem title="Practice calender" to="/practice-calendar"/>
 				{
 					/*
 						TODO
 						<CustomMenuItem title="Monthly mission" to="/monthly-mission"/>
-						<CustomMenuItem title="Practice calender" to="/practice-calendar"/>
 						<CustomMenuItem title="Settings" to="/" disabled={true}/>						
 					*/
 				}
 				<CustomMenuItem 
-					title="Logout" 
+					title="Logout"
 					to="/"
 					onClick={handleLogout}
 				/>

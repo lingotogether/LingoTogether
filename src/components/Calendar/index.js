@@ -45,7 +45,7 @@ function Calendar(props) {
 
     useEffect(() => {
         if (initBookingData) {
-            filterMonths(initBookingData); //SetInitMonthData
+            filterMonths(initBookingData); // SetInitMonthData
         }
     }, [initBookingData]);
 
@@ -53,7 +53,7 @@ function Calendar(props) {
         if (initBookingData) {
             setInputFall(true);
 
-            filterMonths(initBookingData); //SetInitMonthData
+            filterMonths(initBookingData); // SetInitMonthData
         } else {
             setInputFall(true);
             setActiveYYYYMM(year + '' + month);
@@ -77,11 +77,11 @@ function Calendar(props) {
     };
 
     const filterMonths = data => {
-        //檢查初始日期格式
+        // 檢查初始日期格式
         let reg = /\d{4}(0[1-9]|1[0-2])$/;
         let regExp = new RegExp(reg);
         if (!regExp.test(initYearMonth)) {
-            alert('初始日期格式或資料不正確，請使用有效日期並以YYYYMM格式輸入');
+            alert('初始日期格式或資料不正確，請使用有效日期並以 YYYYMM 格式輸入');
         }
         let withVolidDate = !checkDate(data);
 
@@ -102,7 +102,7 @@ function Calendar(props) {
         if (inputFall) {
             return;
         } else {
-            //已到最小月份
+            // 已到最小月份
             let prevData = [];
             if (currentYearMonthIndex - 1 < 1) {
                 prevData = filterDetials(DirtyDate, monthBarArr[0]);
@@ -135,7 +135,7 @@ function Calendar(props) {
             }
 
             if (
-                //已到最大月份
+                // 已到最大月份
                 currentYearMonthIndex + 1 >
                 monthBarArr.length - 2
             ) {
@@ -175,7 +175,7 @@ function Calendar(props) {
     };
 
     return (
-        <div className="calendar">
+        <div className="calendar" style={{paddingTop: '50px'}}>
             {props.CurrentUser ? (
                 <header>
                     <a className="bt_ftsp" onClick={() => setIsList(!isList)}>

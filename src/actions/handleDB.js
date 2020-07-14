@@ -76,6 +76,24 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                     CallBackFunction({ noData: true })
                 })
             break
+        // case 'receiveBeadsRecordData':
+        //     db.collection('beadsRecord')
+        //         // .where('ToEmail', '==', DataID)
+        //         .get()
+        //         .then(function(querySnapshot) {
+        //             if (querySnapshot.docs.length < 1) {
+        //                 CallBackFunction({ noData: true })
+        //             } else {
+        //                 querySnapshot.forEach(function(doc) {
+        //                     CallBackFunction(doc.data())
+        //                 })
+        //             }
+        //         })
+        //         .catch(function(error) {
+        //             console.log('Error getting documents: ', error)
+        //             CallBackFunction({ noData: true })
+        //         })
+        //     break
         default:
             db.collection(collection)
                 .get()

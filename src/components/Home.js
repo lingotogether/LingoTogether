@@ -70,13 +70,13 @@ const Home = (props) => {
             const pointedAt = CurrentUser.memberData.pointed_at.toDate()
             const limitTime = new Date(pointedAt.getTime() + 15*60000)
 
-            //current time is within pointAt time to pointedAt time + 15 => not allow
+            // current time is within pointAt time to pointedAt time + 15 => not allow
             return pointedAt > new Date() || new Date() > limitTime
         }
 
         if(!allowAddPoint()) return
 
-        //是否準時 & 正確的level
+        // 是否準時 & 正確的 level
         if(
             bookingDate === today &&
             currentHour === bookingHour &&
@@ -95,7 +95,7 @@ const Home = (props) => {
                     'UPDATE'
                 )
             } else {
-                //是否點Join
+                // 是否點 Join
                 if(booking.whoJoinEmail.includes(CurrentUser.email)) {
                     hendleDBactions(
                         'memberCard',
@@ -107,7 +107,7 @@ const Home = (props) => {
                         },
                         'UPDATE'
                     ) 
-                    //alert('Congratulations! +1 Bread! ')                   
+                    // alert('Congratulations! +1 Bread! ')                   
                 }
             }
         }

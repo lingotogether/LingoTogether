@@ -1,0 +1,68 @@
+@import '../style/color.scss';
+
+.profile-icon {
+	border: 1px solid #a5cf69;
+	color: #a5cf69;
+	border-radius: 50%;
+	height: 50px;
+	width: 50px;
+}
+
+.profile-icon:hover {
+	border: 1px solid orange;
+	color: orange;
+}
+
+.profile-icon .username-initial {
+	line-height: 50px;
+	font-weight: bold;
+	font-size: 28px;
+}
+
+.profile-link:hover {
+	color: orange;
+}
+
+.profile-title {
+	color: #1d9e82;
+}
+
+.profile-content {
+	font-weight: bold;
+	color: orange;
+}
+
+.profile-table {
+    width: 100%;
+    border: solid 2px #92c799;
+    border-radius: 10px;
+
+    .row-title > th {
+        font-size: 20px;
+    }
+    .row-title {
+        width: 100%;
+    }
+
+    .row > td {
+        font-size: 16px;
+    }
+    .row {
+        text-align: center;
+        height: 100%;
+        .btn-deco {
+            background: $iconLabelOrange;
+            color: #fff;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 700;
+            width: 45px;
+            &.green {
+                background: $color2;
+            }
+            &.yellow {
+                background: $color1;
+            }
+        }
+    }
+}
