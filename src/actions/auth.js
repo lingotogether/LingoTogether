@@ -196,7 +196,7 @@ const chectCompleteInfo = (user, receiveMemberData) => {
     hendleDBactions('memberCard', user.email, {}, 'getMemberCardByEmail', receiveMemberData);
 };
 
-const initBeadsRecord =  dispatch => {
+const initBeadsRecord = dispatch => {
     const receiveBeadsRecordData = ALLdata => {
         dispatch(saveBeadsRecordData(ALLdata));
     };
@@ -216,13 +216,6 @@ export const loginUser = (email, password) => dispatch => {
             dispatch(loginError());
         });
 };
-
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-export const createBeadsRecordData = ObjData => {
-    hendleDBactions('booking', '', ObjData, 'SET', );
-};
-
 
 export const logoutUser = () => dispatch => {
     alert('Logging out');

@@ -3,11 +3,14 @@ import { connect } from 'react-redux'
 import dayjs from 'dayjs'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { parseTime } from '../../utils/helpers'
-import { cBoxController, BookingDateData, createBeadsRecordData } from '../../actions'
-import ClassForm from '../ClassForm'
 import '../../style/VIPHome.scss'
 import '../../style/CalendarMain.scss'
+
+
+import { hendleDBactions } from '../../actions/handleDB';
+
+
+// import * as firebase from 'firebase/app'
 
 const cx = require('classnames')
 
@@ -21,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
 const ReceivedBeads = (props) => {
 
 	const {
-		CurrentUser, dispatch, cBoxShow, beadsRecordData, initALLMemberData, 
-		isAdminAccount, deviceIsMobile, initBookingData // , bookingData
+		CurrentUser, deviceIsMobile, beadsRecordData, initALLMemberData, 
+		// isAdminAccount, dispatch, cBoxShow, initBookingData, bookingData
 	} = props
 
 	const classes = useStyles()
@@ -33,61 +36,79 @@ const ReceivedBeads = (props) => {
 		'Adv.'
 	]
 
-	const onClickDate = (e, book) => {
-        dispatch(cBoxController(true))
-        // dispatch(BookingDateData(book))
-	}
 
 	// for (let book of initBookingData) {
 
-	// 	const Email = initALLMemberData.filter(data => {
-	// 		return data['UserName'] === book['CreateUserName']
-	// 	}).map(data => data['Email'])[0]
+	// 	const bookingDate = dayjs(book.date, "YYYY/MM/DD").hour(book.time / 100)
+	// 	if (bookingDate.valueOf() > Date.now()) continue
 
-	// 	const bookingDate = dayjs(book.date + book.time, "YYYY/MM/DDhhmm")
+	// 	for (let paticipant of book.whoJoinEmail) {
 
-	// 	createBeadsRecordData({
+	// 		const UserID = initALLMemberData.filter(data => {
+	// 			return data.Email === paticipant
+	// 		}).map(data => data.uid)[0]
+	// 		if (UserID === undefined) continue
+
+	// 		dispatch(createBeadsRecordData(
+	// 			bookingDate.format('YYYYMMDD-') + classLvMap[book.classLv] + '-ParticipantPunctual',
+	// 			{
+	// 				Bead: 10,
+	// 				Date: firebase.firestore.Timestamp.fromMillis(bookingDate.valueOf()),
+	// 				FromUserID: "system",
+	// 				Level: book.classLv,
+	// 				Status: "Participant punctual",
+	// 				Title: "Being a participant",
+	// 				ToUserID: UserID,
+	// 			})
+	// 		)
+	// 	}
+
+	// 	console.log('Aisu Test 2: ', {
 	// 		Bead: 20,
-	// 		Date: bookingDate.unix(),
-	// 		FromEmail: "system",
+	// 		Date: { seconds: bookingDate.unix(), nanoseconds: 0 },
+	// 		FromUserID: "system",
 	// 		Level: book.classLv,
 	// 		Status: "Host punctual",
 	// 		Title: "Being a host",
-	// 		ToEmail: Email,
+	// 		ToUserID: UserID,
 	// 	})
 	// }
 
+
+	// async function demo() {
+	// 	for (let record of beadsRecordData) {
+	// 		const repairBead = DATA => {
+	// 			hendleDBactions('memberCard', DATA.Email,
+	// 				{
+	// 					...DATA,
+	// 					Bead: DATA.Bead + record.Bead
+	// 				},
+	// 				'UPDATE'
+	// 			)
+	// 		}
+	// 		hendleDBactions('memberCard', record.ToUserID, {}, 'getMemberCardByUserID', repairBead)
+	// 		await new Promise(r => setTimeout(r, 2000));
+	// 	}
+	// }
+
+	// demo()
+
+
 	const personalBeadsRecord = beadsRecordData.filter(record => {
-		return record.FromEmail === CurrentUser.email || record.ToEmail === CurrentUser.email
+		return record.FromUserID === CurrentUser.uid || record.ToUserID === CurrentUser.uid
 	})
 
 	const {
-		GainedPoint,
-		HostPoint,
-		JoinDate
+		JoinDate,
+		Bead
 	} = CurrentUser.memberData
-	const totalPoint = GainedPoint + HostPoint
+	
+	const totalPoint = Bead
 	const formatedDate = JoinDate ? JoinDate.toDate() : null
 
 	return (
 		<Fragment>
 			<div className={cx('VIPhome', { mobile: deviceIsMobile })}>
-	            <div
-	                className={cx('mask', { cardActive: cBoxShow })}
-	                onClick={() => {
-	                    dispatch(cBoxController(false))
-	                }}
-	            ></div>
-	            <div className="classForm">
-	                {cBoxShow ? (
-	                    <ClassForm
-	                        // {...bookingData}
-	                        CurrentUser={CurrentUser}
-	                        {...props}
-	                        isAdminAccount={isAdminAccount}
-	                    />
-	                ) : null}
-	            </div>
 				<div className={classes.root}>
 					<Grid container spacing={1}>
 						<Grid item xs={12}>
@@ -115,11 +136,11 @@ const ReceivedBeads = (props) => {
 								{
 									personalBeadsRecord.length === 0 
 									? '( No result )'
-									: personalBeadsRecord.map((record, index) => {
+									: personalBeadsRecord.map(record => {
 
 										const recordDate = record.Date.toDate()
-										const FromUser = initALLMemberData.filter(data => {
-											return data['Email'] === record.FromEmail || data['Email'] === record.ToEmail
+										const FromUser = record.FromUserID === "system" ? "system" : initALLMemberData.filter(data => {
+											return data.uid === record.FromUserID
 										}).map(data => data['UserName'])[0]
 
 										return (
@@ -160,10 +181,10 @@ const mapStateToProps = state => {
         isVerifying: state.auth.isVerifying,
         CurrentUser: state.auth.CurrentUser,
         initALLMemberData: state.auth.initALLMemberData,
-        isAdminAccount: state.auth.isAdminAccount,
-        initBookingData: state.auth.initBookingData,
-        cBoxShow: state.auth.cBoxShow,
-        bookingData: state.auth.BookingDateData,
+        // isAdminAccount: state.auth.isAdminAccount,
+        // initBookingData: state.auth.initBookingData,
+        // cBoxShow: state.auth.cBoxShow,
+        // bookingData: state.auth.BookingDateData,
 		deviceIsMobile: state.auth.deviceIsMobile,
 
 		// New feature

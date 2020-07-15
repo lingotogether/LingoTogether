@@ -41,17 +41,22 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                     alert('伺服器發生錯誤，請稍後再試')
                 })
             break
-        case 'getBookingByUid':
+        case 'getBookingByDate':
             db.collection('booking')
+                .where('Date', '==', DataID)
                 .get()
                 .then((querySnapshot) => {
-                    if(querySnapshot.docs.length < 1) {
+                    if (querySnapshot.docs.length < 1) {
                         CallBackFunction({ noData: true })
                     } else {
                         querySnapshot.forEach(doc => {
                             CallBackFunction(doc.data())
                         })
                     }
+                })
+                .catch(function(error) {
+                    console.log('Error getting documents: ', error)
+                    CallBackFunction({ noData: true })
                 })
             break
         case 'getMemberCardByEmail':
@@ -76,9 +81,28 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                     CallBackFunction({ noData: true })
                 })
             break
+        case 'getMemberCardByUserID':
+            db.collection('memberCard')
+                .where('uid', '==', DataID)
+                .get()
+                .then(function(querySnapshot) {
+                    if (querySnapshot.docs.length < 1) {
+                        CallBackFunction({ noData: true })
+                    } else {
+                        querySnapshot.forEach(function(doc) {
+                            CallBackFunction(doc.data())
+                        })
+                    }
+                })
+                .catch(function(error) {
+                    console.log('Error getting documents: ', error)
+                    CallBackFunction({ noData: true })
+                })
+            break
+
         // case 'receiveBeadsRecordData':
         //     db.collection('beadsRecord')
-        //         // .where('ToEmail', '==', DataID)
+        //         // .where('ToUserID', '==', DataID)
         //         .get()
         //         .then(function(querySnapshot) {
         //             if (querySnapshot.docs.length < 1) {
@@ -94,6 +118,7 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
         //             CallBackFunction({ noData: true })
         //         })
         //     break
+
         default:
             db.collection(collection)
                 .get()
