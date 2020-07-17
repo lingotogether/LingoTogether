@@ -122,11 +122,12 @@ const CardNoContent = (props) => {
                 questions: totalQ,
                 Title: iTitle,
                 PhotoOrVideo: iPhotoOrVideo,
-                Material: iMaterial,
+                Material: iMaterial === undefined ? "" : iMaterial,
                 time: timing,
                 maxParticipants: numberOfParticipants,
                 sysTime: isysTime,
-                isHost: true,
+                hostSettlement: false,
+                
                 classLv: selectLevel,
             },
             'SET'
@@ -140,11 +141,9 @@ const CardNoContent = (props) => {
     }
 
     const resetBookingData = d => {
-        console.log(748998713)
         dispatch(saveBookingData(d))
     }
     const resetMemberData = d => {
-        console.log(748998713)
         dispatch(saveALLMemberData(d))
     }
     const handleClickEditing = open => {
@@ -178,9 +177,9 @@ const CardNoContent = (props) => {
         type === 'Add' ? setAddQuestion(newArr) : setiQuestion(newArr)
     }
 
-    // 新增Question欄位
+    // 新增 Question 欄位
     const handleAddQuestionCol = e => {
-        //有空白不給新增
+        // 有空白不給新增
         let hasBlank = AddQuestion.indexOf('') === -1 ? false : true
 
         if (hasBlank) return

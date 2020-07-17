@@ -126,7 +126,7 @@ export const BookingDateData = BookingDateData => {
 };
 
 export const saveBookingData = initBookingData => {
-    // console.log('saveBookingData', initBookingData);
+    console.log('saveBookingData', initBookingData);
     return {
         type: SAVE_BOOKING_DATA,
         initBookingData,
@@ -134,8 +134,7 @@ export const saveBookingData = initBookingData => {
 };
 
 export const saveALLMemberData = initALLMemberData => {
-    // console.log('memberData有沒有進', initALLMemberData);
-    console.log('initALLMemberData', initALLMemberData);
+    console.log('saveALLMemberData', initALLMemberData);
     return {
         type: SAVE_ALL_MEMBER_DATA,
         initALLMemberData,
@@ -143,8 +142,7 @@ export const saveALLMemberData = initALLMemberData => {
 };
 
 export const saveBeadsRecordData = initBeadsRecord => {
-    // console.log('Aisu Test', initBeadsRecord);
-    console.log('initBeadsRecord', initBeadsRecord);
+    console.log('saveBeadsRecordData', initBeadsRecord);
     return {
         type: SAVE_BEADS_RECORD_DATA,
         initBeadsRecord,
@@ -162,12 +160,12 @@ export const deviceIsMobile = isMobile => {
 export const verifyAuth = () => dispatch => {
     dispatch(verifyRequest());
     myFirebase.auth().onAuthStateChanged(user => {
-        console.log(' dispatch(verifyRequest());  user', user);
+        console.log('dispatch(verifyRequest());  user: ', user);
         if (user !== null) {
             const receiveMemberData = data => {
                 if (!data.uid) {
                     data.uid = user.uid;
-                    hendleDBactions('memberCard', data.Email, data, 'UPDATE', receiveMemberData);
+                    hendleDBactions('memberCard', data.Email, data, 'UPDATE', );
                 }
                 dispatch(setCurrentUser({ ...user, memberData: data }));
             };

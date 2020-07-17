@@ -8,12 +8,14 @@ import Signup from './components/Signup'
 import Navbar from './components/NavBar'
 import TopHome from './TopHome'
 import ReceivedBeads from './components/PersonalPage/ReceivedBeads'
+import RewardHost from './components/PersonalPage/RewardHost'
 import MonthlyMission from './components/PersonalPage/MonthlyMission'
 import PracticeCalendar from './components/PersonalPage/PracticeCalendar'
 import { deviceIsMobile } from './actions/'
 
 import { hendleDBactions } from './actions/handleDB'
 import MemberList from './components/MemberList'
+
 let cx = require('classnames')
 
 function App(props) {
@@ -127,6 +129,13 @@ function App(props) {
                     exact
                     path="/received-beads"
                     component={ReceivedBeads}
+                    isAuthenticated={isAuthenticated}
+                    isVerifying={isVerifying}
+                />
+                <ProtectedRoute
+                    exact
+                    path="/reward-host"
+                    component={RewardHost}
                     isAuthenticated={isAuthenticated}
                     isVerifying={isVerifying}
                 />

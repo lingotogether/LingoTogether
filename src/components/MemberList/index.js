@@ -67,7 +67,7 @@ const MemberList = (props) => {
     const deleteMember = e => {
         const dom = e.target
         const Email = dom.getAttribute('data-email')
-        //改為保留資料 但更改狀態
+        // 改為保留資料 但更改狀態
         if (window.confirm('Are you sure you want to permanently delete this member?')) {
             hendleDBactions(
                 'memberCard',
