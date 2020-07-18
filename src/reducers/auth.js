@@ -151,7 +151,7 @@ export default (
         case SAVE_BEADS_RECORD_DATA:
             return {
                 ...state,
-                beadsRecordData: action.initBeadsRecord
+                beadsRecordData: action.initBeadsRecordData
             }
         case SAVE_PRIZE_DATA:
             return {

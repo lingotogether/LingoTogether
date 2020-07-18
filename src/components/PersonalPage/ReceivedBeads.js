@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import '../../style/VIPHome.scss'
 import '../../style/CalendarMain.scss'
 
+// New Feature
 import Pagination from '@material-ui/lab/Pagination';
 // import { hendleDBactions } from '../../actions/handleDB';
 // import * as firebase from 'firebase/app'
@@ -33,8 +34,6 @@ const ReceivedBeads = (props) => {
 		'In.',
 		'Adv.'
 	]
-
-	// console.log(initALLMemberData)
 
 	// for (let member of initALLMemberData) {
 	// 	hendleDBactions('memberCard', member.DataID, {

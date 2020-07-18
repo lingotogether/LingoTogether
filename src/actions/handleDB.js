@@ -1,5 +1,4 @@
 import { db } from '../firebase/firebase'
-import { resetAllBookingData } from './auth'
 
 export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunction) {
     const sfDocRef = DataID ? db.collection(collection).doc(DataID) : null
