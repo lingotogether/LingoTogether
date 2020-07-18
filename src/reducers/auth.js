@@ -15,7 +15,11 @@ import {
     CURRENT_USER,
     SAVE_ALL_MEMBER_DATA,
     SET_DEVICE,
-    SAVE_BEADS_RECORD_DATA, // New feature
+
+    // New feature
+    SAVE_BEADS_RECORD_DATA, 
+    SAVE_PRIZE_DATA, 
+
 } from '../actions/';
 
 export default (
@@ -37,7 +41,10 @@ export default (
         initALLMemberData: null,
         isAdminAccount: false,
         deviceIsMobile: false,
-        beadsRecordData: null, // New feature
+
+        // New feature
+        beadsRecordData: null, 
+        PrizeData: null, 
     },
     action
 ) => {
@@ -139,12 +146,19 @@ export default (
                 ...state,
                 deviceIsMobile: action.isMobile,
             };
+
         // New feature
         case SAVE_BEADS_RECORD_DATA:
             return {
                 ...state,
                 beadsRecordData: action.initBeadsRecord
             }
+        case SAVE_PRIZE_DATA:
+            return {
+                ...state,
+                PrizeData: action.initPrizeData
+            }
+
         default:
             return state;
     }

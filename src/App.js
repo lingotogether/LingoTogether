@@ -9,6 +9,7 @@ import Navbar from './components/NavBar'
 import TopHome from './TopHome'
 import ReceivedBeads from './components/PersonalPage/ReceivedBeads'
 import RewardHost from './components/PersonalPage/RewardHost'
+import PrizeExchange from './components/PersonalPage/PrizeExchange'
 import MonthlyMission from './components/PersonalPage/MonthlyMission'
 import PracticeCalendar from './components/PersonalPage/PracticeCalendar'
 import { deviceIsMobile } from './actions/'
@@ -19,7 +20,7 @@ import MemberList from './components/MemberList'
 let cx = require('classnames')
 
 function App(props) {
-    const { isAuthenticated, isVerifying, dispatch, CurrentUser } = props
+    const { isAuthenticated, isVerifying, dispatch, CurrentUser, } = props
     const [withMData, setWithMData] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
     const [noShow, setNoShow] = useState(true)
@@ -136,6 +137,13 @@ function App(props) {
                     exact
                     path="/reward-host"
                     component={RewardHost}
+                    isAuthenticated={isAuthenticated}
+                    isVerifying={isVerifying}
+                />
+                <ProtectedRoute
+                    exact
+                    path="/prize-exchange"
+                    component={PrizeExchange}
                     isAuthenticated={isAuthenticated}
                     isVerifying={isVerifying}
                 />

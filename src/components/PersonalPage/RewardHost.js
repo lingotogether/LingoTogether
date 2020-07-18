@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import '../../style/VIPHome.scss'
 import '../../style/CalendarMain.scss'
 
-import { saveALLMemberData } from '../../actions'
+import { CURRENT_USER, saveALLMemberData } from '../../actions'
 import { hendleDBactions } from '../../actions/handleDB';
 import * as firebase from 'firebase/app'
 
@@ -37,7 +37,7 @@ const RewardHost = (props) => {
 		const setCurrentUser = user => {
 			console.log('setCurrentUser', user);
 			return {
-				type: 'CURRENT_USER',
+				type: CURRENT_USER,
 				user,
 			}
 		}
@@ -182,7 +182,6 @@ const RewardHost = (props) => {
 							<Grid item xs={12}>
 								<span className='profile-content'>
 									{ 'You have: '}{ isNaN(totalPoint) ? 0 : totalPoint }{ ' beads' }
-									{/* { dayjs(formatedDate).format('MM/DD/YYYY') } */}
 								</span>
 							</Grid>
 							<Grid item xs={12}>

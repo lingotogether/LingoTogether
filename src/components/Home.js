@@ -24,7 +24,7 @@ const Home = (props) => {
                 props.CurrentUser.email,
                 '',
                 'getMemberCardByEmail',
-                (d) => console.log(d)
+                (data) => console.log('setCurrentUser: ', data)
             )
         setCurrentUser(props.CurrentUser)
     }, [props.cBoxShow, props.CurrentUser])

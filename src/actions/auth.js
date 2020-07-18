@@ -30,6 +30,7 @@ export const SET_DEVICE = 'SET_DEVICE';
 
 // New feature
 export const SAVE_BEADS_RECORD_DATA = 'SAVE_BEADS_RECORD_DATA';
+export const SAVE_PRIZE_DATA = 'SAVE_PRIZE_DATA';
 
 
 // Login methods
@@ -141,11 +142,19 @@ export const saveALLMemberData = initALLMemberData => {
     };
 };
 
-export const saveBeadsRecordData = initBeadsRecord => {
-    console.log('saveBeadsRecordData', initBeadsRecord);
+export const saveBeadsRecordData = initBeadsRecordData => {
+    console.log('saveBeadsRecordData', initBeadsRecordData);
     return {
         type: SAVE_BEADS_RECORD_DATA,
-        initBeadsRecord,
+        initBeadsRecordData,
+    };
+};
+
+export const savePrizeData = initPrizeData => {
+    console.log('savePrizeData', initPrizeData);
+    return {
+        type: SAVE_PRIZE_DATA,
+        initPrizeData,
     };
 };
 
@@ -170,7 +179,8 @@ export const verifyAuth = () => dispatch => {
                 dispatch(setCurrentUser({ ...user, memberData: data }));
             };
             chectCompleteInfo(user, receiveMemberData);
-            initBeadsRecord(dispatch);
+            initBeadsRecordData(dispatch);
+            initPrizeData(dispatch);
             dispatch(receiveLogin(user));
         } else {
             // alert('Please Sign up or Login');
@@ -194,11 +204,18 @@ const chectCompleteInfo = (user, receiveMemberData) => {
     hendleDBactions('memberCard', user.email, {}, 'getMemberCardByEmail', receiveMemberData);
 };
 
-const initBeadsRecord = dispatch => {
+const initBeadsRecordData = dispatch => {
     const receiveBeadsRecordData = ALLdata => {
         dispatch(saveBeadsRecordData(ALLdata));
     };
-    hendleDBactions('beadsRecord', '', {}, 'receiveBeadsRecordData', receiveBeadsRecordData);
+    hendleDBactions('beadsRecord', '', {}, '', receiveBeadsRecordData);
+};
+
+const initPrizeData = dispatch => {
+    const receivePrizeData = ALLdata => {
+        dispatch(savePrizeData(ALLdata));
+    };
+    hendleDBactions('prize', '', {}, '', receivePrizeData);
 };
 
 export const loginUser = (email, password) => dispatch => {

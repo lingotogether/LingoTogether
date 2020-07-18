@@ -129,8 +129,8 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                     
                     let initData = []
                     querySnapshot.forEach(doc => {
-                        const booked = doc.data() //obj
-                        initData.push({ ...booked, DataID: doc.id })
+                        const data = doc.data()
+                        initData.push({ ...data, DataID: doc.id })
                     })
 
                     CallBackFunction && CallBackFunction(initData)

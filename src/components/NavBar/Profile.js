@@ -50,6 +50,7 @@ const Profile = ({ CurrentUser, dispatch }) => {
 			>
 				<CustomMenuItem title="Received beads" to="/received-beads"/>
 				<CustomMenuItem title="Reward host" to="/reward-host"/>
+				<CustomMenuItem title="Prize exchange" to="/prize-exchange"/>
 				{
 					/*
 					TODO

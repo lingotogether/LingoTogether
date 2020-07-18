@@ -164,7 +164,7 @@ const ReceivedBeads = (props) => {
 								</tr>
 								{
 									showPersonalBeadsRecord.length === 0 
-									? '( No result )'
+									? '( No record )'
 									: showPersonalBeadsRecord.map(record => {
 
 										const recordDate = record.Date.toDate()
