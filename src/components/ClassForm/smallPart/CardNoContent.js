@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 const CardNoContent = (props) => {
     const { 
         Status, Title, date, PhotoOrVideo, Material, 
-        questions, CurrentUser, dispatch
+        questions, CurrentUser, dispatch, initBookingData
     } = props
 
     const classes = useStyles()
@@ -102,6 +102,23 @@ const CardNoContent = (props) => {
     const handleEditingSave = () => {
         let DataId = date.split('/').join('') + '-' + timing + '-' + CurrentUser.uid
         let isysTime = new Date(dayjs())
+        const bookings = initBookingData || []
+        const thisDateBookings = bookings.filter(booking => booking.date === date)
+
+        //Section limit check (three per date)
+        if(thisDateBookings.length >= 3) {
+            return alert('There are already have three sections today.')
+        }
+
+        //Time conflict check
+        if(thisDateBookings.map(booking => booking.time).includes(timing)) {
+            return alert('This time has already been taken.')
+        }
+
+        //Class level conflict check
+        if(thisDateBookings.map(booking => booking.classLv).includes(selectLevel)) {
+            return alert('This level has already been taken.')
+        }
 
         setEditing(false)
 

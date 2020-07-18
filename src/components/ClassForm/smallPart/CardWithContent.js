@@ -68,6 +68,7 @@ export default function CardWithContent(props) {
         dispatch,
         isAdminAccount,
         whoJoinEmail,
+        initBookingData
     } = props
 
     const classes = useStyles()
@@ -217,6 +218,15 @@ export default function CardWithContent(props) {
     }
 
     const handleEditingSave = () => {
+
+        const bookings = initBookingData || []
+        const thisDateBookings = bookings.filter(booking => booking.date === date)        
+
+        //Time conflict check
+        if(iTime !== time && thisDateBookings.map(booking => booking.time).includes(iTime)) {
+            return alert('This time has already been taken.')
+        }
+
         setEditing(false)
         hendleDBactions(
             'booking',

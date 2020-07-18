@@ -32,48 +32,64 @@ export const CreateTable = (
         for (let i = 1; i < totalD + 1; i++) {
             let hasDetail = false
             let saveJ
+            let saveJArray = []
             for (let j = 0; j < ThisMonthDetails.length; j++) {
                 //和本月資料比對是否有相同
                 let hasDate = Number(ThisMonthDetails[j].date.split('/')[2])
                 if (hasDate === i) {
                     hasDetail = true
                     saveJ = j
+                    saveJArray.push(j)
                 }
             }
+            saveJArray.sort((a, b) => ThisMonthDetails[a].time - ThisMonthDetails[b].time)
             if (hasDetail) {
-                let item = ThisMonthDetails[saveJ]
-
-                let dd = item.date.split('/') //dd is arr
-                let W = new Date(item.date).getDay()
+                let W = new Date(ThisMonthDetails[saveJ].date).getDay()
+                let thisDD = activeYYYYMM.slice(0, 4) + '/' + activeYYYYMM.slice(4, 7) + '/' + (i < 10 ? '0' + i : i)
                 table.push(
                     <li
-                        className={`oneDate  ${activeID === dd[2] ? 'active' : ''} ${
+                        className={`oneDate  ${activeID === i ? 'active' : ''} ${
                             isList ? 'calendars_listmode' : 'calendars_daymode'
-                        } `}
-                        key={`date${dd[2]}`}
-                        id={dd[2]}
-                        data-index={saveJ}
-                        onClick={e => onClickDate(e)}
+                        } hasDate`}
+                        key={`date${i}`}
+                        id={i}
                     >
                         <div className="inner-li">
-                            <div className="li-left">
-                                {Number(dd[2])}
+                            <div 
+                                className="li-left"
+                                onClick={e => onClickDate(e, thisDD)}
+                            >
+                                {Number(i)}
                                 <span className="weekday">{`${isList ? weekday[W] : ''}`}</span>
                             </div>
                             <div className="li-middle">
                                 <div className="content">
-                                    <span>{parseTime(item.time)}</span>
-
-                                    <span>
-                                        [{item.CreateUserName}]{item.Title}
-                                    </span>
-                                </div>
-                                <div
-                                    className={`btn-deco 
-                                    ${item.classLv === 0 ? 'green' : ''}  
-                                    ${item.classLv === 2 ? 'yellow' : ''}`}
-                                >
-                                    {level[item.classLv]}
+                                {
+                                    saveJArray.map((thisDate, index) => {
+                                        let item = ThisMonthDetails[thisDate]
+                                        return (
+                                            <span
+                                                className="content-item"
+                                                data-index={thisDate}
+                                                onClick={e => onClickDate(e)}
+                                                key={index}
+                                            >
+                                                <div
+                                                    className={`btn-deco 
+                                                    ${item.classLv === 0 ? 'green' : ''}  
+                                                    ${item.classLv === 2 ? 'yellow' : ''}`}
+                                                >
+                                                    {level[item.classLv]}
+                                                </div>{' '}
+                                                {
+                                                    isList 
+                                                    ? `[${item.CreateUserName}] ${parseTime(item.time)} ${item.Title}`
+                                                    : parseTime(item.time)
+                                                }
+                                            </span>
+                                        )
+                                    })
+                                }
                                 </div>
                             </div>
                         </div>

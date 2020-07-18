@@ -160,6 +160,9 @@ header {
     .oneDate {
         overflow: hidden;
     }
+    .oneDate.hasDate {
+        pointer-events: none;
+    }
     .oneDate.calendars_daymode {
         width: calc(100% / 7);
         height: 100px;
@@ -168,12 +171,14 @@ header {
         .inner-li {
             position: relative;
             height: 100px;
+            overflow: auto !important;
             .li-left {
+                pointer-events: auto;
                 color: #000;
             }
             .li-middle {
+                pointer-events: auto;
                 .btn-deco {
-                    position: absolute;
                     top: 0;
                     right: 0;
                     background: $iconLabelOrange;
@@ -193,7 +198,10 @@ header {
                     display: flex;
                     flex-direction: column;
                     position: absolute;
-                    top: 40%;
+                    top: 30%;
+                    .content-item {
+                        z-index: 999;
+                    }
                 }
             }
             .li-right {
@@ -259,6 +267,9 @@ header {
                 .content {
                     margin-top: 3px;
                     margin-bottom: 2px;
+                    .content-item {
+                        pointer-events: auto !important;
+                    }
                 }
                 span {
                     margin-right: 30px;
@@ -271,7 +282,7 @@ header {
                     border-radius: 3px;
                     font-weight: 700;
                     font-size: 14px;
-                    // position: absolute;
+                    display: inline;
                     width: 45px;
                     &.green {
                         background: $color2;
