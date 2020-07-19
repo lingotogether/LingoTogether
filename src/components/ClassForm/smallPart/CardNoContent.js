@@ -127,6 +127,8 @@ const CardNoContent = (props) => {
                 maxParticipants: numberOfParticipants,
                 sysTime: isysTime,
                 hostSettlement: false,
+                whoJoin: [],
+                whoJoinEmail: [],
                 
                 classLv: selectLevel,
             },

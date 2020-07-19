@@ -230,7 +230,7 @@ export default function CardWithContent(props) {
                 questions: iQuestion,
                 Title: iTitle,
                 PhotoOrVideo: iPhotoOrVideo,
-                Material: iMaterial,
+                Material: iMaterial === undefined ? "" : iMaterial,
                 maxParticipants: iNumberOfParticipants,
                 time: iTime
             },

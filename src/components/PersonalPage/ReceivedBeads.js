@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { connect } from 'react-redux'
 import dayjs from 'dayjs'
 import { Grid } from '@material-ui/core'
@@ -109,29 +109,33 @@ const ReceivedBeads = (props) => {
 	// demo()
 
 
-	const personalBeadsRecord = beadsRecordData.filter(record => {
+	// Bead records data
+	let personalBeadsRecord = beadsRecordData.filter(record => {
 		return record.FromUserID === CurrentUser.uid || record.ToUserID === CurrentUser.uid
 	})
+	personalBeadsRecord.sort((a, b) => {
+		return b.Date - a.Date
+	})
 
-	const {
-		JoinDate,
-		Bead
-	} = CurrentUser.memberData
+	const totalPoint = CurrentUser.memberData.Bead
+	const formatedDate = CurrentUser.memberData.JoinDate ? CurrentUser.memberData.JoinDate.toDate() : null
+
 	
-	const totalPoint = Bead
-	const formatedDate = JoinDate ? JoinDate.toDate() : null
+	// Pagination data & functions
+    const [page, setPage] = useState(1)
+    const [rowsPerPage, setRowsPerPage] = useState(10)
+	const totalPage = Math.ceil(personalBeadsRecord.length / rowsPerPage)
+	let showPersonalBeadsRecord = personalBeadsRecord.slice((page-1) * rowsPerPage, page * rowsPerPage);
 
-	// Pagination start
-	const totalPage = Math.ceil(personalBeadsRecord.length / 5)
-	const [page, setPage] = React.useState(1);
-
-	// Load PersonalBeadsRecord according to which page
-	let showPersonalBeadsRecord = personalBeadsRecord.slice( (page-1)*5, page*5 );
-	const handleChange = (event, value) => {
+	const handleChangePage = (event, value) => {
 		setPage(value);
-		showPersonalBeadsRecord = personalBeadsRecord.slice( (page-1)*5, page*5-4 )
+		showPersonalBeadsRecord = personalBeadsRecord.slice((page-1) * rowsPerPage, page * rowsPerPage)
 	};
-	// Pagination end
+	// const handleChangeRowsPerPage = (event) => {
+    //     setRowsPerPage(+event.target.value)
+    //     setPage(1)
+    // }
+
 
 	return (
 		<Fragment>
@@ -176,7 +180,7 @@ const ReceivedBeads = (props) => {
 												<td>
 													{ dayjs(recordDate).format('MM/DD/YYYY') }
 													<br/>
-													{ dayjs(recordDate).format('hh:mm') }
+													{ dayjs(recordDate).format('hh:mm a') }
 												</td>
 												<td>{ record.Bead }</td>
 												<td>
@@ -196,10 +200,17 @@ const ReceivedBeads = (props) => {
 							</table>
 						</Grid>
 
-						{/* Pagination */}
-						<div class="center">
-							<Pagination count={totalPage} size="large" page={page} onChange={handleChange} />
-						</div>
+						<Grid item xs={12}>
+							<div>
+								<Pagination
+									size="large"
+									count={ totalPage }
+									page={ page }
+									onChange={ handleChangePage }
+									style={{ alignContent: "center" }}
+								/>
+							</div>
+						</Grid>
 
 					</Grid>
 				</div>

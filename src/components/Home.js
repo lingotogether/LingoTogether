@@ -73,6 +73,10 @@ const Home = (props) => {
 
         const bookingTime = 
             dayjs()
+                .year(booking.date.substring(0, 4))
+                .month(booking.date.substring(5, 7))
+                .date(booking.date.substring(8, 10))
+                .subtract(1, 'month')
                 .hour(booking.time.substring(0, 2))
                 .minute(booking.time.substring(2, 4))
                 .second('0')
@@ -81,16 +85,6 @@ const Home = (props) => {
         const EndLimitTime = bookingTime.add(20, 'minute')
         const currentTime = dayjs()
         // const currentTime = dayjs().hour(22).minute(17) // For testing
-
-        const bookingDate = 
-                dayjs()
-                    .year(booking.date.substring(0, 4))
-                    .month(booking.date.substring(5, 7))
-                    .date(booking.date.substring(8, 10))
-                    .subtract(1, 'month')
-					.hour(booking.time.substring(0, 2))
-                    .minute(booking.time.substring(2, 4))
-                    .second(0)
 
         let status = ""
         // Early
@@ -130,8 +124,8 @@ We will take 20 beads away from you as a punishment.')
                     })[0]
 
                     hendleDBactions('beadsRecord',
-                        bookingDate.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + hostMemberData.uid, {
-                            Date: firebase.firestore.Timestamp.fromMillis(bookingDate.valueOf()),
+                        bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + hostMemberData.uid, {
+                            Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
                             Level: booking.classLv,
                             Bead: -30,
                             Title: "Being a host",
@@ -168,8 +162,8 @@ We will take 20 beads away from you as a punishment.')
                         })[0]
                         
                         hendleDBactions('beadsRecord',
-                            bookingDate.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + participantMemberData.uid, {
-                                Date: firebase.firestore.Timestamp.fromMillis(bookingDate.valueOf()),
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + participantMemberData.uid, {
+                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
                                 Level: booking.classLv,
                                 Bead: -20,
                                 Title: "Being a participant",
@@ -223,8 +217,8 @@ We will take 20 beads away from you as a punishment.')
                         })[0]
     
                         hendleDBactions('beadsRecord',
-                            bookingDate.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + hostMemberData.uid, {
-                                Date: firebase.firestore.Timestamp.fromMillis(bookingDate.valueOf()),
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + hostMemberData.uid, {
+                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
                                 Level: booking.classLv,
                                 Bead: 20,
                                 Title: "Being a host",
@@ -260,8 +254,8 @@ We will take 20 beads away from you as a punishment.')
                         })[0]
                         
                         hendleDBactions('beadsRecord',
-                            bookingDate.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + participantMemberData.uid, {
-                                Date: firebase.firestore.Timestamp.fromMillis(bookingDate.valueOf()),
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + participantMemberData.uid, {
+                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
                                 Level: booking.classLv,
                                 Bead: 10,
                                 Title: "Being a participant",
@@ -313,8 +307,8 @@ You can get 20 beads for reward only if you host punctually!')
                         })[0]
     
                         hendleDBactions('beadsRecord',
-                            bookingDate.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + hostMemberData.uid, {
-                                Date: firebase.firestore.Timestamp.fromMillis(bookingDate.valueOf()),
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + hostMemberData.uid, {
+                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
                                 Level: booking.classLv,
                                 Bead: 0,
                                 Title: "Being a host",
@@ -351,8 +345,8 @@ You can get 10 beads for reward only if you participate punctually!')
                         })[0]
                         
                         hendleDBactions('beadsRecord',
-                            bookingDate.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + participantMemberData.uid, {
-                                Date: firebase.firestore.Timestamp.fromMillis(bookingDate.valueOf()),
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + participantMemberData.uid, {
+                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
                                 Level: booking.classLv,
                                 Bead: 0,
                                 Title: "Being a participant",

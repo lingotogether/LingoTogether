@@ -48,13 +48,13 @@ const Profile = ({ CurrentUser, dispatch }) => {
 				open={Boolean(anchorEl)}
 				onClose={() => setAnchorEl(null)}
 			>
+				<CustomMenuItem title="Practice calender" to="/practice-calendar"/>
 				<CustomMenuItem title="Received beads" to="/received-beads"/>
 				<CustomMenuItem title="Reward host" to="/reward-host"/>
 				<CustomMenuItem title="Prize exchange" to="/prize-exchange"/>
 				{
 					/*
 					TODO
-						<CustomMenuItem title="Practice calender" to="/practice-calendar"/>
 						<CustomMenuItem title="Monthly mission" to="/monthly-mission"/>
 						<CustomMenuItem title="Settings" to="/" disabled={true}/>						
 					*/
