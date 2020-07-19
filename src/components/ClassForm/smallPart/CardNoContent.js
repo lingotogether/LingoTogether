@@ -100,7 +100,7 @@ const CardNoContent = (props) => {
     }
 
     const handleEditingSave = () => {
-        let DataId = date.split('/').join('') + '-' + timing + '-' + CurrentUser.uid
+        let DataId = date.split('/').join('') + '-' + timing + '-' + CurrentUser.uid + selectLevel
         let isysTime = new Date(dayjs())
         const bookings = initBookingData || []
         const thisDateBookings = bookings.filter(booking => booking.date === date)
@@ -108,11 +108,6 @@ const CardNoContent = (props) => {
         //Section limit check (three per date)
         if(thisDateBookings.length >= 3) {
             return alert('There are already have three sections today.')
-        }
-
-        //Time conflict check
-        if(thisDateBookings.map(booking => booking.time).includes(timing)) {
-            return alert('This time has already been taken.')
         }
 
         //Class level conflict check
