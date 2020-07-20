@@ -460,10 +460,10 @@ You can get 10 beads for reward only if you participate punctually!')
                             <img src={require('../img/Ba_room.png')} alt="basic" />
                         </li>
                         <li onClick={() => skOnclick(1)}>
-                            <img src={require('../img/In_room.png')} alt="m" />
+                            <img src={require('../img/In_room.png')} alt="intermediate" />
                         </li>
                         <li onClick={() => skOnclick(2)}>
-                            <img src={require('../img/Adv_room.png')} alt="a" />
+                            <img src={require('../img/Adv_room.png')} alt="advance" />
                         </li>
                     </ul>
                 </div>

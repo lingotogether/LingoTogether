@@ -302,7 +302,7 @@ const CardNoContent = (props) => {
                             )
                         })
                     }
-                    </select>                 
+                    </select>
                 </div>
 
                 <div className={'levelSelector'}>

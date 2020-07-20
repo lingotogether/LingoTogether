@@ -7,8 +7,9 @@ import '../../style/VIPHome.scss'
 import '../../style/CalendarMain.scss'
 
 import Pagination from '@material-ui/lab/Pagination';
-import { CURRENT_USER, saveALLMemberData, savePrizeData } from '../../actions'
+import { CURRENT_USER, saveALLMemberData, saveBeadsRecordData, savePrizeData } from '../../actions'
 import { hendleDBactions } from '../../actions/handleDB';
+import * as firebase from 'firebase/app'
 
 
 const cx = require('classnames')
@@ -56,25 +57,39 @@ const ReceivedBeads = (props) => {
 		dispatch(savePrizeData(newData))
 	}
 
+	const resetBeadsRecord = newData => {
+		dispatch(saveBeadsRecordData(newData))
+	}
+
+
+	let sortedPrizeData = PrizeData
+	sortedPrizeData = sortedPrizeData.sort((a, b) => {
+		return b.DataID - a.DataID
+	})
 
 	// Pagination start
-	const totalPage = Math.ceil(PrizeData.length / 5)
+	const totalPage = Math.ceil(sortedPrizeData.length / 5)
 	const [page, setPage] = useState(1);
 
 	// Load PersonalBeadsRecord according to which page
-	let pagePrizeData = PrizeData.slice( (page-1)*5, page*5 );
+	let pagePrizeData = sortedPrizeData.slice( (page-1)*5, page*5 );
 	const handleChange = (event, value) => {
 		setPage(value);
-		pagePrizeData = PrizeData.slice( (page-1)*5, page*5-4 )
+		pagePrizeData = sortedPrizeData.slice( (page-1)*5, page*5-4 )
 	};
 	// Pagination end
 
 
 	const ExchangePrize = value => {
-
+		
 		const prize = PrizeData.filter(data => {
 			return data.DataID === value
 		})[0]
+
+		if (prize.Cost > CurrentUser.memberData.Bead) {
+			alert('Your beads is not enough to exchange this prize.')
+			return
+		}
 
 		hendleDBactions('prize',
 			prize.DataID, {
@@ -83,6 +98,19 @@ const ReceivedBeads = (props) => {
 				ExchangeUserID: [ ...prize.ExchangeUserID, CurrentUser.uid ], 
 			}, 'UPDATE',
 			hendleDBactions('prize', '', {}, '', resetPrizeData)
+		)
+           
+		hendleDBactions('beadsRecord',
+			dayjs().format('YYYYMMDD-HHmmss-') + 'exchangePrize-' + CurrentUser.uid, {
+				Date: firebase.firestore.Timestamp.fromMillis(dayjs().valueOf()),
+				Level: 3,
+				Bead: (prize.Cost * -1),
+				Title: "Prize exchange",
+				Status: prize.Title,
+				FromUserID: "system",
+				ToUserID: CurrentUser.uid,
+			}, 'SET',
+			hendleDBactions('beadsRecord', '', {}, '', resetBeadsRecord)
 		)
 
 		hendleDBactions('memberCard',
@@ -95,6 +123,8 @@ const ReceivedBeads = (props) => {
 				hendleDBactions('memberCard', '', {}, '', resetMemberData)
 			}
 		)
+
+		alert('Please check your email for more details.')
 	}
 
 	const AddPrize = () => {

@@ -80,41 +80,23 @@ function App(props) {
                         </a>
                     </div>
                     {
-                        /*
-                        isAuthenticated && (
-                            <Fragment>
-                                <div className="beads">
-                                    Host Beads<br/>
-                                    <span className="score">
-                                        { CurrentUser ? CurrentUser.memberData.HostPoint || 0 : 0 } pts
-                                    </span>
+                        isMobile ? (
+                            <div className="mNavbar">
+                                <ul className="hamberIconContainer">
+                                    <li onClick={() => setNoShow(!noShow)}>
+                                        <div className="hamberBorder">
+                                            <i className="fas fa-bars"></i>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div className={cx('BarHiddenPart', { noShow: noShow })}>
+                                    <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} />
                                 </div>
-                                <div className="beads">
-                                    Gained Beads<br/>
-                                    <span className="score">
-                                        { CurrentUser ? CurrentUser.memberData.GainedPoint || 0 : 0 } pts
-                                    </span>
-                                </div>
-                            </Fragment>
-                        )
-                        */
-                    }
-                    {isMobile ? (
-                        <div className="mNavbar">
-                            <ul className="hamberIconContainer">
-                                <li onClick={() => setNoShow(!noShow)}>
-                                    <div className="hamberBorder">
-                                        <i className="fas fa-bars"></i>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div className={cx('BarHiddenPart', { noShow: noShow })}>
-                                <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} />
                             </div>
-                        </div>
-                    ) : (
-                        <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} />
-                    )}
+                        ) : (
+                            <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} />
+                        )
+                    }
                 </nav>
             </div>
 

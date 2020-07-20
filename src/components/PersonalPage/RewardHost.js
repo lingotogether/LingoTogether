@@ -201,7 +201,7 @@ const RewardHost = (props) => {
 									min={0}
 									max={ isNaN(totalPoint) || totalPoint < 0 ? 0 : totalPoint }
 								/>
-								<button type="button" onClick={rewardHost}>打賞</button>
+								<button type="button" onClick={rewardHost}>Donate</button>
 
 							</Grid>
 						</Grid>
