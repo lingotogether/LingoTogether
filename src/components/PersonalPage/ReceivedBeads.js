@@ -174,17 +174,17 @@ const ReceivedBeads = (props) => {
 									<span style={{ fontSize: 26 }}>{ mostBeadMemberData[0].UserName }</span><br/>
 									<span style={{ fontSize: 20 }}>({ mostBeadMemberData[0].Email.slice(0, mostBeadMemberData[0].Email.indexOf("@")) })</span>
 								</div>
-								<div className='fisrt-place-bead'><span style={{ fontSize: 30 }}>{ mostBeadMemberData[0].Bead }</span></div>
+								<div className='fisrt-place-bead'><span style={{ fontSize: 50 }}>{ mostBeadMemberData[0].Bead }</span></div>
 								<div className='second-place-user'>
 									<span style={{ fontSize: 26 }}>{ mostBeadMemberData[1].UserName }</span><br/>
 									<span style={{ fontSize: 20 }}>({ mostBeadMemberData[1].Email.slice(0, mostBeadMemberData[1].Email.indexOf("@")) })</span>
 								</div>
-								<div className='second-place-bead'><span style={{ fontSize: 30 }}>{ mostBeadMemberData[1].Bead }</span></div>
+								<div className='second-place-bead'><span style={{ fontSize: 50 }}>{ mostBeadMemberData[1].Bead }</span></div>
 								<div className='third-place-user'>
 									<span style={{ fontSize: 26 }}>{ mostBeadMemberData[2].UserName }</span><br/>
 									<span style={{ fontSize: 20 }}>({ mostBeadMemberData[2].Email.slice(0, mostBeadMemberData[2].Email.indexOf("@")) })</span>
 								</div>
-								<div className='third-place-bead'><span style={{ fontSize: 30 }}>{ mostBeadMemberData[2].Bead }</span></div>
+								<div className='third-place-bead'><span style={{ fontSize: 50 }}>{ mostBeadMemberData[2].Bead }</span></div>
 							</div>
 						</Grid>
 
