@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }))
 
-const ReceivedBeads = (props) => {
+const BeadsExchange = (props) => {
 
 	const {
 		dispatch, CurrentUser, deviceIsMobile, 
@@ -156,7 +156,7 @@ const ReceivedBeads = (props) => {
 					<Grid container spacing={1}>
 						<Grid item xs={12}>
 							<h1 className='profile-title'>
-								Prize Exchange
+								Beads Exchange
 							</h1>
 						</Grid>
 						{
@@ -198,6 +198,12 @@ const ReceivedBeads = (props) => {
 										id="prize-amount"
 										defaultValue={5}
 										min={0}
+									/><br/>
+									<label>Photo: </label>
+									<input
+										type="file"
+										id="prize-photo"
+										accept="image/*"
 									/><br/>
 									<button type="button" onClick={AddPrize}>新增獎項</button>
 								</Grid>
@@ -277,4 +283,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(ReceivedBeads)
+export default connect(mapStateToProps)(BeadsExchange)

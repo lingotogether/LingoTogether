@@ -5,6 +5,7 @@ import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import '../../style/VIPHome.scss'
 import '../../style/CalendarMain.scss'
+import '../../style/ReceivedBeads.scss'
 
 // New Feature
 import Pagination from '@material-ui/lab/Pagination';
@@ -56,7 +57,7 @@ const ReceivedBeads = (props) => {
 	const totalPoint = CurrentUser.memberData.Bead
 	const formatedDate = CurrentUser.memberData.JoinDate ? CurrentUser.memberData.JoinDate.toDate() : null
 
-
+	
 	// Pagination data & functions
     const [page, setPage] = useState(1)
     const [rowsPerPage, setRowsPerPage] = useState(10)
@@ -70,8 +71,8 @@ const ReceivedBeads = (props) => {
 	// const handleChangeRowsPerPage = (event) => {
     //     setRowsPerPage(+event.target.value)
     //     setPage(1)
-	// }
-	
+    // }
+
 
 	// Fix database
 	// for (let member of initALLMemberData) {
@@ -164,10 +165,10 @@ const ReceivedBeads = (props) => {
 								{' beads have received since '}
 								{ dayjs(formatedDate).format('MM/DD/YYYY') }
 							</span>
-						</Grid>
+						</Grid>						
 
 						<Grid item xs={12}>
-							<h2>Bead ranking</h2>
+							<h2>Beads ranking</h2>
 							<div className='img-container' style={{ width: 600, marginTop: 50 }}>
 								<img src={require('../../img/ranking.png')} style={{ width: "100%" }}/>
 								<div className='fisrt-place-user'>
@@ -212,42 +213,39 @@ const ReceivedBeads = (props) => {
 										return (
 											<tr className="row">
 												<td>
-													{ dayjs(recordDate).format('MM/DD/YYYY') }
-													<br/>
-													{ dayjs(recordDate).format('hh:mm a') }
+													<div className="record-Date">
+														{ dayjs(recordDate).format('MM/DD/YYYY') }
+														<br/>
+														{ dayjs(recordDate).format('hh:mm a') }
+													</div>
 												</td>
-												<td>{ record.Bead }</td>
+												<td><div className="record-Bead">{ record.Bead }</div></td>
 												<td>
 												{
 													record.Level === 3 ? '' : 
-													<div
-														className={`btn-deco 
+													<div className={`btn-deco 
 														${record.Level === 0 ? 'green' : ''}  
 														${record.Level === 2 ? 'yellow' : ''}`}
 													>{ classLvMap[record.Level] }</div>
 												}
 												</td>
-												<td>{ record.Title }</td>
-												<td>{ record.Status }</td>
-												<td>{ FromUser }</td>
+												<td><div className="record-Title">{ record.Title }</div></td>												
+												<td><div className="record-Status">{ record.Status }</div></td>	
+												<td><div className="record-FromUser">{ FromUser }</div></td>
 											</tr>
 										)
 									})
 								}
 							</table>
 						</Grid>
-
-						<Grid item xs={12}>
-							<div>
-								<Pagination
-									size="large"
-									count={ totalPage }
-									page={ page }
-									onChange={ handleChangePage }
-									style={{ alignContent: "center" }}
-								/>
-							</div>
-						</Grid>
+						<div className="center">
+							<Pagination
+								size="large"
+								count={ totalPage }
+								page={ page }
+								onChange={ handleChangePage }
+							/>
+						</div>
 
 					</Grid>
 				</div>

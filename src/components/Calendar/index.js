@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { CreateTable, createMonthBar, createWeekTable } from './createTable';
 import { filterDetials, checkDate, filterMonthsWithData, completeMonthArr } from './filterTools';
 import { cBoxController, BookingDateData } from '../../actions';
 import '../../style/CalendarMain.scss';
 
-// let dayjs = require('dayjs');
+
 function Calendar(props) {
-    const { useState, useEffect } = React;
+
     const { initBookingData, dispatch } = props;
     const today = new Date();
     const year = today.getFullYear();
@@ -27,9 +27,9 @@ function Calendar(props) {
         'November',
         'December',
     ];
-    const [isList, setIsList] = useState(false);
-    const [inputFall, setInputFall] = useState(false);
 
+    // const [isList, setIsList] = useState(false);
+    const [inputFall, setInputFall] = useState(false);
     const [activeID, setActiveID] = useState('');
     const [monthBarArr, setMonthBarArr] = useState([]);
     const [initYearMonth] = useState(year + '' + month);
@@ -52,7 +52,6 @@ function Calendar(props) {
     const getDate = () => {
         if (initBookingData) {
             setInputFall(true);
-
             filterMonths(initBookingData); // SetInitMonthData
         } else {
             setInputFall(true);
@@ -76,23 +75,23 @@ function Calendar(props) {
         setThisMonthDetails(detail);
     };
 
-    const filterMonths = data => {
+    const filterMonths = bookingData => {
         // 檢查初始日期格式
         let reg = /\d{4}(0[1-9]|1[0-2])$/;
         let regExp = new RegExp(reg);
         if (!regExp.test(initYearMonth)) {
             alert('初始日期格式或資料不正確，請使用有效日期並以 YYYYMM 格式輸入');
         }
-        let withVolidDate = !checkDate(data);
+        let withVolidDate = !checkDate(bookingData);
 
         if (withVolidDate) {
-            filterMonthsWithData(data, initYearMonth, SetInitMonthData);
-            CreateTable(activeYYYYMM, ThisMonthDetails, activeID, isList, weekday, onClickDate);
+            filterMonthsWithData(bookingData, initYearMonth, SetInitMonthData);
+            CreateTable(activeYYYYMM, ThisMonthDetails, activeID, onClickDate);
         } else {
             alert('資料日期格式不正或非有效日期，獲取資料失敗，正確格式為：YYYY/MM/DD');
             setCurrentYearMonthIndex(1);
             setThisMonthDetails([]);
-            setDirtyDate(data);
+            setDirtyDate(bookingData);
             setInputFall(true);
         }
     };
@@ -175,13 +174,10 @@ function Calendar(props) {
     };
 
     return (
-        <div className="calendar" style={{paddingTop: '50px'}}>
+        <div className="calendar" style={{ paddingTop: '50px' }}>
             {props.CurrentUser ? (
                 <header>
-                    <a className="bt_ftsp" onClick={() => setIsList(!isList)}>
-                        <i className={` ${!isList ? 'fas fa-list-ul' : 'far fa-calendar-minus'}`} />
-                        {` ${!isList ? 'List Mode' : 'Calendar Mode'}`}
-                    </a>
+                    <div style={{ textAlign: "center" }}>{ '( Based on your time zone )' }</div>
                 </header>
             ) : null}
             <div className="monthBar">
@@ -208,17 +204,15 @@ function Calendar(props) {
                     </a>
                 ) : null}
             </div>
-            <div className={`weekdays ${isList ? 'noShow' : ''}`}>
-                <ul>{createWeekTable(weekday)}</ul>
+            <div className='weekdays'>
+                <ul>{ createWeekTable(weekday) }</ul>
             </div>
             <div className="table">
-                <ul className={isList ? 'calendars_listmode' : 'calendars_daymode'}>
+                <ul className='calendars_daymode'>
                     {CreateTable(
                         activeYYYYMM,
                         ThisMonthDetails,
                         activeID,
-                        isList,
-                        weekday,
                         onClickDate
                     )}
                 </ul>

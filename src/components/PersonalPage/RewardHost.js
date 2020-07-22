@@ -5,6 +5,7 @@ import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import '../../style/VIPHome.scss'
 import '../../style/CalendarMain.scss'
+import '../../style/RewardHost.scss'
 
 import { CURRENT_USER, saveALLMemberData } from '../../actions'
 import { hendleDBactions } from '../../actions/handleDB';
@@ -148,8 +149,8 @@ const RewardHost = (props) => {
 							</Grid>
 							<Grid item xs={12}>
 
-								<h2>You haven't join any meeting before yet</h2>
-								<h4>Only participants of the meeting can encourage it's host.</h4>
+								<h2>You haven't joined any meeting yet</h2>
+								<h4>Only participants of the meeting can encourage his host.</h4>
 
 							</Grid>
 						</Grid>
@@ -201,7 +202,9 @@ const RewardHost = (props) => {
 									min={0}
 									max={ isNaN(totalPoint) || totalPoint < 0 ? 0 : totalPoint }
 								/>
-								<button type="button" onClick={rewardHost}>Donate</button>
+								<button type="button" class="button" onClick={rewardHost}>
+									<span>Donate</span>
+								</button>
 
 							</Grid>
 						</Grid>

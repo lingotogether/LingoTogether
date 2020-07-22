@@ -9,7 +9,7 @@ import Navbar from './components/NavBar'
 import TopHome from './TopHome'
 import ReceivedBeads from './components/PersonalPage/ReceivedBeads'
 import RewardHost from './components/PersonalPage/RewardHost'
-import PrizeExchange from './components/PersonalPage/PrizeExchange'
+import BeadsExchange from './components/PersonalPage/BeadsExchange'
 import MonthlyMission from './components/PersonalPage/MonthlyMission'
 import PracticeCalendar from './components/PersonalPage/PracticeCalendar'
 import { deviceIsMobile } from './actions/'
@@ -124,8 +124,8 @@ function App(props) {
                 />
                 <ProtectedRoute
                     exact
-                    path="/prize-exchange"
-                    component={PrizeExchange}
+                    path="/beads-exchange"
+                    component={BeadsExchange}
                     isAuthenticated={isAuthenticated}
                     isVerifying={isVerifying}
                 />

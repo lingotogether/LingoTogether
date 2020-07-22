@@ -1,13 +1,13 @@
 import React from 'react'
 import { parseTime } from '../../utils/helpers'
 
+
 const level = ['Ba.', 'In.', 'Adv.']
+
 export const CreateTable = (
     activeYYYYMM,
     ThisMonthDetails,
     activeID,
-    isList,
-    weekday,
     onClickDate
 ) => {
     if (!activeYYYYMM) {
@@ -24,7 +24,7 @@ export const CreateTable = (
             table.push(
                 <li
                     key={'blankP' + i}
-                    className={`oneDate ${isList ? 'noShow' : 'calendars_daymode'}  gray-blank`}
+                    className='oneDate calendars_daymode gray-blank'
                     id={'blank' + i}
                 />
             )
@@ -47,9 +47,7 @@ export const CreateTable = (
                 let W = new Date(item.date).getDay()
                 table.push(
                     <li
-                        className={`oneDate  ${activeID === dd[2] ? 'active' : ''} ${
-                            isList ? 'calendars_listmode' : 'calendars_daymode'
-                        } `}
+                        className={`oneDate  ${activeID === dd[2] ? 'active' : ''} calendars_daymode`}
                         key={`date${dd[2]}`}
                         id={dd[2]}
                         data-index={saveJ}
@@ -58,22 +56,21 @@ export const CreateTable = (
                         <div className="inner-li">
                             <div className="li-left">
                                 {Number(dd[2])}
-                                <span className="weekday">{`${isList ? weekday[W] : ''}`}</span>
                             </div>
                             <div className="li-middle">
                                 <div className="content">
-                                    <span>{parseTime(item.time)}</span>
+                                    <span>{ parseTime(item.time) }</span>
 
                                     <span>
-                                        [{item.CreateUserName}]{item.Title}
+                                        [{ item.CreateUserName }]{ item.Title }
                                     </span>
                                 </div>
                                 <div
                                     className={`btn-deco 
-                                    ${item.classLv === 0 ? 'green' : ''}  
-                                    ${item.classLv === 2 ? 'yellow' : ''}`}
+                                    ${ item.classLv === 0 ? 'green' : '' }  
+                                    ${ item.classLv === 2 ? 'yellow' : '' }` }
                                 >
-                                    {level[item.classLv]}
+                                    { level[item.classLv] }
                                 </div>
                             </div>
                         </div>
@@ -85,7 +82,7 @@ export const CreateTable = (
                 table.push(
                     <li
                         key={'blank' + i}
-                        className={`oneDate ${isList ? 'noShow' : 'calendars_daymode'} `}
+                        className='oneDate calendars_daymode'
                         id={i}
                         onClick={e => onClickDate(e, thisDD)}
                     >
@@ -103,7 +100,7 @@ export const CreateTable = (
             table.push(
                 <li
                     key={'blankB' + totalD + i}
-                    className={`oneDate ${isList ? 'noShow' : 'calendars_daymode'}  gray-blank`}
+                    className='oneDate calendars_daymode gray-blank'
                 />
             )
         }

@@ -51,7 +51,7 @@ const Profile = ({ CurrentUser, dispatch }) => {
 				<CustomMenuItem title="Practice calender" to="/practice-calendar"/>
 				<CustomMenuItem title="Received beads" to="/received-beads"/>
 				<CustomMenuItem title="Reward host" to="/reward-host"/>
-				<CustomMenuItem title="Prize exchange" to="/prize-exchange"/>
+				<CustomMenuItem title="Beads exchange" to="/beads-exchange"/>
 				{
 					/*
 					TODO
