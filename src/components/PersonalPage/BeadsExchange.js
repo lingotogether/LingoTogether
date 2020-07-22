@@ -10,6 +10,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import { CURRENT_USER, saveALLMemberData, saveBeadsRecordData, savePrizeData } from '../../actions'
 import { hendleDBactions } from '../../actions/handleDB';
 import * as firebase from 'firebase/app'
+import 'firebase/storage';
 
 
 const cx = require('classnames')
@@ -62,23 +63,21 @@ const BeadsExchange = (props) => {
 	}
 
 
+	// Prize list
 	let sortedPrizeData = PrizeData
 	sortedPrizeData = sortedPrizeData.sort((a, b) => {
 		return b.DataID - a.DataID
 	})
 
-	// Pagination start
+	// Pagination of Prize list
 	const totalPage = Math.ceil(sortedPrizeData.length / 5)
 	const [page, setPage] = useState(1);
 
-	// Load PersonalBeadsRecord according to which page
-	let pagePrizeData = sortedPrizeData.slice( (page-1)*5, page*5 );
+	let pagePrizeData = sortedPrizeData.slice( (page-1)*5, page*5 )
 	const handleChange = (event, value) => {
 		setPage(value);
 		pagePrizeData = sortedPrizeData.slice( (page-1)*5, page*5-4 )
 	};
-	// Pagination end
-
 
 	const ExchangePrize = value => {
 		
@@ -127,6 +126,8 @@ const BeadsExchange = (props) => {
 		alert('Please check your email for more details.')
 	}
 
+
+	// A function to add new prize into DB
 	const AddPrize = () => {
 
 		const prizeID = dayjs().format('YYYYMMDDHHmmss-') + CurrentUser.uid
@@ -134,12 +135,34 @@ const BeadsExchange = (props) => {
 		const prizeDescription = String(document.getElementById("prize-description").value)
 		const prizeCost = Number(document.getElementById("prize-cost").value)
 		const prizeAmount = Number(document.getElementById("prize-amount").value)
+		const prizePhoto = document.getElementById("prize-photo").files[0]
+
+		if (prizeTitle === '') {
+			alert('Please input Title!')
+			return
+		}
+		else if (prizeCost.isNaN) {
+			alert('Invalid Cost!')
+			return
+		}
+		else if (prizeAmount.isNaN) {
+			alert('Invalid Amount!')
+			return
+		}
+
+		if (prizePhoto !== undefined) {
+			const storageRef = firebase.storage().ref().child(prizeID);
+			storageRef.put(prizePhoto).then(function(snapshot) {
+				console.log(snapshot)
+			})
+		}
 
 		hendleDBactions('prize',
 			prizeID, {
 				DataID: prizeID, 
 				Title: prizeTitle, 
 				Description: prizeDescription, 
+				hasPhoto: prizePhoto === undefined ? false : true, 
 				Cost: prizeCost, 
 				LeftAmount: prizeAmount, 
 				TotalAmount: prizeAmount, 
@@ -213,6 +236,7 @@ const BeadsExchange = (props) => {
 							<h2>Prize list</h2>
 							<table className='profile-table'>
 								<tr className="row-title">
+									<th>Image</th>
 									<th>Title</th>
 									<th>Description</th>
 									<th>Cost</th>
@@ -225,6 +249,7 @@ const BeadsExchange = (props) => {
 									: pagePrizeData.map(data => {
 										return (
 											<tr className="row">
+												<td><img id={ data.DataID } src='' style={{ height: 50, margin: "0 auto" }}/></td>
 												<td>{ data.Title }</td>
 												<td>{ data.Description }</td>
 												<td>{ data.Cost }</td>
@@ -237,7 +262,8 @@ const BeadsExchange = (props) => {
 												</td>
 												<td>
 												{
-													isAdminAccount ? data.ExchangeUserID.map((user, index) => {
+													isAdminAccount ?
+													data.ExchangeUserID.map((user, index) => {
 														const userMemberData = initALLMemberData.filter(memberData => {
 															return memberData.uid === user
 														})[0]
@@ -249,13 +275,36 @@ const BeadsExchange = (props) => {
 															}<br/>
 															</div>
 														)
-													}) : <button disabled={data.LeftAmount === 0} onClick={() => ExchangePrize(data.DataID)}>Exchange</button>
+													}) :
+													<button
+														disabled={data.LeftAmount === 0 || data.ExchangeUserID.indexOf(CurrentUser.uid) != -1 }
+														onClick={() => ExchangePrize(data.DataID)}
+													>Exchange</button>
 												}
 												</td>
 											</tr>
 										)
 									})
 								}
+								<script>
+								{
+									pagePrizeData.forEach(prize => {
+										if (prize.hasPhoto) {
+											const storageRef = firebase.storage().ref().child(prize.DataID);
+											storageRef.getDownloadURL().then(function(url) {
+												var img = document.getElementById(prize.DataID);
+												img.src = url;
+											}).catch(function(error) {
+												// Handle any errors
+											})
+										}
+										// else {
+										// 	var img = document.getElementById(prize.DataID);
+										// 	img.src = '';
+										// }
+									})
+								}
+								</script>
 							</table>
 						</Grid>
 
