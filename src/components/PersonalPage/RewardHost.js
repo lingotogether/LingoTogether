@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import dayjs from 'dayjs'
 import { Grid } from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import '../../style/VIPHome.scss'
 import '../../style/CalendarMain.scss'
@@ -129,7 +130,7 @@ const RewardHost = (props) => {
 
 	console.log(lastBooking)
 
-	// Didn't join any meeting before yet
+	// Didn't join any discussion before yet
 	if (lastBooking.noData) {
 		return (
 			<Fragment>
@@ -149,8 +150,8 @@ const RewardHost = (props) => {
 							</Grid>
 							<Grid item xs={12}>
 
-								<h2>You haven't joined any meeting yet</h2>
-								<h4>Only participants of the meeting can encourage his host.</h4>
+								<h2>You haven't joined any discussion yet</h2>
+								<h4>Only participants of the discussion can encourage his host.</h4>
 
 							</Grid>
 						</Grid>
@@ -187,22 +188,27 @@ const RewardHost = (props) => {
 							</Grid>
 							<Grid item xs={12}>
 
-								<h2>Last meeting</h2>
+								<h2>Last discussion</h2>
 								<div>Date & Time: { bookingTime.format('YYYY/MM/DD - hh:mm a') }</div>
 								<div>Title: { lastBooking.Title }</div>
 								<div>Host: { lastBooking.CreateUserName }</div>
 
 								<h2>Encourage the host!</h2>
 								<h4>Giving beads to host will cost you beads equally</h4>
-								<label>Bead: </label>
-								<input
-									type="number"
+								<TextField
+									className="input-beads"
 									id="reward-bead"
+									label="Beads"
+									type="number"
+									InputLabelProps={{
+										shrink: true,
+									}}
+									
 									defaultValue={0}
 									min={0}
 									max={ isNaN(totalPoint) || totalPoint < 0 ? 0 : totalPoint }
-								/>
-								<button type="button" class="button" onClick={rewardHost}>
+        						/>
+								<button type="button"  className="button-donate" onClick={rewardHost}>
 									<span>Donate</span>
 								</button>
 

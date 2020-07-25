@@ -68,6 +68,12 @@ const Home = (props) => {
 
     const updatePoints = (booking, level, today) => {
 
+        if (isAdminAccount) {
+            alert('管理員身分：無聊天室之進入限制。')
+            window.open(skRoomUrl[level])
+            return
+        }
+
         const isHost = booking.CreateUserID === CurrentUser.uid
         const index = booking.whoJoinEmail.indexOf(CurrentUser.email)
 
@@ -97,7 +103,7 @@ const Home = (props) => {
         else status = "ABSENT"
 
         if (status === "EARLY" && today) {
-            alert('Please wait until 15 minutes before the start of meeting~')
+            alert('Please wait until 15 minutes before the start of discussion~')
         }
         else if (status === "ABSENT") {
 
@@ -112,9 +118,9 @@ We will take 30 beads away from you as a punishment.')
 In this case, system regards you as absent.\n \
 We will take 20 beads away from you as a punishment.')
             }
-            else if (today) alert('You can\'t enter meeting that started over 20 minutes')
+            else if (today) alert('You can\'t enter discussion that started over 20 minutes')
 
-            // Settle host and participants who haven't enter meeting yet
+            // Settle host and participants who haven't enter discussion yet
             async function settleHostAndParticipants() {
 
                 if (!booking.hostSettlement) {
@@ -394,7 +400,7 @@ You can get 10 beads for reward only if you participate punctually!')
     }
 
 
-    // Click the button right on the page for entering Skype meeting room
+    // Click the button right on the page for entering Skype discussion room
     const skOnclick = level => {
 
         // Beads rewarding
@@ -407,16 +413,17 @@ You can get 10 beads for reward only if you participate punctually!')
             },
             'getBookingByDateAndLevel',
             booking => {
-                console.log(booking)
-                if (booking.noData)
-                    alert('今天沒有這個難度的讀書會喔！\nThere\'s no meeting of this level today!')
+                // console.log(booking)
+                if (isAdminAccount) updatePoints(booking, level, true)
+                else if (booking.noData)
+                    alert('今天沒有這個難度的讀書會喔！\nThere\'s no discussion of this level today!')
                 else if (booking.CreateUserID !== CurrentUser.uid && booking.whoJoinEmail.indexOf(CurrentUser.email) === -1) 
-                    alert('您並沒有報名這場讀書會喔～\nYou didn\'t join this meeting so you are not allowed to get in~')
+                    alert('您並沒有報名這場讀書會喔～\nYou didn\'t join this discussion so you are not allowed to get in~')
                 else updatePoints(booking, level, true)
             }
         )
 
-        // Check for last meeting's reward settlements
+        // Check for last discussion's reward settlements
         hendleDBactions(
             'booking',
             '',

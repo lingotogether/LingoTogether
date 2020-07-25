@@ -1,38 +1,51 @@
-.button {
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  cursor:pointer;
+}
+.input-beads{
+  text-align: center;
+  margin: 2px;
+  width: 80px;
+  margin: 2px;
+  padding: 2px;
+  
+}
+.button-donate {
   border-radius: 4px;
-  background-color: #f4511e;
+  background-color: #a5cf69;
   border: none;
   color: #FFFFFF;
   text-align: center;
-  font-size: 28px;
-  padding: 20px;
-  width: 150px;
+  font-size: 18px;
+  padding: 11px;
+  width: 100px;
+  height: 43px;
   transition: all 0.5s;
   cursor: pointer;
   margin: 5px;
 }
 
-.button span {
+.button-donate span {
   cursor: pointer;
   display: inline-block;
   position: relative;
   transition: 0.5s;
 }
 
-.button span:after {
+.button-donate span:after {
   content: '\00bb';
   position: absolute;
   opacity: 0;
   top: 0;
-  right: -20px;
+  right: -6px;
   transition: 0.5s;
 }
 
-.button:hover span {
-  padding-right: 25px;
+.button-donate:hover span {
+  padding-right: 18px;
 }
 
-.button:hover span:after {
+.button-donate:hover span:after {
   opacity: 1;
   right: 0;
 }

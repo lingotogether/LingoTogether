@@ -2,9 +2,11 @@ import React, { useState, Fragment } from 'react'
 import { connect } from 'react-redux'
 import dayjs from 'dayjs'
 import { Grid } from '@material-ui/core'
+import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles'
 import '../../style/VIPHome.scss'
 import '../../style/CalendarMain.scss'
+import '../../style/BeadsExchange.scss'
 
 import Pagination from '@material-ui/lab/Pagination';
 import { CURRENT_USER, saveALLMemberData, saveBeadsRecordData, savePrizeData } from '../../actions'
@@ -19,6 +21,11 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 		flexGrow: 1,
 		padding: theme.spacing(0, 15)
+	},
+	textField: {
+		marginLeft: theme.spacing(1),
+		marginRight: theme.spacing(1),
+	
 	}
 }))
 
@@ -198,37 +205,62 @@ const BeadsExchange = (props) => {
 							(
 								<Grid item xs={12}>
 									<h2>Add new prize</h2>
-									<label>Title: </label>
-									<input
-										type="string"
+									<TextField
 										id="prize-title"
-									/><br/>
-									<label>Description: </label>
-									<input
+										label="Title"
 										type="string"
+										className={classes.textField}
+										fullWidth
+										margin="normal"
+										margin="dense"
+										variant="outlined"
+									/>
+									<TextField
 										id="prize-description"
-									/><br/>
-									<label>Cost: </label>
-									<input
-										type="number"
-										id="prize-cost"
-										defaultValue={100}
-										min={0}
-									/><br/>
-									<label>Amount: </label>
-									<input
-										type="number"
-										id="prize-amount"
-										defaultValue={5}
-										min={0}
-									/><br/>
-									<label>Photo: </label>
+										label="Description"
+										type="string"
+										className={classes.textField}
+										fullWidth
+										margin="dense"
+										variant="outlined"
+									/>
+									<br></br>
+									<Grid item xs={6} >
+										<TextField
+											label="Cost"
+											id="prize-cost"
+											defaultValue={100}
+											min={0}
+											className={classes.textField}
+											fullWidth
+											margin="dense"
+											variant="outlined"
+										/>
+									</Grid>
+									<Grid item xs={6} >
+										<TextField
+											label="Amount"
+											id="prize-amount"
+											defaultValue={5}
+											min={0}
+											className={classes.textField}
+											fullWidth
+											margin="dense"
+											variant="outlined"
+										/>
+									</Grid>
+
+									<label className="photo">Photo: </label>
 									<input
 										type="file"
 										id="prize-photo"
 										accept="image/*"
 									/><br/>
-									<button type="button" onClick={AddPrize}>新增獎項</button>
+
+									<button type="button" onClick={AddPrize} className="button-addprize">
+										<span>新增獎項</span>
+									</button>
+									<br></br>
 								</Grid>
 							) : (<></>)
 						}
@@ -277,9 +309,12 @@ const BeadsExchange = (props) => {
 														)
 													}) :
 													<button
+														className="button-exchange"
 														disabled={data.LeftAmount === 0 || data.ExchangeUserID.indexOf(CurrentUser.uid) != -1 }
 														onClick={() => ExchangePrize(data.DataID)}
-													>Exchange</button>
+													>
+														<span>Exchange</span>
+													</button>
 												}
 												</td>
 											</tr>
