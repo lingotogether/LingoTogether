@@ -281,7 +281,13 @@ const BeadsExchange = (props) => {
 									: pagePrizeData.map(data => {
 										return (
 											<tr className="row">
-												<td><img id={ data.DataID } src='' style={{ height: 50, margin: "0 auto" }}/></td>
+												<td>
+												{
+													data.hasPhoto ? 
+													<img id={ data.DataID } src='' style={{ height: 50, margin: "0 auto" }}/> : 
+													<img id={ data.DataID } src={ require('../../img/lingo-2-removebg.png') } style={{ height: 50, margin: "0 auto" }}/>
+												}
+												</td>	
 												<td>{ data.Title }</td>
 												<td>{ data.Description }</td>
 												<td>{ data.Cost }</td>
