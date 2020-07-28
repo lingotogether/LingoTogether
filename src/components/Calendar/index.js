@@ -5,7 +5,6 @@ import { filterDetials, checkDate, filterMonthsWithData, completeMonthArr } from
 import { cBoxController, BookingDateData } from '../../actions';
 import '../../style/CalendarMain.scss';
 
-
 function Calendar(props) {
 
     const { initBookingData, dispatch } = props;
@@ -175,11 +174,9 @@ function Calendar(props) {
 
     return (
         <div className="calendar" style={{ paddingTop: '50px' }}>
-            {props.CurrentUser ? (
-                <header>
-                    <div style={{ textAlign: "center" }}>{ '( Based on your time zone )' }</div>
-                </header>
-            ) : null}
+            {/* <header>
+                <div style={{ textAlign: "center" }}>{ '( Based on your time zone )' }</div>
+            </header> */}
             <div className="monthBar">
                 {props.CurrentUser ? (
                     <a className="bar-btn prev" onClick={e => onClickPrev(e)}>

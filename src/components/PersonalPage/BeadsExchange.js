@@ -8,6 +8,8 @@ import '../../style/VIPHome.scss'
 import '../../style/CalendarMain.scss'
 import '../../style/BeadsExchange.scss'
 
+import { Button, Backdrop } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Pagination from '@material-ui/lab/Pagination';
 import { CURRENT_USER, saveALLMemberData, saveBeadsRecordData, savePrizeData } from '../../actions'
 import { hendleDBactions } from '../../actions/handleDB';
@@ -25,8 +27,11 @@ const useStyles = makeStyles((theme) => ({
 	textField: {
 		marginLeft: theme.spacing(1),
 		marginRight: theme.spacing(1),
-	
-	}
+	},
+	backdrop: {
+		zIndex: theme.zIndex.drawer + 1,
+		color: '#fff',
+	},
 }))
 
 const BeadsExchange = (props) => {
@@ -77,15 +82,28 @@ const BeadsExchange = (props) => {
 	})
 
 	// Pagination of Prize list
-	const totalPage = Math.ceil(sortedPrizeData.length / 5)
+	const prizePerPage = 5
+	const totalPage = Math.ceil(sortedPrizeData.length / prizePerPage)
 	const [page, setPage] = useState(1);
 
-	let pagePrizeData = sortedPrizeData.slice( (page-1)*5, page*5 )
+	let pagePrizeData = sortedPrizeData.slice( (page-1) * prizePerPage, page * prizePerPage )
 	const handleChange = (event, value) => {
 		setPage(value);
-		pagePrizeData = sortedPrizeData.slice( (page-1)*5, page*5-4 )
 	};
 
+	// Photo display
+	const falseArray = Array(prizePerPage).fill(false)
+	const [openArray, setOpenArray] = React.useState(false);
+	const handleClose = () => {
+		setOpenArray(falseArray);
+	};
+	const handleToggle = (prizeNo) => {
+		const newOpenArray = Array(prizePerPage).fill(false)
+		newOpenArray[prizeNo] = true
+		setOpenArray(newOpenArray);
+	};
+
+	// Function to exchange prize
 	const ExchangePrize = value => {
 		
 		const prize = PrizeData.filter(data => {
@@ -130,11 +148,11 @@ const BeadsExchange = (props) => {
 			}
 		)
 
-		alert('Please check your email for more details.')
+		alert('Congrats! Please check your email inbox for further information.')
 	}
 
 
-	// A function to add new prize into DB
+	// Function to add new prize into DB
 	const AddPrize = () => {
 
 		const prizeID = dayjs().format('YYYYMMDDHHmmss-') + CurrentUser.uid
@@ -177,6 +195,25 @@ const BeadsExchange = (props) => {
 			}, 'SET',
 			hendleDBactions('prize', '', {}, '', resetPrizeData)
 		)
+	}
+
+	// Function to delete prize from DB
+	const DeletePrize = value => {
+
+		if (window.confirm('Are you sure to delete this prize?')) {
+			const prize = PrizeData.filter(data => {
+				return data.DataID === value
+			})[0]
+	
+			if (prize.hasPhoto) {
+				const storageRef = firebase.storage().ref().child(prize.DataID);
+				storageRef.delete()
+			}
+	
+			hendleDBactions('prize', prize.DataID, {}, 'DELETE',
+				hendleDBactions('prize', '', {}, '', resetPrizeData)
+			)
+		}
 	}
 
 	return (
@@ -268,6 +305,11 @@ const BeadsExchange = (props) => {
 							<h2>Prize list</h2>
 							<table className='profile-table'>
 								<tr className="row-title">
+									{
+										isAdminAccount ?
+										<th>Delete</th> :
+										<></>
+									}
 									<th>Image</th>
 									<th>Title</th>
 									<th>Description</th>
@@ -278,13 +320,25 @@ const BeadsExchange = (props) => {
 								{
 									pagePrizeData.length === 0 
 									? '( No prize for exchange now )'
-									: pagePrizeData.map(data => {
+									: pagePrizeData.map((data, index) => {
 										return (
 											<tr className="row">
+												{
+													isAdminAccount ?
+													<td><Button variant="outlined" color="secondary" onClick={() => DeletePrize(data.DataID)}>
+														<DeleteIcon />
+													</Button></td> :
+													<></>
+												}
 												<td>
 												{
 													data.hasPhoto ? 
-													<img id={ data.DataID } src='' style={{ height: 50, margin: "0 auto" }}/> : 
+													(<div>
+														<Button variant="outlined" onClick={() => handleToggle(index)}>Show</Button>
+														<Backdrop className={classes.backdrop} open={openArray[index]} onClick={handleClose}>
+															<img id={ data.DataID } src='' style={{ height: '60%', margin: "0 auto" }}/>
+														</Backdrop>
+													</div>) : 
 													<img id={ data.DataID } src={ require('../../img/lingo-2-removebg.png') } style={{ height: 50, margin: "0 auto" }}/>
 												}
 												</td>	
@@ -327,7 +381,6 @@ const BeadsExchange = (props) => {
 										)
 									})
 								}
-								<script>
 								{
 									pagePrizeData.forEach(prize => {
 										if (prize.hasPhoto) {
@@ -339,13 +392,8 @@ const BeadsExchange = (props) => {
 												// Handle any errors
 											})
 										}
-										// else {
-										// 	var img = document.getElementById(prize.DataID);
-										// 	img.src = '';
-										// }
 									})
 								}
-								</script>
 							</table>
 						</Grid>
 
