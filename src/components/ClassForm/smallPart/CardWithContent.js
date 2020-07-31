@@ -61,18 +61,20 @@ export default function CardWithContent(props) {
         Material,
         CreateUserName,
         CreateUserID,
-        whoJoin,
         questions,
         DataID,
         CurrentUser,
         dispatch,
         isAdminAccount,
-        whoJoinEmail
+        whoJoin,
+        whoJoinEmail,
+        settlement,
     } = props
 
     const classes = useStyles()
     const [iwhoJoin, setiWhoJoin] = useState(whoJoin || [])
-    const [iwhoJoinEmail] = useState(whoJoinEmail || [])
+    const [iwhoJoinEmail, setiWhoJoinEmail] = useState(whoJoinEmail || [])
+    const [iSettlement, setiSettlement] = useState(settlement || [])
     const [isJoin, setIsJoin] = useState(false)
     const [isHost, setIsHost] = useState(false)
     const [CanBeUpdated, SetCanBeUpdated] = useState(false)
@@ -109,7 +111,6 @@ export default function CardWithContent(props) {
                     } else {
                         targetI = whoJoin.indexOf(CurrentUser.memberData.UserName)
                     }
-                    console.log('targetI', targetI)
                     targetI === -1 ? setIsJoin(false) : setIsJoin(true)
                 } else {
                     setIsJoin(false)
@@ -130,42 +131,46 @@ export default function CardWithContent(props) {
 
         const { memberData, email } = CurrentUser
         const { UserName } = memberData
+
         let cloneWhoJoin = JSON.parse(JSON.stringify(iwhoJoin))
         let cloneWhoJoinEmail = JSON.parse(JSON.stringify(iwhoJoinEmail))
-        // const targetI = cloneWhoJoin.indexOf(CurrentUser.uid)
-        const targetI = cloneWhoJoin.indexOf(UserName)
+        let cloneSettlement = JSON.parse(JSON.stringify(iSettlement))
+        
         const targetEmail = cloneWhoJoinEmail.indexOf(email)
-        console.log(222333, cloneWhoJoinEmail)
-        console.log(1233427468, targetI, targetEmail)
-        if (!isJoin) {
 
+        if (!isJoin) {
             if(iwhoJoin.length >= limit) {
                 return alert('Max participants')
             }
-
             cloneWhoJoin.push(UserName)
             cloneWhoJoinEmail.push(email)
+            cloneSettlement.push(false)
             setIsJoin(true)
         } else {
-            cloneWhoJoin.splice(targetI, 1)
+            cloneWhoJoin.splice(targetEmail, 1)
             cloneWhoJoinEmail.splice(targetEmail, 1)
+            cloneSettlement.splice(targetEmail, 1)
             setIsJoin(false)
         }
-        const updateOBJ = { whoJoin: cloneWhoJoin, whoJoinEmail: cloneWhoJoinEmail }
+
+        const updateOBJ = { whoJoin: cloneWhoJoin, whoJoinEmail: cloneWhoJoinEmail, settlement: cloneSettlement }
+        
         hendleDBactions('booking', DataID, updateOBJ, 'UPDATE')
+
         setiWhoJoin(cloneWhoJoin)
+        setiWhoJoinEmail(cloneWhoJoinEmail)
+        setiSettlement(cloneSettlement)
+
         // reset DB data
         setTimeout(function() {
             hendleDBactions('booking', '', '', '', resetBookingData)
             hendleDBactions('memberCard', '', '', '', resetMemberData)
-        }, 9000)
+        }, 3000)
     }
     const resetBookingData = d => {
-        console.log(748998713)
         dispatch(saveBookingData(d))
     }
     const resetMemberData = d => {
-        console.log(748998713)
         dispatch(saveALLMemberData(d))
     }
     const handleInputChange = (e, type) => {
@@ -225,7 +230,7 @@ export default function CardWithContent(props) {
                 questions: iQuestion,
                 Title: iTitle,
                 PhotoOrVideo: iPhotoOrVideo,
-                Material: iMaterial,
+                Material: iMaterial === undefined ? "" : iMaterial,
                 maxParticipants: iNumberOfParticipants,
                 time: iTime
             },

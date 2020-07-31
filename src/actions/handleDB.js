@@ -1,36 +1,35 @@
 import { db } from '../firebase/firebase'
-import { resetAllBookingData } from './auth'
 
 export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunction) {
     const sfDocRef = DataID ? db.collection(collection).doc(DataID) : null
     switch (type) {
         case 'SET':
-            console.log('DataID', DataID)
             sfDocRef
                 .set(DataObj)
                 .then(function() {
-                    console.log('建立成功')
+                    console.log('建立成功: ', DataObj)
                     CallBackFunction && CallBackFunction()
                 })
                 .catch(function(err) {
                     console.log(err)
                     alert('伺服器發生錯誤，請稍後再試')
                 })
-
             break
+
         case 'UPDATE':
-            console.log('DataObj', DataObj)
             if (sfDocRef) {
                 sfDocRef
                     .update(DataObj)
                     .then(function() {
-                        console.log('修改成功')
+                        console.log('修改成功: ', DataObj)
+                        CallBackFunction && CallBackFunction()
                     })
                     .catch(function() {
                         alert('伺服器發生錯誤，請稍後再試')
                     })
             }
             break
+
         case 'DELETE':
             sfDocRef
                 .delete()
@@ -41,33 +40,78 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                     alert('伺服器發生錯誤，請稍後再試')
                 })
             break
-        case 'getBookingByUid':
-            db.collection('booking')
-                .get()
-                .then((querySnapshot) => {
-                    if(querySnapshot.docs.length < 1) {
-                        CallBackFunction({ noData: true })
-                    } else {
-                        querySnapshot.forEach(doc => {
-                            CallBackFunction(doc.data())
-                        })
-                    }
-                })
-            break
+
         case 'getMemberCardByEmail':
             db.collection('memberCard')
                 .where('Email', '==', DataID)
                 .get()
                 .then(function(querySnapshot) {
-                    // console.log('*************', querySnapshot.docs.length)
+                    if (querySnapshot.docs.length < 1) {
+                        CallBackFunction && CallBackFunction({ noData: true })
+                    } else {
+                        querySnapshot.forEach(function(doc) {
+                            CallBackFunction && CallBackFunction(doc.data())
+                        })
+                    }
+                })
+                .catch(function(error) {
+                    console.log('Error getting documents: ', error)
+                    CallBackFunction && CallBackFunction({ noData: true })
+                })
+            break
+
+        case 'getMemberCardByUserID':
+            db.collection('memberCard')
+                .where('uid', '==', DataID)
+                .get()
+                .then(function(querySnapshot) {
+                    if (querySnapshot.docs.length < 1) {
+                        CallBackFunction && CallBackFunction({ noData: true })
+                    } else {
+                        querySnapshot.forEach(function(doc) {
+                            CallBackFunction && CallBackFunction(doc.data())
+                        })
+                    }
+                })
+                .catch(function(error) {
+                    console.log('Error getting documents: ', error)
+                    CallBackFunction && CallBackFunction({ noData: true })
+                })
+            break
+
+        case 'getBookingByDateAndLevel':
+            db.collection('booking')
+                .where('date', '==', DataObj.date)
+                .where('classLv', '==', DataObj.level)
+                .get()
+                .then((querySnapshot) => {
+                    console.log('Aisu Test: ', querySnapshot)
+                    if (querySnapshot.docs.length < 1) {
+                        CallBackFunction && CallBackFunction({ noData: true })
+                    } else {
+                        querySnapshot.forEach(doc => {
+                            CallBackFunction && CallBackFunction({...doc.data(), DataID: doc.id})
+                        })
+                    }
+                })
+                .catch(function(error) {
+                    console.log('Error getting documents: ', error)
+                    CallBackFunction && CallBackFunction({ noData: true })
+                })
+            break
+
+        case 'getLastBookingBeforeDate':
+            db.collection('booking')
+                .orderBy('date', 'desc')
+                .startAfter(DataObj)
+                .limit(1)
+                .get()
+                .then((querySnapshot) => {
                     if (querySnapshot.docs.length < 1) {
                         CallBackFunction({ noData: true })
                     } else {
-                        querySnapshot.forEach(function(doc) {
-                            // doc.data() is never undefined for query doc snapshots
-                            // console.log('*************')
-                            // console.log(doc.id, ' => ', doc.data())
-                            CallBackFunction(doc.data())
+                        querySnapshot.forEach(doc => {
+                            CallBackFunction({...doc.data(), DataID: doc.id})
                         })
                     }
                 })
@@ -76,14 +120,16 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                     CallBackFunction({ noData: true })
                 })
             break
+
         default:
             db.collection(collection)
                 .get()
-                .then(snapshot => {
+                .then(querySnapshot => {
+                    
                     let initData = []
-                    snapshot.forEach(doc => {
-                        const booked = doc.data() //obj
-                        initData.push({ ...booked, DataID: doc.id })
+                    querySnapshot.forEach(doc => {
+                        const data = doc.data()
+                        initData.push({ ...data, DataID: doc.id })
                     })
 
                     CallBackFunction && CallBackFunction(initData)

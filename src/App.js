@@ -8,16 +8,19 @@ import Signup from './components/Signup'
 import Navbar from './components/NavBar'
 import TopHome from './TopHome'
 import ReceivedBeads from './components/PersonalPage/ReceivedBeads'
+import RewardHost from './components/PersonalPage/RewardHost'
+import BeadsExchange from './components/PersonalPage/BeadsExchange'
 import MonthlyMission from './components/PersonalPage/MonthlyMission'
 import PracticeCalendar from './components/PersonalPage/PracticeCalendar'
 import { deviceIsMobile } from './actions/'
 
 import { hendleDBactions } from './actions/handleDB'
 import MemberList from './components/MemberList'
+
 let cx = require('classnames')
 
 function App(props) {
-    const { isAuthenticated, isVerifying, dispatch, CurrentUser } = props
+    const { isAuthenticated, isVerifying, dispatch, CurrentUser, } = props
     const [withMData, setWithMData] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
     const [noShow, setNoShow] = useState(true)
@@ -77,41 +80,23 @@ function App(props) {
                         </a>
                     </div>
                     {
-                        /*
-                        isAuthenticated && (
-                            <Fragment>
-                                <div className="beads">
-                                    Host Beads<br/>
-                                    <span className="score">
-                                        { CurrentUser ? CurrentUser.memberData.HostPoint || 0 : 0 } pts
-                                    </span>
+                        isMobile ? (
+                            <div className="mNavbar">
+                                <ul className="hamberIconContainer">
+                                    <li onClick={() => setNoShow(!noShow)}>
+                                        <div className="hamberBorder">
+                                            <i className="fas fa-bars"></i>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div className={cx('BarHiddenPart', { noShow: noShow })}>
+                                    <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} />
                                 </div>
-                                <div className="beads">
-                                    Gained Beads<br/>
-                                    <span className="score">
-                                        { CurrentUser ? CurrentUser.memberData.GainedPoint || 0 : 0 } pts
-                                    </span>
-                                </div>
-                            </Fragment>
-                        )
-                        */
-                    }
-                    {isMobile ? (
-                        <div className="mNavbar">
-                            <ul className="hamberIconContainer">
-                                <li onClick={() => setNoShow(!noShow)}>
-                                    <div className="hamberBorder">
-                                        <i className="fas fa-bars"></i>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div className={cx('BarHiddenPart', { noShow: noShow })}>
-                                <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} />
                             </div>
-                        </div>
-                    ) : (
-                        <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} />
-                    )}
+                        ) : (
+                            <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} />
+                        )
+                    }
                 </nav>
             </div>
 
@@ -127,6 +112,20 @@ function App(props) {
                     exact
                     path="/received-beads"
                     component={ReceivedBeads}
+                    isAuthenticated={isAuthenticated}
+                    isVerifying={isVerifying}
+                />
+                <ProtectedRoute
+                    exact
+                    path="/reward-host"
+                    component={RewardHost}
+                    isAuthenticated={isAuthenticated}
+                    isVerifying={isVerifying}
+                />
+                <ProtectedRoute
+                    exact
+                    path="/beads-exchange"
+                    component={BeadsExchange}
                     isAuthenticated={isAuthenticated}
                     isVerifying={isVerifying}
                 />

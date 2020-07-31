@@ -28,6 +28,11 @@ export const SAVE_ALL_MEMBER_DATA = 'SAVE_ALL_MEMBER_DATA';
 
 export const SET_DEVICE = 'SET_DEVICE';
 
+// New feature
+export const SAVE_BEADS_RECORD_DATA = 'SAVE_BEADS_RECORD_DATA';
+export const SAVE_PRIZE_DATA = 'SAVE_PRIZE_DATA';
+
+
 // Login methods
 const requestLogin = () => {
     return {
@@ -122,7 +127,7 @@ export const BookingDateData = BookingDateData => {
 };
 
 export const saveBookingData = initBookingData => {
-    // console.log('saveBookingData', initBookingData);
+    console.log('saveBookingData', initBookingData);
     return {
         type: SAVE_BOOKING_DATA,
         initBookingData,
@@ -130,11 +135,26 @@ export const saveBookingData = initBookingData => {
 };
 
 export const saveALLMemberData = initALLMemberData => {
-    // console.log('memberData有沒有進', initALLMemberData);
-    console.log('initALLMemberData', initALLMemberData);
+    console.log('saveALLMemberData', initALLMemberData);
     return {
         type: SAVE_ALL_MEMBER_DATA,
         initALLMemberData,
+    };
+};
+
+export const saveBeadsRecordData = initBeadsRecordData => {
+    console.log('saveBeadsRecordData', initBeadsRecordData);
+    return {
+        type: SAVE_BEADS_RECORD_DATA,
+        initBeadsRecordData,
+    };
+};
+
+export const savePrizeData = initPrizeData => {
+    console.log('savePrizeData', initPrizeData);
+    return {
+        type: SAVE_PRIZE_DATA,
+        initPrizeData,
     };
 };
 
@@ -149,22 +169,24 @@ export const deviceIsMobile = isMobile => {
 export const verifyAuth = () => dispatch => {
     dispatch(verifyRequest());
     myFirebase.auth().onAuthStateChanged(user => {
-        console.log(' dispatch(verifyRequest());  user', user);
+        console.log('dispatch(verifyRequest());  user: ', user);
         if (user !== null) {
             const receiveMemberData = data => {
                 if (!data.uid) {
                     data.uid = user.uid;
-                    hendleDBactions('memberCard', data.Email, data, 'UPDATE', receiveMemberData);
-                    dispatch(setCurrentUser({ ...user, memberData: data }));
+                    hendleDBactions('memberCard', data.Email, data, 'UPDATE', );
                 }
                 dispatch(setCurrentUser({ ...user, memberData: data }));
             };
             chectCompleteInfo(user, receiveMemberData);
+            initBeadsRecordData(dispatch);
+            initPrizeData(dispatch);
             dispatch(receiveLogin(user));
         } else {
             // alert('Please Sign up or Login');
         }
-        //  dispatch(verifySuccess());
+
+        // dispatch(verifySuccess());
         initALLMemberData(dispatch);
 
         // hendleDBactions('memberCard', '', {}, 'receiveALLMemberData', receiveALLMemberData);
@@ -182,6 +204,20 @@ const chectCompleteInfo = (user, receiveMemberData) => {
     hendleDBactions('memberCard', user.email, {}, 'getMemberCardByEmail', receiveMemberData);
 };
 
+const initBeadsRecordData = dispatch => {
+    const receiveBeadsRecordData = ALLdata => {
+        dispatch(saveBeadsRecordData(ALLdata));
+    };
+    hendleDBactions('beadsRecord', '', {}, '', receiveBeadsRecordData);
+};
+
+const initPrizeData = dispatch => {
+    const receivePrizeData = ALLdata => {
+        dispatch(savePrizeData(ALLdata));
+    };
+    hendleDBactions('prize', '', {}, '', receivePrizeData);
+};
+
 export const loginUser = (email, password) => dispatch => {
     dispatch(requestLogin());
     myFirebase
@@ -191,7 +227,7 @@ export const loginUser = (email, password) => dispatch => {
             dispatch(receiveLogin(user));
         })
         .catch(error => {
-            //Do something with the error if you want!
+            // Do something with the error if you want!
             dispatch(loginError());
         });
 };
@@ -207,7 +243,7 @@ export const logoutUser = () => dispatch => {
             setTimeout((window.location.href = '/'), 2000);
         })
         .catch(error => {
-            //Do something with the error if you want!
+            // Do something with the error if you want!
             dispatch(logoutError(error));
         });
 };
