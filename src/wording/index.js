@@ -12,11 +12,11 @@ export const aboutUs2 = `-Improved Virtual Communication and Collaboration.<br/>
 export const aboutUs3 = `-Learn on any connected device<br/> -Learning can take place
                                     almost anywhere.<br/> 任何城市皆是外語聊天室<br/>`;
 
-export const rulesIntroE = `Monthly mission: earn 5 beads each month!*<br/> If fails , you will lose the opportunity for practice next mouth:(<br/>
+export const rulesIntroE = `Monthly mission: earn 5 beads each month!*<br/> If fails , you will lose the opportunity for practice next month :(<br/>
                             You are welcome to come back in the following month:) <br />
                             *Each month is calculated from the participant's date of registration<br/>`;
 export const rulesIntroC = ` 每月任務：獲得5點<br/>點數結算日期依照您註冊時間計算<br/>
-                                未達成5點，您將失去下個月練習機會:(<br/>但歡迎您再下個月的歸來<br/>`;
+                                未達成5點，您將失去下個月練習機會 :(<br/>但歡迎您再下個月的歸來<br/>`;
 
 export const rulesE = `- upload questions 24 hours ahead<br/>- If you are unable to host please find a substitute host<br/>`;
 

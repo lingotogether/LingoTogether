@@ -58,22 +58,22 @@ const Signup = ({ classes, dispatch, isAuthenticated }) => {
         const emailLowerCase = email.toLowerCase()
 
         const updateOBJ = {
+            Status: 0,
             Email: emailLowerCase,
+            UserName: userName,
             JoinDate: new Date(),
             LastUpdateTime: new Date(),
-            Level: level,
+            Bead: 0, 
             SkypeID: skypeID,
-            UserName: userName,
-            InfoSource: infoSource,
             GainedPoint: 0,
             HostPoint: 0,
+            Level: level,
             isPassed: false,
-            Status: 0,
+            InfoSource: infoSource,
         }
 
         if (isValid()) {
             hendleDBactions('memberCard', emailLowerCase, updateOBJ, 'SET')
-
             dispatch(signupUser(email, password, updateOBJ))
         }
     }

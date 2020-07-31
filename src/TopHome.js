@@ -2,12 +2,15 @@ import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Home from './components/Home';
 import { Wordings } from './wording';
+
 const { aboutUs1, aboutUs2, aboutUs3, rulesIntroE, rulesIntroC, rulesE, rulesC } = Wordings;
 
 function TopHome(props) {
+
     const LocationHash = where => {
         window.location.hash = where;
     };
+
     const MediaLink = {
         line: 'https://lin.ee/ClD1qEz',
         fb: 'https://www.facebook.com/Lingotogether-106438844258407/?modal=admin_todo_tour',

@@ -15,17 +15,22 @@ import {
     CURRENT_USER,
     SAVE_ALL_MEMBER_DATA,
     SET_DEVICE,
+
+    // New feature
+    SAVE_BEADS_RECORD_DATA, 
+    SAVE_PRIZE_DATA, 
+
 } from '../actions/';
 
 export default (
     state = {
         isLoggingIn: false,
         isLoggingOut: false,
-        isVerifying: false, // init verifyAuth已進行
+        isVerifying: false, // init verifyAuth 已進行
         loginError: false,
         logoutError: false,
         SignupError: false,
-        isAuthenticated: false, //已登入
+        isAuthenticated: false, // 已登入
         isSignuping: false,
         isSignuped: false,
         user: {},
@@ -36,6 +41,10 @@ export default (
         initALLMemberData: null,
         isAdminAccount: false,
         deviceIsMobile: false,
+
+        // New feature
+        beadsRecordData: null, 
+        PrizeData: null, 
     },
     action
 ) => {
@@ -51,7 +60,7 @@ export default (
             return {
                 ...state,
                 isLoggingIn: false,
-                isAuthenticated: true, //已登入.
+                isAuthenticated: true, // 已登入.
                 user: action.user,
                 isAdminAccount: isAdmin,
             };
@@ -137,6 +146,19 @@ export default (
                 ...state,
                 deviceIsMobile: action.isMobile,
             };
+
+        // New feature
+        case SAVE_BEADS_RECORD_DATA:
+            return {
+                ...state,
+                beadsRecordData: action.initBeadsRecordData
+            }
+        case SAVE_PRIZE_DATA:
+            return {
+                ...state,
+                PrizeData: action.initPrizeData
+            }
+
         default:
             return state;
     }
