@@ -22,7 +22,7 @@ const Profile = ({ CurrentUser, dispatch }) => {
 	const [anchorEl, setAnchorEl] = useState(null)
 
 	const handleLogout = () => {
-		console.log('here')
+		// console.log('here')
 		dispatch(logoutUser())
 	}
 

@@ -54,7 +54,7 @@ const loginError = () => {
 };
 
 const setCurrentUser = user => {
-    console.log('setCurrentUser', user);
+    // console.log('setCurrentUser', user);
     return {
         type: CURRENT_USER,
         user,
@@ -127,7 +127,7 @@ export const BookingDateData = BookingDateData => {
 };
 
 export const saveBookingData = initBookingData => {
-    console.log('saveBookingData', initBookingData);
+    // console.log('saveBookingData', initBookingData);
     return {
         type: SAVE_BOOKING_DATA,
         initBookingData,
@@ -135,7 +135,7 @@ export const saveBookingData = initBookingData => {
 };
 
 export const saveALLMemberData = initALLMemberData => {
-    console.log('saveALLMemberData', initALLMemberData);
+    // console.log('saveALLMemberData', initALLMemberData);
     return {
         type: SAVE_ALL_MEMBER_DATA,
         initALLMemberData,
@@ -143,7 +143,7 @@ export const saveALLMemberData = initALLMemberData => {
 };
 
 export const saveBeadsRecordData = initBeadsRecordData => {
-    console.log('saveBeadsRecordData', initBeadsRecordData);
+    // console.log('saveBeadsRecordData', initBeadsRecordData);
     return {
         type: SAVE_BEADS_RECORD_DATA,
         initBeadsRecordData,
@@ -151,7 +151,7 @@ export const saveBeadsRecordData = initBeadsRecordData => {
 };
 
 export const savePrizeData = initPrizeData => {
-    console.log('savePrizeData', initPrizeData);
+    // console.log('savePrizeData', initPrizeData);
     return {
         type: SAVE_PRIZE_DATA,
         initPrizeData,
@@ -169,7 +169,7 @@ export const deviceIsMobile = isMobile => {
 export const verifyAuth = () => dispatch => {
     dispatch(verifyRequest());
     myFirebase.auth().onAuthStateChanged(user => {
-        console.log('dispatch(verifyRequest());  user: ', user);
+        // console.log('dispatch(verifyRequest());  user: ', user);
         if (user !== null) {
             const receiveMemberData = data => {
                 if (!data.uid) {
@@ -270,7 +270,7 @@ export const signupUser = (email, password, userData) => dispatch => {
             } else {
                 alert(errorMessage);
             }
-            console.log(error);
+            // console.log(error);
         });
 };
 

@@ -48,7 +48,7 @@ const BeadsExchange = (props) => {
 	
 	const resetCurrentUserData = newData => {
 		const setCurrentUser = user => {
-			console.log('setCurrentUser', user);
+			// console.log('setCurrentUser', user);
 			return {
 				type: CURRENT_USER,
 				user,
@@ -178,7 +178,7 @@ const BeadsExchange = (props) => {
 		if (prizePhoto !== undefined) {
 			const storageRef = firebase.storage().ref().child(prizeID);
 			storageRef.put(prizePhoto).then(function(snapshot) {
-				console.log(snapshot)
+				// console.log(snapshot)
 			})
 		}
 
