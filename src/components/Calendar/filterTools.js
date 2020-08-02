@@ -1,15 +1,12 @@
 import dayjs from 'dayjs';
-// import utc from 'dayjs/plugin/utc'
-// dayjs.extend(utc)
 
 export const filterMonthsWithData = (bookingData, initYearMonth, SetInitMonthData) => {
     // deal with Month range
-    // getMonthRangeArr(initYearMonth, 12); // 填充月份 起始年月YYYYMM  產出幾個月
+    getMonthRangeArr(initYearMonth, 12); // 填充月份 起始年月YYYYMM  產出幾個月
     let arr = getMonthRangeArr(initYearMonth, 12);
-    bookingData.map(booking => {
-        const bookingDate = dayjs(booking.date.slice(0, 4) + '-' + booking.date.slice(5, 7) + '-' + booking.date.slice(8, 10))
-        if (!arr.includes(bookingDate.format('YYYYMM'))) {
-            arr.push(bookingDate.format('YYYYMM'));
+    bookingData.map(item => {
+        if (!arr.includes(item.date.slice(0, 4) + item.date.slice(5, 7))) {
+            arr.push(item.date.slice(0, 4) + item.date.slice(5, 7));
         }
         return arr;
     });
