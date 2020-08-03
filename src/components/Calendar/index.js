@@ -78,9 +78,10 @@ function Calendar(props) {
         // 檢查初始日期格式
         let reg = /\d{4}(0[1-9]|1[0-2])$/;
         let regExp = new RegExp(reg);
-        if (!regExp.test(initYearMonth)) {
-            alert('初始日期格式或資料不正確，請使用有效日期並以 YYYYMM 格式輸入');
-        }
+        console.log(initYearMonth, bookingData)
+        // if (!regExp.test(initYearMonth)) {
+        //     alert('初始日期格式或資料不正確，請使用有效日期並以 YYYYMM 格式輸入');
+        // }
         let withVolidDate = !checkDate(bookingData);
 
         if (withVolidDate) {
