@@ -47,7 +47,7 @@ const PracticeCalendar = (props) => {
 	const displayMonthStartIndex = startDate.diff(DEFAULT_START_DATE, 'month')
 	const displayMonthEndIndex = endDate.diff(DEFAULT_START_DATE, 'month')
 
-	console.log(displayMonthEndIndex)
+	// console.log(displayMonthEndIndex)
 
 	var monthPractice = Array(totalMonthAmount).fill(0)
 	var monthHost = Array(totalMonthAmount).fill(0)

@@ -114,6 +114,7 @@ const MemberList = (props) => {
                                     <TableCell className={classes.tableHeader}>lv.</TableCell>
                                     <TableCell className={classes.tableHeader}>Name</TableCell>
                                     <TableCell className={classes.tableHeader}>Email</TableCell>
+                                    <TableCell className={classes.tableHeader}>Bead</TableCell>
                                     <TableCell className={classes.tableHeader}>LineID</TableCell>
                                     <TableCell className={classes.tableHeader}>SkypeID</TableCell>
                                     <TableCell className={classes.tableHeader}>本月</TableCell>
@@ -134,6 +135,7 @@ const MemberList = (props) => {
                                             Level,
                                             UserName,
                                             Email,
+                                            Bead,
                                             LineID,
                                             SkypeID,
                                             GainedPoint,
@@ -158,6 +160,7 @@ const MemberList = (props) => {
                                                 <TableCell>{ Level }</TableCell>
                                                 <TableCell>{ UserName }</TableCell>
                                                 <TableCell>{ Email }</TableCell>
+                                                <TableCell>{ Bead }</TableCell>
                                                 <TableCell>{ LineID }</TableCell>
                                                 <TableCell>{ SkypeID }</TableCell>
                                                 <TableCell>{ GainedPoint }</TableCell>

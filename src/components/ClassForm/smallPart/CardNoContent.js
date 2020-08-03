@@ -71,7 +71,7 @@ const CardNoContent = (props) => {
     }
 
     useEffect(() => {
-        console.log(AddQuestion)
+        // console.log(AddQuestion)
     }, [AddQuestion, AddQuestionObj])
 
     const handleInputChange = (e, type) => {

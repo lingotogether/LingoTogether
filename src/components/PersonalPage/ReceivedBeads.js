@@ -9,9 +9,6 @@ import '../../style/ReceivedBeads.scss'
 
 // New Feature
 import Pagination from '@material-ui/lab/Pagination';
-// import { FaTrophy, FaMedal, FaAward } from "react-icons/fa"
-// import { hendleDBactions } from '../../actions/handleDB';
-// import * as firebase from 'firebase/app'
 
 const cx = require('classnames')
 
@@ -26,7 +23,7 @@ const ReceivedBeads = (props) => {
 
 	const {
 		CurrentUser, deviceIsMobile, beadsRecordData, initALLMemberData, 
-		// isAdminAccount, dispatch, cBoxShow, initBookingData, bookingData
+		initBookingData
 	} = props
 
 	const classes = useStyles()
@@ -72,82 +69,6 @@ const ReceivedBeads = (props) => {
     //     setRowsPerPage(+event.target.value)
     //     setPage(1)
     // }
-
-
-	// Fix database
-	// for (let member of initALLMemberData) {
-	// 	hendleDBactions('memberCard', member.DataID, {
-	// 		...member,
-	// 		Bead: 0
-	// 	}, 'UPDATE')
-	// }
-
-	// for (let book of initBookingData) {
-
-	// 	const bookingDate = 
-	// 		dayjs()
-	// 			.year(book.date.substring(0, 4))
-	// 			.month(book.date.substring(5, 7))
-	// 			.date(book.date.substring(8, 10))
-	// 			.subtract(1, 'month')
-
-	// 	hendleDBactions(
-	// 		'beadsRecord', 
-	// 		bookingDate.format('YYYYMMDD-') + classLvMap[book.classLv] + book.CreateUserID,
-	// 		{
-	// 			Bead: 20,
-	// 			Date: firebase.firestore.Timestamp.fromMillis(bookingDate.valueOf()),
-	// 			FromUserID: "system",
-	// 			Level: book.classLv,
-	// 			Status: "Host punctual",
-	// 			Title: "Being a host",
-	// 			ToUserID: book.CreateUserID,
-	// 		},
-	// 		'SET',
-	// 	)
-
-	// 	for (let paticipant of book.whoJoinEmail) {
-
-	// 		const UserID = initALLMemberData.filter(data => {
-	// 			return data.Email === paticipant
-	// 		}).map(data => data.uid)[0]
-	// 		if (UserID === undefined) continue
-
-	// 		hendleDBactions(
-	// 			'beadsRecord', 
-	// 			bookingDate.format('YYYYMMDD-') + classLvMap[book.classLv] + UserID,
-	// 			{
-	// 				Bead: 10,
-	// 				Date: firebase.firestore.Timestamp.fromMillis(bookingDate.valueOf()),
-	// 				FromUserID: "system",
-	// 				Level: book.classLv,
-	// 				Status: "Participant punctual",
-	// 				Title: "Being a participant",
-	// 				ToUserID: UserID,
-	// 			},
-	// 			'SET',
-	// 		)
-	// 	}
-	// }
-
-	// async function demo() {
-	// 	for (let record of beadsRecordData) {
-	// 		const repairBead = DATA => {
-	// 			hendleDBactions('memberCard', DATA.Email,
-	// 				{
-	// 					...DATA,
-	// 					Bead: DATA.Bead + record.Bead
-	// 				},
-	// 				'UPDATE'
-	// 			)
-	// 		}
-	// 		hendleDBactions('memberCard', record.ToUserID, {}, 'getMemberCardByUserID', repairBead)
-	// 		await new Promise(r => setTimeout(r, 2000));
-	// 	}
-	// }
-
-	// demo()
-
 
 	return (
 		<Fragment>
@@ -256,13 +177,9 @@ const ReceivedBeads = (props) => {
 
 const mapStateToProps = state => {
     return {
-        // isAuthenticated: state.auth.isAuthenticated,
-        // isVerifying: state.auth.isVerifying,
         CurrentUser: state.auth.CurrentUser,
         initALLMemberData: state.auth.initALLMemberData,
-        // isAdminAccount: state.auth.isAdminAccount,
-        // initBookingData: state.auth.initBookingData,
-        // cBoxShow: state.auth.cBoxShow,
+        initBookingData: state.auth.initBookingData,
         bookingData: state.auth.BookingDateData,
 		deviceIsMobile: state.auth.deviceIsMobile,
 

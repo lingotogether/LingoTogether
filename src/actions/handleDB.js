@@ -7,11 +7,11 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
             sfDocRef
                 .set(DataObj)
                 .then(function() {
-                    console.log('建立成功: ', DataObj)
+                    // console.log('建立成功: ', DataObj)
                     CallBackFunction && CallBackFunction()
                 })
                 .catch(function(err) {
-                    console.log(err)
+                    // console.log(err)
                     alert('伺服器發生錯誤，請稍後再試')
                 })
             break
@@ -21,7 +21,7 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                 sfDocRef
                     .update(DataObj)
                     .then(function() {
-                        console.log('修改成功: ', DataObj)
+                        // console.log('修改成功: ', DataObj)
                         CallBackFunction && CallBackFunction()
                     })
                     .catch(function() {
@@ -34,7 +34,7 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
             sfDocRef
                 .delete()
                 .then(function() {
-                    console.log('刪除成功')
+                    // console.log('刪除成功')
                 })
                 .catch(function() {
                     alert('伺服器發生錯誤，請稍後再試')
@@ -55,7 +55,7 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                     }
                 })
                 .catch(function(error) {
-                    console.log('Error getting documents: ', error)
+                    // console.log('Error getting documents: ', error)
                     CallBackFunction && CallBackFunction({ noData: true })
                 })
             break
@@ -74,7 +74,7 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                     }
                 })
                 .catch(function(error) {
-                    console.log('Error getting documents: ', error)
+                    // console.log('Error getting documents: ', error)
                     CallBackFunction && CallBackFunction({ noData: true })
                 })
             break
@@ -85,7 +85,6 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                 .where('classLv', '==', DataObj.level)
                 .get()
                 .then((querySnapshot) => {
-                    console.log('Aisu Test: ', querySnapshot)
                     if (querySnapshot.docs.length < 1) {
                         CallBackFunction && CallBackFunction({ noData: true })
                     } else {
@@ -95,7 +94,7 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                     }
                 })
                 .catch(function(error) {
-                    console.log('Error getting documents: ', error)
+                    // console.log('Error getting documents: ', error)
                     CallBackFunction && CallBackFunction({ noData: true })
                 })
             break
@@ -116,7 +115,7 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                     }
                 })
                 .catch(function(error) {
-                    console.log('Error getting documents: ', error)
+                    // console.log('Error getting documents: ', error)
                     CallBackFunction({ noData: true })
                 })
             break

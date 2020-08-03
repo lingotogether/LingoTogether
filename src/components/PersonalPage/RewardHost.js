@@ -37,7 +37,7 @@ const RewardHost = (props) => {
 
 	const resetCurrentUserData = newData => {
 		const setCurrentUser = user => {
-			console.log('setCurrentUser', user);
+			// console.log('setCurrentUser', user);
 			return {
 				type: CURRENT_USER,
 				user,
@@ -128,7 +128,7 @@ const RewardHost = (props) => {
 			givingBeads(bead)
 	}
 
-	console.log(lastBooking)
+	// console.log(lastBooking)
 
 	// Didn't join any discussion before yet
 	if (lastBooking.noData) {
