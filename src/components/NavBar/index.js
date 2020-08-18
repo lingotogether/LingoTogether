@@ -74,13 +74,17 @@ function Navbar(props) {
                                 關於我們
                             </a>
                         </li>
-                        <li className={cx('nav-1', { active: nowActive === 1 })}>
-                            <a href="/TopHome#Rules" onClick={() => LocationHash(1, '#Rules')}>
-                                Rules
-                                {isMobile ? null : <br />}
-                                規制
-                            </a>
-                        </li>
+                        {
+                            /*
+                                <li className={cx('nav-1', { active: nowActive === 1 })}>
+                                    <a href="/TopHome#Rules" onClick={() => LocationHash(1, '#Rules')}>
+                                        Rules
+                                        {isMobile ? null : <br />}
+                                        規制
+                                    </a>
+                                </li>
+                            */
+                        }
                         <li className={cx('nav-2', { active: nowActive === 2 })}>
                             <a
                                 href="/TopHome#Calendar"
