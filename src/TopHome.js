@@ -17,6 +17,7 @@ function TopHome(props) {
         ig: 'https://www.instagram.com/lingotogether',
         email: 'mailto:hr@lingotogether.com',
         yt: 'https://www.youtube.com/channel/UC8UEVOyQJdTYhpiTyvIR8cw',
+        podcast: 'https://podcasts.apple.com/tw/podcast/%E8%81%86%E6%9E%9C%E8%8B%B1%E6%96%87%E8%81%BD%E5%8A%9B%E7%AB%99/id1526108092'
     };
 
     return (
@@ -32,20 +33,19 @@ function TopHome(props) {
                                     style={{ width: '100%' }}
                                 />
                                 <p className="labortatory">
-                                    A free online language practice platform.
-                                    <span style={{ color: 'rgb(29, 158, 130)' }}>
-                                        {` Creating an environment for`}
-                                    </span>
-                                    {` practicing languages`}
+                                    Practice your target language online for free.  
+
+                                    
+                                  
                                 </p>
 
                                 <p className="labortatory">
-                                    歡迎來到
+                                     免費在線上練習你的目標語言。
                                     <span style={{ color: 'rgb(29, 158, 130)' }}>
-                                        Lingotogether
+                            
                                     </span>
-                                    線上語言練習平台。
-                                    <span style={{ color: 'orange' }}>創造獨特的外語環境。 </span>
+                                    
+                                    <span style={{ color: 'rgb(29, 158, 130)' }}> </span>
                                 </p>
                             </div>
                         </div>
@@ -73,8 +73,11 @@ function TopHome(props) {
                         <h2> About Lingotogether </h2>
                         <hr />
 
-                        <p>SKYPE enables us to practice languages online </p>
-                        <p> Lingotogether使用SKYPE進行會話練習，</p>
+                        <p>　“Pracitice”is the most efficient way for lnguage learning; whereas “immersion”is the most direct way for language acquisition.
+                         Lingotogether combines “practice” and “immersion” and create a unqiue environment for language practice.
+                         </p>
+
+                        <p> 【練習】是語言學習最有效的方法；【沈浸】是語言習得最直接的做法。 Lingotogether結合【練習】與【沈浸】打造出獨特的外語練習環境。</p>
                     </div>
 
                     <div className="row">
@@ -84,7 +87,7 @@ function TopHome(props) {
                                     <div className="cover"></div>
                                 </a>
                                 <img src={require('./img/self-learning.jpg')} alt="self-learning" />
-                                <h3 className="title">Self-regulated learning</h3>
+                                <h3 className="title">Self-regulated Learning</h3>
                                 <h4 className="title"> 自主學習</h4>
                                 <p dangerouslySetInnerHTML={{ __html: aboutUs1 }}></p>
                             </div>
@@ -98,8 +101,8 @@ function TopHome(props) {
                                     src={require('./img/well organized.jpg')}
                                     alt="well organized"
                                 />
-                                <h3 className="title">Effective study group</h3>
-                                <h4 className="title">有組織</h4>
+                                <h3 className="title">Knowledge Production Output</h3>
+                                <h4 className="title">語言知識輸出管道</h4>
                                 <p dangerouslySetInnerHTML={{ __html: aboutUs2 }}></p>
                             </div>
                         </div>
@@ -198,7 +201,7 @@ function TopHome(props) {
                     <div id="intro">
                         <h2>正在進行...</h2>
                         <hr />
-                        <p>Lingotogether本月行程</p>
+                        <p>Monthly Schedule</p>
                     </div>
                     <Home {...props} />
                 </div>
@@ -335,11 +338,16 @@ function TopHome(props) {
                                             <i className="fab fa-youtube"></i>
                                         </a>
                                     </li>
+
+                                      
+
                                     <li>
                                         <a href={MediaLink.email}>
                                             <i className="fas fa-envelope"></i>
                                         </a>
+
                                     </li>
+                                  
                                 </ul>
                             </div>
                         </div>
@@ -347,7 +355,7 @@ function TopHome(props) {
                     <div className="col-6">
                         <div className="footer-words col-md-6 col-sm-12">
                             <div className="copyright">
-                                <div className="title">&copy; Lingotogether2019.</div>
+                                <div className="title">&copy; Lingotogether2020.</div>
                                 <div className="subtitle">practice languages together</div>
                             </div>
                         </div>
