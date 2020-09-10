@@ -15,7 +15,7 @@ export const CreateTable = (
         let firstD = new Date(activeYYYYMM.slice(0, 4), activeYYYYMM.slice(4, 7) - 1, 1);
         let totalD = lastD.getDate();
         let firstD_W = firstD.getDay();
-        //第一行補灰格
+        // 第一行補灰格
         for (let i = 0; i < firstD_W; i++) {
             table.push(
                 <li
@@ -30,7 +30,7 @@ export const CreateTable = (
             let hasDetail = false;
             let saveJ;
             for (let j = 0; j < ThisMonthDetails.length; j++) {
-                //和本月資料比對是否有相同
+                // 和本月資料比對是否有相同
                 let hasDate = Number(ThisMonthDetails[j].date.split('/')[2]);
                 if (hasDate === i) {
                     hasDetail = true;
@@ -48,7 +48,7 @@ export const CreateTable = (
                     color = 'status3';
                 }
 
-                let dd = item.date.split('/'); //dd is arr
+                let dd = item.date.split('/'); // dd is arr
                 let W = new Date(dd.join('-')).getDay();
                 table.push(
                     <li
@@ -121,7 +121,6 @@ export const CreateTable = (
                     className={`oneDate ${isList ? 'noShow' : 'calendars_daymode'}  gray-blank`}
                 />
             );
-            //}
         }
         return table;
     }

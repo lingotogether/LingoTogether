@@ -48,6 +48,7 @@ const Signup = ({ classes, dispatch, isAuthenticated }) => {
     const [ level, setLevel ] = useState(1)
     const [ skypeID, setSkypeID ] = useState('')
     const [ userName, setUserName ] = useState('')
+    const [ infoSource, setInfoSource ] = useState('')
 
     const handleSubmit = () => {
         if (isAuthenticated) {
@@ -57,21 +58,22 @@ const Signup = ({ classes, dispatch, isAuthenticated }) => {
         const emailLowerCase = email.toLowerCase()
 
         const updateOBJ = {
+            Status: 0,
             Email: emailLowerCase,
+            UserName: userName,
             JoinDate: new Date(),
             LastUpdateTime: new Date(),
-            Level: level,
+            Bead: 0, 
             SkypeID: skypeID,
-            UserName: userName,
             GainedPoint: 0,
             HostPoint: 0,
+            Level: level,
             isPassed: false,
-            Status: 0,
+            InfoSource: infoSource,
         }
 
         if (isValid()) {
             hendleDBactions('memberCard', emailLowerCase, updateOBJ, 'SET')
-
             dispatch(signupUser(email, password, updateOBJ))
         }
     }
@@ -141,6 +143,15 @@ const Signup = ({ classes, dispatch, isAuthenticated }) => {
                     <SignupForm
                         handleOnChange={handleOnChange}
                         levelVal={level}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        id="info_source"
+                        label="How did you hear about lingotogether? 您是在哪裡得知lingotogether?"
+                        aria-label="How did you hear about lingotogether?"
+                        onChange={({ target }) => setInfoSource(target.value)}
                     />
 
                     <Button

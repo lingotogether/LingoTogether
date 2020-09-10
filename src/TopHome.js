@@ -2,18 +2,22 @@ import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Home from './components/Home';
 import { Wordings } from './wording';
+
 const { aboutUs1, aboutUs2, aboutUs3, rulesIntroE, rulesIntroC, rulesE, rulesC } = Wordings;
 
 function TopHome(props) {
+
     const LocationHash = where => {
         window.location.hash = where;
     };
+
     const MediaLink = {
         line: 'https://lin.ee/ClD1qEz',
         fb: 'https://www.facebook.com/Lingotogether-106438844258407/?modal=admin_todo_tour',
         ig: 'https://www.instagram.com/lingotogether',
         email: 'mailto:hr@lingotogether.com',
         yt: 'https://www.youtube.com/channel/UC8UEVOyQJdTYhpiTyvIR8cw',
+        podcast: 'https://podcasts.apple.com/tw/podcast/%E8%81%86%E6%9E%9C%E8%8B%B1%E6%96%87%E8%81%BD%E5%8A%9B%E7%AB%99/id1526108092'
     };
 
     return (
@@ -29,20 +33,19 @@ function TopHome(props) {
                                     style={{ width: '100%' }}
                                 />
                                 <p className="labortatory">
-                                    A free online language practice platform.
-                                    <span style={{ color: 'rgb(29, 158, 130)' }}>
-                                        {` Creating an environment for`}
-                                    </span>
-                                    {` practicing languages`}
+                                    Practice your target language online for free.  
+
+                                    
+                                  
                                 </p>
 
                                 <p className="labortatory">
-                                    歡迎來到
+                                     免費在線上練習你的目標語言。
                                     <span style={{ color: 'rgb(29, 158, 130)' }}>
-                                        Lingotogether
+                            
                                     </span>
-                                    線上語言練習平台。
-                                    <span style={{ color: 'orange' }}>創造獨特的外語環境。 </span>
+                                    
+                                    <span style={{ color: 'rgb(29, 158, 130)' }}> </span>
                                 </p>
                             </div>
                         </div>
@@ -53,7 +56,7 @@ function TopHome(props) {
                                         title="uniq"
                                         width="100%"
                                         height="315"
-                                        src="https://www.youtube.com/embed/H_2UZZYuP3g"
+                                        src="https://www.youtube.com/embed/0_sQS_w3S24"
                                         frameBorder="0"
                                         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
@@ -70,8 +73,11 @@ function TopHome(props) {
                         <h2> About Lingotogether </h2>
                         <hr />
 
-                        <p>SKYPE enables us to practice languages online </p>
-                        <p> Lingotogether使用SKYPE進行會話練習，</p>
+                        <p>　“Pracitice”is the most efficient way for lnguage learning; whereas “immersion”is the most direct way for language acquisition.
+                         Lingotogether combines “practice” and “immersion” and create a unqiue environment for language practice.
+                         </p>
+
+                        <p> 【練習】是語言學習最有效的方法；【沈浸】是語言習得最直接的做法。 Lingotogether結合【練習】與【沈浸】打造出獨特的外語練習環境。</p>
                     </div>
 
                     <div className="row">
@@ -81,7 +87,7 @@ function TopHome(props) {
                                     <div className="cover"></div>
                                 </a>
                                 <img src={require('./img/self-learning.jpg')} alt="self-learning" />
-                                <h3 className="title">Self-regulated learning</h3>
+                                <h3 className="title">Self-regulated Learning</h3>
                                 <h4 className="title"> 自主學習</h4>
                                 <p dangerouslySetInnerHTML={{ __html: aboutUs1 }}></p>
                             </div>
@@ -95,8 +101,8 @@ function TopHome(props) {
                                     src={require('./img/well organized.jpg')}
                                     alt="well organized"
                                 />
-                                <h3 className="title">Effective study group</h3>
-                                <h4 className="title">有組織</h4>
+                                <h3 className="title">Knowledge Production Output</h3>
+                                <h4 className="title">語言知識輸出管道</h4>
                                 <p dangerouslySetInnerHTML={{ __html: aboutUs2 }}></p>
                             </div>
                         </div>
@@ -114,6 +120,8 @@ function TopHome(props) {
                     </div>
                 </div>
                 <div id="Rules">
+                {
+                    /*
                     <div>
                         <div id="intro">
                             <h2>運作規則</h2>
@@ -124,6 +132,8 @@ function TopHome(props) {
                             <p dangerouslySetInnerHTML={{ __html: rulesIntroC }}></p>
                         </div>
                     </div>
+                    */
+                }
                     <div className="row">
                         <div className="col-6">
                             <img
@@ -148,7 +158,7 @@ function TopHome(props) {
                                 <p>
                                     <b>Time: Schedule your own time(GMT+8)</b>
                                 </p>
-                                <p>Host：2 beads / Participant：1 point</p>
+                                <p>Host：20 beads / Participant：10 beads</p>
                                 <Grid container spacing={3}>
                                     <Grid item xs={6}>
                                         <h2 className="title">Being a Host</h2>
@@ -158,10 +168,7 @@ function TopHome(props) {
                                     <Grid item xs={6}>
                                         <h2 className="title">Being a participant</h2>
                                         <hr />
-                                        <p>- Login and click the QR code next to the calender to get into the chat room</p>
-                                        <p>- Show up on time</p>
-                                        <p>- if you would like to cancel the discussion, click
-                                        "join" again.</p>
+                                        <p dangerouslySetInnerHTML={{ __html: rulesE }}></p>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -171,7 +178,7 @@ function TopHome(props) {
                                 <p>
                                     <b>時間： 自由選擇時間(台灣時間)</b>
                                 </p>
-                                <p>主持人：2 beads / 參加者：1 point</p>
+                                <p>主持人：20 beads / 參加者：10 beads</p>
                                 <Grid container spacing={3}>
                                     <Grid item xs={6}>
                                         <h2 className="title">擔任主持人</h2>
@@ -181,7 +188,7 @@ function TopHome(props) {
                                     <Grid item xs={6}>
                                         <h2 className="title">參加討論者</h2>
                                         <hr />
-                                        <p>- 登錄帳號點擊日曆旁QR code進入聊天室</p>
+                                        <p>- 點擊日曆旁圖示進入聊天室</p>
                                         <p>- 準時出現在聊天室</p>
                                         <p>- 想要取消當次討論，再點擊一次“join”</p>
                                     </Grid>
@@ -194,7 +201,7 @@ function TopHome(props) {
                     <div id="intro">
                         <h2>正在進行...</h2>
                         <hr />
-                        <p>Lingotogether本月行程</p>
+                        <p>Monthly Schedule</p>
                     </div>
                     <Home {...props} />
                 </div>
@@ -270,9 +277,6 @@ function TopHome(props) {
                             <b>有問題？ 獲得額外協助 </b>
                             <hr />
                             <div>
-                                <p>Forget your password? 忘記密碼? </p>
-                                <p>Can't log in ? 無法登入? </p>
-                                <p>Take a leave? 請假? </p>
                                 <p> Contact us on:聯絡我們吧: </p>
                                 <ul className="contactUs">
                                     <li>
@@ -334,11 +338,16 @@ function TopHome(props) {
                                             <i className="fab fa-youtube"></i>
                                         </a>
                                     </li>
+
+                                      
+
                                     <li>
                                         <a href={MediaLink.email}>
                                             <i className="fas fa-envelope"></i>
                                         </a>
+
                                     </li>
+                                  
                                 </ul>
                             </div>
                         </div>
@@ -346,7 +355,7 @@ function TopHome(props) {
                     <div className="col-6">
                         <div className="footer-words col-md-6 col-sm-12">
                             <div className="copyright">
-                                <div className="title">&copy; Lingotogether2019.</div>
+                                <div className="title">&copy; Lingotogether2020.</div>
                                 <div className="subtitle">practice languages together</div>
                             </div>
                         </div>

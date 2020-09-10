@@ -61,18 +61,20 @@ export default function CardWithContent(props) {
         Material,
         CreateUserName,
         CreateUserID,
-        whoJoin,
         questions,
         DataID,
         CurrentUser,
         dispatch,
         isAdminAccount,
+        whoJoin,
         whoJoinEmail,
+        settlement,
     } = props
 
     const classes = useStyles()
     const [iwhoJoin, setiWhoJoin] = useState(whoJoin || [])
-    const [iwhoJoinEmail] = useState(whoJoinEmail || [])
+    const [iwhoJoinEmail, setiWhoJoinEmail] = useState(whoJoinEmail || [])
+    const [iSettlement, setiSettlement] = useState(settlement || [])
     const [isJoin, setIsJoin] = useState(false)
     const [isHost, setIsHost] = useState(false)
     const [CanBeUpdated, SetCanBeUpdated] = useState(false)
@@ -109,7 +111,6 @@ export default function CardWithContent(props) {
                     } else {
                         targetI = whoJoin.indexOf(CurrentUser.memberData.UserName)
                     }
-                    console.log('targetI', targetI)
                     targetI === -1 ? setIsJoin(false) : setIsJoin(true)
                 } else {
                     setIsJoin(false)
@@ -130,61 +131,46 @@ export default function CardWithContent(props) {
 
         const { memberData, email } = CurrentUser
         const { UserName } = memberData
+
         let cloneWhoJoin = JSON.parse(JSON.stringify(iwhoJoin))
         let cloneWhoJoinEmail = JSON.parse(JSON.stringify(iwhoJoinEmail))
-        // const targetI = cloneWhoJoin.indexOf(CurrentUser.uid)
-        const targetI = cloneWhoJoin.indexOf(UserName)
+        let cloneSettlement = JSON.parse(JSON.stringify(iSettlement))
+        
         const targetEmail = cloneWhoJoinEmail.indexOf(email)
-        console.log(222333, cloneWhoJoinEmail)
-        console.log(1233427468, targetI, targetEmail)
-        if (!isJoin) {
 
+        if (!isJoin) {
             if(iwhoJoin.length >= limit) {
                 return alert('Max participants')
             }
-
             cloneWhoJoin.push(UserName)
             cloneWhoJoinEmail.push(email)
+            cloneSettlement.push(false)
             setIsJoin(true)
-            hendleDBactions(
-                'memberCard',
-                CurrentUser.email,
-                {
-                    ...CurrentUser.memberData,
-                    pendingGained: true
-                },
-                'UPDATE'
-            )
         } else {
-            cloneWhoJoin.splice(targetI, 1)
-            cloneWhoJoinEmail.splice(email, 1)
+            cloneWhoJoin.splice(targetEmail, 1)
+            cloneWhoJoinEmail.splice(targetEmail, 1)
+            cloneSettlement.splice(targetEmail, 1)
             setIsJoin(false)
-            hendleDBactions(
-                'memberCard',
-                CurrentUser.email,
-                {
-                    ...CurrentUser.memberData,
-                    GainedPoint: CurrentUser.memberData.GainedPoint - 1,
-                },
-                'UPDATE'
-            )
-            // alert('Ooops! -1 Bread! ')
         }
-        const updateOBJ = { whoJoin: cloneWhoJoin, whoJoinEmail: cloneWhoJoinEmail }
+
+        const updateOBJ = { whoJoin: cloneWhoJoin, whoJoinEmail: cloneWhoJoinEmail, settlement: cloneSettlement }
+        
         hendleDBactions('booking', DataID, updateOBJ, 'UPDATE')
+
         setiWhoJoin(cloneWhoJoin)
+        setiWhoJoinEmail(cloneWhoJoinEmail)
+        setiSettlement(cloneSettlement)
+
         // reset DB data
         setTimeout(function() {
             hendleDBactions('booking', '', '', '', resetBookingData)
             hendleDBactions('memberCard', '', '', '', resetMemberData)
-        }, 9000)
+        }, 3000)
     }
     const resetBookingData = d => {
-        console.log(748998713)
         dispatch(saveBookingData(d))
     }
     const resetMemberData = d => {
-        console.log(748998713)
         dispatch(saveALLMemberData(d))
     }
     const handleInputChange = (e, type) => {
@@ -220,7 +206,7 @@ export default function CardWithContent(props) {
                 CurrentUser.email,
                 {
                     ...CurrentUser.memberData,
-                    HostPoint: CurrentUser.memberData.HostPoint - 2.5,
+                    pendingHost: false,
                 },
                 'UPDATE'
             )
@@ -244,15 +230,13 @@ export default function CardWithContent(props) {
                 questions: iQuestion,
                 Title: iTitle,
                 PhotoOrVideo: iPhotoOrVideo,
-                Material: iMaterial,
+                Material: iMaterial === undefined ? "" : iMaterial,
                 maxParticipants: iNumberOfParticipants,
                 time: iTime
             },
             'UPDATE'
         )
-
         resetBookingData()
-
         setiLevel(classLv)
     }
 
@@ -288,7 +272,14 @@ export default function CardWithContent(props) {
                 }
                 title={
                     !Editing ? (
-                        iTitle
+                        <a 
+                            href={iMaterial} 
+                            style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                        >
+                            { iTitle }
+                        </a>
                     ) : (
                         <TextField
                             key={`CardTitleEditing`}

@@ -88,7 +88,7 @@ const Login = ({ dispatch, classes, loginError, isAuthenticated }) => {
                         className={classes.submit}
                         onClick={() => dispatch(loginUser(email, password))}
                     >
-                        Login In
+                        Login 
                     </Button>
                     <br/>
                     <a 

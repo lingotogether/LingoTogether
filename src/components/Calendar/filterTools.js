@@ -1,12 +1,15 @@
 import dayjs from 'dayjs';
-export const filterMonthsWithData = (data, initYearMonth, SetInitMonthData) => {
-    //deal with Month range
-    getMonthRangeArr(initYearMonth, 12); // 填充月份 起始年月YYYYMM  產出幾個月
+// import utc from 'dayjs/plugin/utc'
+// dayjs.extend(utc)
+
+export const filterMonthsWithData = (bookingData, initYearMonth, SetInitMonthData) => {
+    // deal with Month range
+    // getMonthRangeArr(initYearMonth, 12); // 填充月份 起始年月YYYYMM  產出幾個月
     let arr = getMonthRangeArr(initYearMonth, 12);
-    // let arr = [];
-    data.map(item => {
-        if (!arr.includes(item.date.slice(0, 4) + item.date.slice(5, 7))) {
-            arr.push(item.date.slice(0, 4) + item.date.slice(5, 7));
+    bookingData.map(booking => {
+        const bookingDate = dayjs(booking.date.slice(0, 4) + '-' + booking.date.slice(5, 7) + '-' + booking.date.slice(8, 10))
+        if (!arr.includes(bookingDate.format('YYYYMM'))) {
+            arr.push(bookingDate.format('YYYYMM'));
         }
         return arr;
     });
@@ -14,27 +17,27 @@ export const filterMonthsWithData = (data, initYearMonth, SetInitMonthData) => {
 
     let findIndex = arr.indexOf(initYearMonth);
 
-    let details = filterDetials(data, arr[findIndex]);
-    SetInitMonthData(arr, findIndex, arr[findIndex], details, data, false);
+    let details = filterDetials(bookingData, arr[findIndex]);
+    SetInitMonthData(arr, findIndex, arr[findIndex], details, bookingData, false);
 };
-export const filterDetials = (data, activeM) => {
-    let details = data.filter(item => {
-        let YYYYMM = item.date.slice(0, 4) + item.date.slice(5, 7);
 
-        return YYYYMM === activeM;
+export const filterDetials = (bookingData, activeYYYYMM) => {
+    let filteredBookingData = bookingData.filter(booking => {
+        const YYYYMM = dayjs(booking.date.slice(0, 4) + '-' + booking.date.slice(5, 7) + '-' + booking.date.slice(8, 10)).format('YYYYMM')
+        return YYYYMM === activeYYYYMM;
     });
-    let ordered = sortDate(details);
+    let ordered = sortDate(filteredBookingData);
     return ordered;
 };
 
-const sortDate = details => {
-    let orderDay = details.map((obj, index) => {
-        let dd = obj.date.split('/');
-        return { dd: dd[2], index, price: obj.price };
+const sortDate = filteredBookingData => {
+    let orderDay = filteredBookingData.map((booking, index) => {
+        let dd = booking.date.split('/');
+        return { dd: dd[2], index: index };
     });
 
     let noRepeat = JSON.parse(JSON.stringify(orderDay));
-    let orderDetail = [];
+    let orderedBookingData = [];
 
     for (let i = 0; i < orderDay.length; i++) {
         for (let j = 0; j < noRepeat.length; j++) {
@@ -46,10 +49,10 @@ const sortDate = details => {
     noRepeat = noRepeat.sort(function(a, b) {
         return a.dd > b.dd ? 1 : -1;
     });
-    orderDetail = noRepeat.map(obj => {
-        return details[obj.index];
+    orderedBookingData = noRepeat.map(obj => {
+        return filteredBookingData[obj.index];
     });
-    return orderDetail;
+    return orderedBookingData;
 };
 
 export const checkDate = data => {

@@ -1,0 +1,124 @@
+@import '../style/color.scss';
+
+.profile-icon {
+	border: 1px solid #a5cf69;
+	color: #a5cf69;
+	border-radius: 50%;
+	height: 50px;
+	width: 50px;
+}
+
+.profile-icon:hover {
+	border: 1px solid orange;
+	color: orange;
+}
+
+.profile-icon .username-initial {
+	line-height: 50px;
+	font-weight: bold;
+	font-size: 28px;
+}
+
+.profile-link:hover {
+	color: orange;
+}
+
+.profile-title {
+	color: #1d9e82;
+}
+
+.profile-content {
+	font-weight: bold;
+	color: orange;
+}
+
+.profile-table {
+    width: 100%;
+    border: solid 2px #92c799;
+    border-radius: 10px;
+    padding: 5px;
+
+    .row-title > th {
+        font-size: 20px;
+    }
+    .row-title {
+        width: 100%;
+    }
+
+    .row > td {
+        font-size: 16px;
+    }
+    .row {
+        text-align: center;
+        height: 100%;
+        .btn-deco {
+            background: $iconLabelOrange;
+            color: #fff;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 700;
+            width: 45px;
+            &.green {
+                background: $color2;
+            }
+            &.yellow {
+                background: $color1;
+            }
+        }
+    }
+    .highlight {
+        background-color: #cde4ad;
+    }
+}
+
+.img-container {
+    position: relative;
+    text-align: center;
+    color: black;
+    margin: 0px auto;
+
+    /* First place user */
+    .fisrt-place-user {
+        position: absolute;
+        bottom: 81%;
+        left: 51%;
+        transform: translate(-50%, -50%);
+    }
+    /* First place bead */
+    .fisrt-place-bead {
+        position: absolute;
+        bottom: 23%;
+        left: 51%;
+        transform: translate(-50%, -50%);
+    }
+
+    /* Second place user */
+    .second-place-user {
+        position: absolute;
+        bottom: 53%;
+        left: 22%;
+        transform: translate(-50%, -50%);
+    }
+    /* Second place bead */
+    .second-place-bead {
+        position: absolute;
+        bottom: 5%;
+        left: 22%;
+        transform: translate(-50%, -50%);
+    }
+
+    /* Third place user */
+    .third-place-user {
+        position: absolute;
+        bottom: 45%;
+        left: 79%;
+        transform: translate(-50%, -50%);
+    }
+    /* Third place bead */
+    .third-place-bead {
+        position: absolute;
+        bottom: 0%;
+        left: 79%;
+        transform: translate(-50%, -50%);
+    }
+}

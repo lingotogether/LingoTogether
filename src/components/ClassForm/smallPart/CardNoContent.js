@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 const CardNoContent = (props) => {
     const { 
         Status, Title, date, PhotoOrVideo, Material, 
-        questions, CurrentUser, dispatch
+        questions, CurrentUser, dispatch, initBookingData
     } = props
 
     const classes = useStyles()
@@ -71,7 +71,7 @@ const CardNoContent = (props) => {
     }
 
     useEffect(() => {
-        console.log(AddQuestion)
+        // console.log(AddQuestion)
     }, [AddQuestion, AddQuestionObj])
 
     const handleInputChange = (e, type) => {
@@ -100,8 +100,20 @@ const CardNoContent = (props) => {
     }
 
     const handleEditingSave = () => {
-        let DataId = date.split('/').join('') + '-' + timing + '-' + CurrentUser.uid
+        let DataId = date.split('/').join('') + '-' + timing + '-' + CurrentUser.uid + selectLevel
         let isysTime = new Date(dayjs())
+        const bookings = initBookingData || []
+        const thisDateBookings = bookings.filter(booking => booking.date === date)
+
+        //Section limit check (three per date)
+        if(thisDateBookings.length >= 3) {
+            return alert('There are already have three sections today.')
+        }
+
+        //Class level conflict check
+        if(thisDateBookings.map(booking => booking.classLv).includes(selectLevel)) {
+            return alert('This level has already been taken.')
+        }
 
         setEditing(false)
 
@@ -122,24 +134,17 @@ const CardNoContent = (props) => {
                 questions: totalQ,
                 Title: iTitle,
                 PhotoOrVideo: iPhotoOrVideo,
-                Material: iMaterial,
+                Material: iMaterial === undefined ? "" : iMaterial,
                 time: timing,
                 maxParticipants: numberOfParticipants,
                 sysTime: isysTime,
-                isHost: true,
+                hostSettlement: false,
+                whoJoin: [],
+                whoJoinEmail: [],
+                
                 classLv: selectLevel,
             },
             'SET'
-        )
-
-        hendleDBactions(
-            'memberCard',
-            CurrentUser.email,
-            {
-                ...CurrentUser.memberData,
-                pendingHost: true
-            },
-            'UPDATE'
         )
 
         dispatch(cBoxController(false))
@@ -150,11 +155,9 @@ const CardNoContent = (props) => {
     }
 
     const resetBookingData = d => {
-        console.log(748998713)
         dispatch(saveBookingData(d))
     }
     const resetMemberData = d => {
-        console.log(748998713)
         dispatch(saveALLMemberData(d))
     }
     const handleClickEditing = open => {
@@ -188,9 +191,9 @@ const CardNoContent = (props) => {
         type === 'Add' ? setAddQuestion(newArr) : setiQuestion(newArr)
     }
 
-    // 新增Question欄位
+    // 新增 Question 欄位
     const handleAddQuestionCol = e => {
-        //有空白不給新增
+        // 有空白不給新增
         let hasBlank = AddQuestion.indexOf('') === -1 ? false : true
 
         if (hasBlank) return
@@ -311,7 +314,7 @@ const CardNoContent = (props) => {
                             )
                         })
                     }
-                    </select>                 
+                    </select>
                 </div>
 
                 <div className={'levelSelector'}>
