@@ -74,13 +74,13 @@ function TopHome(props) {
                         <hr />
 
                         <p>　
-                            “Pracitice”is the most efficient way for lnguage learning; 
+                            “Practice”is the most efficient way for language learning; 
                         </p>
                          <p>
                             whereas “immersion”is the most direct way for language acquisition.
                          </p>
                          <p>
-                             Lingotogether combines “practice” and “immersion” and create a unqiue environment for language practice.
+                             Lingotogether combines “practice” and “immersion” and creates a unique environment for language practice.
                          </p>
 
                         <p> 
