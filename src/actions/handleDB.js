@@ -24,7 +24,8 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                         // console.log('修改成功: ', DataObj)
                         CallBackFunction && CallBackFunction()
                     })
-                    .catch(function() {
+                    .catch(function(err) {
+                        // console.log(err)
                         alert('伺服器發生錯誤，請稍後再試')
                     })
             }
