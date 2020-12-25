@@ -55,7 +55,7 @@ function App(props) {
         }
     }, [])
     const handleScroll = e => {
-        console.log(e.path[1].scrollY, 'clientHeight')
+        // console.log(e.path[1].scrollY, 'clientHeight')
         const scrollY = e.path[1].scrollY
         if (scrollY > 600 && 1538 > scrollY) {
             setActiveNav(0)

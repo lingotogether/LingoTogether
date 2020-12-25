@@ -10,7 +10,7 @@ function Calendar(props) {
     const { initBookingData, dispatch } = props;
     const today = new Date();
     const year = today.getFullYear();
-    const month = today.getMonth() + 1 < 8 ? 0 + '' + (today.getMonth() + 1) : today.getMonth() + 1;
+    const month = today.getMonth() + 1 < 10 ? 0 + '' + (today.getMonth() + 1) : today.getMonth() + 1;
     const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
     const monthNames = [
         'January',

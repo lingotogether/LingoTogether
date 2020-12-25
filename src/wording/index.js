@@ -1,16 +1,12 @@
-export const aboutUs1 = `-Learning based on your own schedule <br/> -Motivations and
-                                    Inspirations<br/> -Balance work and family commitments with your
-                                    learning.<br/> 可根據自己的進度來安排學習<br/>
-                                    有共同目標<br/>可增加學習動機<br/>`;
-export const aboutUs2 = `-Improved Virtual Communication and Collaboration.<br/>
-                                    Communicating your ideas clearly and getting responses are
-                                    necessary skills in a virtual workplace.<br/>
-                                    強化虛擬溝通和協作能力<br/>
-                                    在虛擬工作場所中，清晰傳達您的想法<br/>
-                                    讀書會有一套運作標準<br/> 且嚴格執行及管理<br/>
-                                    不用擔心讀書會持續不久<br/>`;
-export const aboutUs3 = `-Learn on any connected device<br/> -Learning can take place
-                                    almost anywhere.<br/> 任何城市皆是外語聊天室<br/>`;
+export const aboutUs1 = `*Learning is based on your own schedule <br/> *Joining the discussion based on your language level<br/> *Lowering Foreign Language Anxiety.<br/> *根據自己的進度來安排學習<br/>
+                                    *根據自身外語程度參加不同等級讀書會<br/>*降低外語焦慮感<br/>`;
+export const aboutUs2 = `*Output your language knowledge. <br/> 
+                                    *Improving virtual communication <br/>
+                                    *讓Lingotogether成為你的語言知識輸出口。<br/>
+                                    *強化虛擬溝通能力<br/>
+                                    `;
+export const aboutUs3 = `*Learning can take place
+                                    almost anywhere with any internet-connected devices.<br/> 任何城市皆是外語聊天室<br/>`;
 
 export const rulesIntroE = `Monthly mission: earn 5 beads each month!*<br/> If fails , you will lose the opportunity for practice next month :(<br/>
                             You are welcome to come back in the following month:) <br />
@@ -18,10 +14,11 @@ export const rulesIntroE = `Monthly mission: earn 5 beads each month!*<br/> If f
 export const rulesIntroC = ` 每月任務：獲得5點<br/>點數結算日期依照您註冊時間計算<br/>
                                 未達成5點，您將失去下個月練習機會 :(<br/>但歡迎您再下個月的歸來<br/>`;
 
-export const rulesE = `- upload questions 24 hours ahead<br/>- If you are unable to host please find a substitute host<br/>`;
+export const rulesE = `*Punctual: + 20點 <br/>*Tardy >  20minutes : + 0點 <br/> *Absent: - 30點`;
+export const rulesF = `*Punctual: + 10點 <br/>*Tardy >  20minutes : + 0點 <br/> *Absent: - 30點`;
 
-export const rulesC = `- 24小時前上傳討論題目<br/> - 主持討論<br/>
-                                     -如果無法主持，請自行找代班主持人`;
+export const rulesC = `*準時: + 20點<br/> *遲到 > 20分鐘 ： + 0點 <br/>
+                                     *缺席：- 30點`;
 
 export const steps2 = `請密切注意Skype及Line<br/> • 組員會和你約個時間聊聊天<br/> •
                             會談中將使用skype螢幕分享功能<br/> • 僅使用語音功能（不使用視訊）<br/>`;
@@ -34,6 +31,7 @@ export const Wordings = {
     rulesIntroC,
     rulesE,
     rulesC,
+    rulesF,
     steps2,
 };
 // 用法 <p dangerouslySetInnerHTML={{ __html: rulesC }}></p>
