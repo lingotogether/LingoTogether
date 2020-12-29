@@ -138,7 +138,7 @@ const BeadsExchange = (props) => {
 		)
 
 		hendleDBactions('memberCard',
-			CurrentUser.memberData.DataID, {
+			CurrentUser.memberData.Email, {
 				...CurrentUser.memberData, 
 				Bead: CurrentUser.memberData.Bead - prize.Cost, 
 			}, 'UPDATE',
@@ -370,7 +370,7 @@ const BeadsExchange = (props) => {
 													}) :
 													<button
 														className="button-exchange"
-														disabled={data.LeftAmount === 0 || data.ExchangeUserID.indexOf(CurrentUser.uid) != -1 }
+														disabled={data.LeftAmount === 0 || data.ExchangeUserID.indexOf(CurrentUser.uid) !== -1 }
 														onClick={() => ExchangePrize(data.DataID)}
 													>
 														<span>Exchange</span>
