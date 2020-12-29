@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Home from './components/Home';
 import { Wordings } from './wording';
 
-const { aboutUs1, aboutUs2, aboutUs3, rulesIntroE, rulesIntroC, rulesE, rulesC } = Wordings;
+const { aboutUs1, aboutUs2, aboutUs3, rulesIntroE, rulesIntroC, rulesE, rulesC, rulesF } = Wordings;
 
 function TopHome(props) {
 
@@ -17,7 +17,7 @@ function TopHome(props) {
         ig: 'https://www.instagram.com/lingotogether',
         email: 'mailto:hr@lingotogether.com',
         yt: 'https://www.youtube.com/channel/UC8UEVOyQJdTYhpiTyvIR8cw',
-        podcast: 'https://podcasts.apple.com/tw/podcast/%E8%81%86%E6%9E%9C%E8%8B%B1%E6%96%87%E8%81%BD%E5%8A%9B%E7%AB%99/id1526108092'
+        podcast: 'https://medium.com/@lingotogether'
     };
 
     return (
@@ -73,11 +73,25 @@ function TopHome(props) {
                         <h2> About Lingotogether </h2>
                         <hr />
 
-                        <p>　“Pracitice”is the most efficient way for lnguage learning; whereas “immersion”is the most direct way for language acquisition.
-                         Lingotogether combines “practice” and “immersion” and create a unqiue environment for language practice.
+                        <p>　
+                            “Practice”is the most efficient way for language learning; 
+                        </p>
+                         <p>
+                            whereas “immersion”is the most direct way for language acquisition.
+                         </p>
+                         <p>
+                             Lingotogether combines “practice” and “immersion” and creates a unique environment for language practice.
                          </p>
 
-                        <p> 【練習】是語言學習最有效的方法；【沈浸】是語言習得最直接的做法。 Lingotogether結合【練習】與【沈浸】打造出獨特的外語練習環境。</p>
+                        <p> 
+                            【練習】是語言學習最有效的方法；
+                        </p>
+                        <p>
+                            【沈浸】是語言習得最直接的做法。
+                        </p>
+                        <p>
+                             Lingotogether結合【練習】與【沈浸】打造出獨特的外語練習環境。
+                        </p>
                     </div>
 
                     <div className="row">
@@ -156,7 +170,7 @@ function TopHome(props) {
                         <div className="col-6">
                             <Grid item xs={12}>
                                 <p>
-                                    <b>Time: Schedule your own time(GMT+8)</b>
+                                    <b>Time: Schedule your own time(based on your time zone)</b>
                                 </p>
                                 <p>Host：20 beads / Participant：10 beads</p>
                                 <Grid container spacing={3}>
@@ -168,7 +182,7 @@ function TopHome(props) {
                                     <Grid item xs={6}>
                                         <h2 className="title">Being a participant</h2>
                                         <hr />
-                                        <p dangerouslySetInnerHTML={{ __html: rulesE }}></p>
+                                        <p dangerouslySetInnerHTML={{ __html: rulesF }}></p>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -176,7 +190,7 @@ function TopHome(props) {
                         <div className="col-6">
                             <Grid item xs={12}>
                                 <p>
-                                    <b>時間： 自由選擇時間(台灣時間)</b>
+                                    <b>時間： 自由選擇時間(根據你的時區)</b>
                                 </p>
                                 <p>主持人：20 beads / 參加者：10 beads</p>
                                 <Grid container spacing={3}>
@@ -318,6 +332,11 @@ function TopHome(props) {
                         <div className="footer-icons col-md-6 col-sm-12">
                             <div className="social-media">
                                 <ul className="clearfix">
+                                    <li>
+                                        <a href={MediaLink.podcast}>
+                                            <i className="fas fa-podcast"></i>
+                                        </a>
+                                    </li>
                                     <li>
                                         <a href={MediaLink.line}>
                                             <i className="fab fa-line"></i>

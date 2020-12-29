@@ -15,6 +15,7 @@ export const rulesIntroC = ` 每月任務：獲得5點<br/>點數結算日期依
                                 未達成5點，您將失去下個月練習機會 :(<br/>但歡迎您再下個月的歸來<br/>`;
 
 export const rulesE = `*Punctual: + 20點 <br/>*Tardy >  20minutes : + 0點 <br/> *Absent: - 30點`;
+export const rulesF = `*Punctual: + 10點 <br/>*Tardy >  20minutes : + 0點 <br/> *Absent: - 30點`;
 
 export const rulesC = `*準時: + 20點<br/> *遲到 > 20分鐘 ： + 0點 <br/>
                                      *缺席：- 30點`;
@@ -30,6 +31,7 @@ export const Wordings = {
     rulesIntroC,
     rulesE,
     rulesC,
+    rulesF,
     steps2,
 };
 // 用法 <p dangerouslySetInnerHTML={{ __html: rulesC }}></p>
