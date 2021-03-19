@@ -1,12 +1,15 @@
-export const aboutUs1 = `*Learning is based on your own schedule <br/> *Joining the discussion based on your language level<br/> *Lowering Foreign Language Anxiety.<br/> *根據自己的進度來安排學習<br/>
-                                    *根據自身外語程度參加不同等級讀書會<br/>*降低外語焦慮感<br/>`;
-export const aboutUs2 = `*Output your language knowledge. <br/> 
-                                    *Improving virtual communication <br/>
-                                    *讓Lingotogether成為你的語言知識輸出口。<br/>
+export const aboutUs1_EN = `*Learning is based on your own schedule <br/> *Joining the discussion based on your language level<br/> *Lowering Foreign Language Anxiety.<br/>`;
+export const aboutUs1 = `*根據自己的進度來安排學習<br/>
+                        *根據自身外語程度參加不同等級讀書會<br/>*降低外語焦慮感<br/>`;  
+
+export const aboutUs2_EN = `*Output your language knowledge. <br/>*Improving virtual communication <br/>`;
+export const aboutUs2 = `*讓Lingotogether成為你的語言知識輸出口。<br/>
                                     *強化虛擬溝通能力<br/>
                                     `;
-export const aboutUs3 = `*Learning can take place
-                                    almost anywhere with any internet-connected devices.<br/> 任何城市皆是外語聊天室<br/>`;
+
+export const aboutUs3_EN = `*Learning can take place
+                                    almost anywhere with any internet-connected devices.<br/>`;
+export const aboutUs3 = `任何城市皆是外語聊天室<br/>`;
 
 export const rulesIntroE = `Monthly mission: earn 5 beads each month!*<br/> If fails , you will lose the opportunity for practice next month :(<br/>
                             You are welcome to come back in the following month:) <br />
@@ -27,6 +30,9 @@ export const Wordings = {
     aboutUs1,
     aboutUs2,
     aboutUs3,
+    aboutUs1_EN,
+    aboutUs2_EN,
+    aboutUs3_EN,
     rulesIntroE,
     rulesIntroC,
     rulesE,

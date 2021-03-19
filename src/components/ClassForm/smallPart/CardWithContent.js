@@ -124,6 +124,28 @@ export default function CardWithContent(props) {
         }
     }, [])
 
+    const handleTimeOffset = () => {
+        let t = iTime;
+        let dd = date;
+
+        let offset = (new Date().getTimezoneOffset() / 60) + 8; // 跟台灣的時差(hr)
+        let tempTime = parseInt(t.substring(0, 2)) + offset;
+        if(tempTime < 0){
+            tempTime += 24;
+            let d = new Date(dd);
+            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString();              
+            dd = newD;                      
+        }
+        else if (tempTime > 23) {
+            tempTime -= 24;
+            let d = new Date(dd);
+            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString();            
+            dd = newD;            
+        }                
+        
+        return [dd, tempTime.toString().padStart(2, "0") + "00"];        
+    }
+
     const handleJoinClick = event => {
         if (!CurrentUser) return
 
@@ -223,16 +245,19 @@ export default function CardWithContent(props) {
 
     const handleEditingSave = () => {
         setEditing(false)
+        const timeData = handleTimeOffset();
+
         hendleDBactions(
             'booking',
             DataID,
             {
+                date: timeData[0],
                 questions: iQuestion,
                 Title: iTitle,
                 PhotoOrVideo: iPhotoOrVideo,
                 Material: iMaterial === undefined ? "" : iMaterial,
                 maxParticipants: iNumberOfParticipants,
-                time: iTime
+                time: timeData[1]
             },
             'UPDATE'
         )

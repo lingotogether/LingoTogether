@@ -124,18 +124,20 @@ const CardNoContent = (props) => {
                 return item
             })
 
+        const timeData = handleTimeOffset();        
+
         hendleDBactions(
             'booking',
             DataId,
             {
                 CreateUserID: CurrentUser.uid,
                 CreateUserName: CurrentUser.memberData.UserName,
-                date: date,
+                date: timeData[0],
                 questions: totalQ,
                 Title: iTitle,
                 PhotoOrVideo: iPhotoOrVideo,
                 Material: iMaterial === undefined ? "" : iMaterial,
-                time: timing,
+                time: timeData[1],
                 maxParticipants: numberOfParticipants,
                 sysTime: isysTime,
                 hostSettlement: false,
@@ -212,6 +214,28 @@ const CardNoContent = (props) => {
         } else {
             return
         }
+    }
+
+    const handleTimeOffset = () => {
+        let t = timing;
+        let dd = date;
+
+        let offset = (new Date().getTimezoneOffset() / 60) + 8; // 跟台灣的時差(hr)
+        let tempTime = parseInt(t.substring(0, 2)) + offset;
+        if(tempTime < 0){
+            tempTime += 24;
+            let d = new Date(dd);
+            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString();              
+            dd = newD;                      
+        }
+        else if (tempTime > 23) {
+            tempTime -= 24;
+            let d = new Date(dd);
+            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString();            
+            dd = newD;            
+        }                
+        
+        return [dd, tempTime.toString().padStart(2, "0") + "00"];        
     }
 
     return (

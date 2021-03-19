@@ -397,6 +397,17 @@ nav a:hover {
     }
 }
 
+#FAQ {
+    h1 {
+        margin-bottom: 80px;
+        text-align: center;
+        color: #7e7e7e;
+        @include forM {
+            margin-bottom: 40px;
+        }
+    }
+}
+
 /*Footer*/
 #footer {
     position: relative;
@@ -493,6 +504,16 @@ nav a:hover {
         padding-bottom: 40px;
     }
 }
+#go-faq {    
+    text-align: center;    
+    margin-top: 30px;
+}
+#go-faq a {
+    border: 3px solid ;    
+    padding: 10px;
+    line-height: 40px;
+}
+
 #go-top {
     position: fixed;
     bottom: 32px;
@@ -660,4 +681,34 @@ nav a:hover {
             }
         }
     }
+}
+
+.faq-header {
+    color: #3ab3a9
+}
+
+.faq-question {
+    font-weight: bold;
+}
+
+.faq-link {
+    margin-top: 20px;
+    color: black;
+    font-weight: bold;
+}
+
+.faq-answer {
+    margin-top: 20px;
+}
+.top-title {
+    display: flex;
+    background-color: #3ab3a9;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    font-size: 32px;
+    font-weight: 500;
+    margin-top: 30px;
+    color: white;    
 }

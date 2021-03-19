@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, useHistory } from 'react-router-dom'
 import { connect } from 'react-redux'
 import ProtectedRoute from './components/ProtectedRoute'
 import Home from './components/Home'
@@ -7,24 +7,55 @@ import Login from './components/Login'
 import Signup from './components/Signup'
 import Navbar from './components/NavBar'
 import TopHome from './TopHome'
+import FAQ from './FAQ'
 import ReceivedBeads from './components/PersonalPage/ReceivedBeads'
 import RewardHost from './components/PersonalPage/RewardHost'
 import BeadsExchange from './components/PersonalPage/BeadsExchange'
 import MonthlyMission from './components/PersonalPage/MonthlyMission'
 import PracticeCalendar from './components/PersonalPage/PracticeCalendar'
 import { deviceIsMobile } from './actions/'
+import Scroll from './components/PersonalPage/Scroll'
 
 import { hendleDBactions } from './actions/handleDB'
 import MemberList from './components/MemberList'
+import { MenuList } from '@material-ui/core'
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Popper from '@material-ui/core/Popper';
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import { LocalConvenienceStoreOutlined } from '@material-ui/icons'
 
 let cx = require('classnames')
+
 
 function App(props) {
     const { isAuthenticated, isVerifying, dispatch, CurrentUser, } = props
     const [withMData, setWithMData] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
     const [noShow, setNoShow] = useState(true)
-    const [ActiveNav, setActiveNav] = useState(0)
+    const [ActiveNav, setActiveNav] = useState(0)    
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const history = useHistory();
+    const [isEnglish, setIsEnglish] = useState(true);    
+
+    const handleClick = (event) => {
+        if (anchorEl !== event.currentTarget) {
+        setAnchorEl(event.currentTarget);
+        }
+    }
+
+    const handleClose = () => {        
+        setAnchorEl(null);
+    }       
+    const handleLanguage = lang => {  
+                
+        
+
+        handleClose();
+        setIsEnglish(lang === "EN" ? true : false);
+        history.push({pathname: "/TopHome", state: { isEnglish: lang === "EN" }});
+    }
 
     const userWithoutData = () => {
         if (CurrentUser) {
@@ -78,7 +109,7 @@ function App(props) {
                         <a href="/">
                             <img src={require('./img/lingo-2-removebg.png')} alt="logo" />
                         </a>
-                    </div>
+                    </div>                    
                     {
                         isMobile ? (
                             <div className="mNavbar">
@@ -94,13 +125,41 @@ function App(props) {
                                 </div>
                             </div>
                         ) : (
-                            <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} />
+                            <div style={{display: "flex", flexDirection: 'row-reverse', alignItems: "center"}}>
+                                <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} isEnglish={isEnglish} />
+                                {/* <img src={require('./img/united-kingdom.png')}
+                                    style={{width: '30px', marginRight: '20px'}}
+                                    aria-owns={anchorEl ? "simple-menu" : undefined}    
+                                    onMouseOver={handleClick}                                                                       
+                                />   */}
+                                <span style={{ width: '20px', textDecoration: 'underline', color: '#3AB3A9', marginRight: '20px'}}>{isEnglish ? "EN" : "CH"}</span>
+                                <i className="fas fa-language fa-2x"
+                                    style={{width: '30px', marginRight: '20px', color: '#3AB3A9', cursor: "pointer"}}
+                                    aria-owns={anchorEl ? "simple-menu" : undefined}    
+                                    onMouseOver={handleClick}                                                       
+                                ></i>
+                                
+
+                                <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} role={undefined} transition style={{zIndex: "10"}}> 
+                                    <Paper>
+                                        <MenuList
+                                            id="simple-menu"                                            
+                                            onMouseLeave={handleClose}
+                                        >
+                                            <MenuItem>Language</MenuItem>
+                                            <MenuItem onClick={() => handleLanguage("EN")}>EN</MenuItem>
+                                            <MenuItem onClick={() => handleLanguage("CH")}>CH</MenuItem>                                    
+                                        </MenuList>
+                                    </Paper>
+                                </Popper>                      
+                                
+                            </div>
                         )
                     }
                 </nav>
             </div>
 
-            <Switch>
+            <Switch>            
                 <ProtectedRoute
                     exact
                     path="/"
@@ -143,22 +202,32 @@ function App(props) {
                     isAuthenticated={isAuthenticated}
                     isVerifying={isVerifying}
                 />
+                <ProtectedRoute
+                    exact
+                    path="/scroll"
+                    component={Scroll}
+                    isAuthenticated={isAuthenticated}
+                    isVerifying={isVerifying}
+                />                
                 <Route path="/login" component={Login} />
                 <Route path="/signup" component={Signup} />
                 <Route path="/admin" component={MemberList} />
                 <Route path="/TopHome" component={TopHome} />
+                <Route path="/FAQ" component={FAQ} />
+                
             </Switch>
+            
         </Fragment>
     )
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state) {    
     return {
         isAuthenticated: state.auth.isAuthenticated,
         isVerifying: state.auth.isVerifying,
         CurrentUser: state.auth.CurrentUser,
         initALLMemberData: state.auth.initALLMemberData,
-        isAdminAccount: state.auth.isAdminAccount,
+        isAdminAccount: state.auth.isAdminAccount,                     
     }
 }
 

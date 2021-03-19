@@ -6,7 +6,7 @@ import Profile from './Profile'
 
 var cx = require('classnames')
 function Navbar(props) {
-    const { isAuthenticated, dispatch, CurrentUser, isAdminAccount, deviceM, ActiveNav } = props
+    const { isAuthenticated, dispatch, CurrentUser, isAdminAccount, deviceM, ActiveNav, isEnglish } = props
     const [withMData, setWithMData] = React.useState(false)
     const [VIPactive, setVIPactive] = React.useState(false)
     const [isMobile, setIsMobile] = React.useState(deviceM)
@@ -69,9 +69,8 @@ function Navbar(props) {
                     <Fragment>                     
                         <li className={cx('nav-0', { active: nowActive === 0 })}>
                             <a href="/TopHome#Outlets" onClick={() => LocationHash(0, '#Outlets')}>
-                                About us
-                                {isMobile ? null : <br />}
-                                關於我們
+                                {isEnglish ? <span>About us</span> : <span>關於我們</span>}
+                                {isMobile ? null : <br />}                                
                             </a>
                         </li>
                         {
@@ -90,16 +89,14 @@ function Navbar(props) {
                                 href="/TopHome#Calendar"
                                 onClick={() => LocationHash(2, '#Calendar')}
                             >
-                                Calender
-                                {isMobile ? null : <br />}
-                                日曆
+                                {isEnglish ? <span>Calender</span> : <span>日曆</span>}                                
+                                {isMobile ? null : <br />}                                
                             </a>
                         </li>
                         <li className={cx('nav-3', { active: nowActive === 3 })}>
                             <a href="/TopHome#Steps" onClick={() => LocationHash(3, '#Steps')}>
-                                Join us
-                                {isMobile ? null : <br />}
-                                加入我們
+                                {isEnglish ? <span>Join us</span> : <span>加入我們</span>}                                
+                                {isMobile ? null : <br />}                                
                             </a>
                         </li>
                     </Fragment>
@@ -110,9 +107,8 @@ function Navbar(props) {
                         onClick={() => LocationHash(8, '')}
                     >
                         <Link to="/login">
-                            Log in
-                            {isMobile ? null : <br />}
-                            登入
+                            {isEnglish ? <span>Log in</span> : <span>登入</span>}                            
+                            {isMobile ? null : <br />}                            
                         </Link>
                     </li>
                 ) : null}
@@ -124,9 +120,8 @@ function Navbar(props) {
                             onClick={() => LocationHash(7, '')}
                         >
                             <Link to="/signup">
-                                Sign up
-                                {isMobile ? null : <br />}
-                                註冊
+                                {isEnglish ? <span>Sign up</span> : <span>註冊</span>}                                
+                                {isMobile ? null : <br />}                            
                             </Link>
                         </li>
                     </Fragment>
@@ -136,7 +131,10 @@ function Navbar(props) {
                         className={cx('nav-1', { active: nowActive === 4 })}
                         onClick={() => LocationHash(4, '')}
                     >
-                        <Link to="/admin">MemberList{isMobile ? null : <br />}會員清單 </Link>
+                        <Link to="/admin">                            
+                            {isEnglish ? <span>MemberList</span> : <span>會員清單</span>}
+                            {isMobile ? null : <br />}
+                        </Link>
                     </li>
                 ) : null}
                 {isAuthenticated ? (
@@ -151,7 +149,8 @@ function Navbar(props) {
                                     setVIPactive(true)
                                 }}
                             >
-                                Vip {isMobile ? null : <br />} 會員專區
+                                {isEnglish ? <span>Vip</span> : <span>會員專區</span>}                                
+                                {isMobile ? null : <br />}                                 
                             </Link>
                         </li>
                         <li className={cx('nav-1', { active: nowActive === 6 })}>

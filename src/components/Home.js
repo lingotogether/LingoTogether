@@ -14,6 +14,7 @@ import * as firebase from 'firebase/app'
 const cx = require('classnames')
 
 const Home = (props) => {
+    const { isOffset } = props;    
 
     const [ CurrentUser, setCurrentUser ] = useState(props.CurrentUser)
 
@@ -458,6 +459,7 @@ You can get 10 beads for reward only if you participate punctually!')
                 <Calendar
                     initBookingData={initBookingData}
                     CurrentUser={CurrentUser}
+                    isOffset={isOffset}
                 />
             </div>
             {isAuthenticated ? (
