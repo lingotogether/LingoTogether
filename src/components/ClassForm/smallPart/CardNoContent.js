@@ -17,6 +17,8 @@ import InputLabel from '@material-ui/core/InputLabel'
 import dayjs from 'dayjs'
 import { parseTime } from '../../../utils/helpers'
 import { timeOptions, participantsOptions } from '../../../utils/options'
+import VideocamIcon from '@material-ui/icons/Videocam';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -61,6 +63,8 @@ const CardNoContent = (props) => {
     )
     const [iMaterial, setiMaterial] = useState(Material)
     const [AddQuestion, setAddQuestion] = useState([])
+    const [iGoogleLink, setiGoogleLink] = useState();
+    const [iNote, setiNote] = useState();
 
     const [timing, setTiming] = useState('2200')
     const [selectLevel, setSelectLevel] = useState(1)
@@ -94,6 +98,12 @@ const CardNoContent = (props) => {
 
                 setiQuestion(newArr)
                 break
+            case 'googleLink':
+                setiGoogleLink(value);
+                break;
+            case 'note':
+                setiNote(value);
+                break;
             default:
                 return
         }
@@ -143,7 +153,8 @@ const CardNoContent = (props) => {
                 hostSettlement: false,
                 whoJoin: [],
                 whoJoinEmail: [],
-                
+                GoogleLink: iGoogleLink,
+                note: iNote,
                 classLv: selectLevel,
             },
             'SET'
@@ -289,83 +300,125 @@ const CardNoContent = (props) => {
                     onChange={(e, i) => handleInputChange(e, 'url')}
                 />
 
-                <div className={'levelSelector'}>
-                    <InputLabel key={'FormControl8'} id="demo-simple-select-outlined-label">
-                        Level
-                    </InputLabel>
+                <div className="GoogleMeet">
+                    <TextField
+                        key={`CardGoogleMeet`}
+                        label={`Google Meet`}
+                        style={{ margin: 8, paddingRight: '37px' }}
+                        placeholder="Please provide the link of your meeting"
+                        fullWidth
+                        multiline                    
+                        margin="normal"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        onChange={(e, i) => handleInputChange(e, 'googleLink')}
+                    />
+                    <VideocamIcon 
+                        className="meetBtn"
+                        key={`GoogleMeetBtn`}
+                        onClick={e => {
+                            window.open('https://meet.google.com/');
+                        }}
+                    >                        
+                    </VideocamIcon>
 
-                    <select
-                        name="classLevel"
-                        onChange={e => handleSelectLevel(e)}
-                        value={selectLevel}
-                        key="classLevel"
-                    >
-                        <option value={0} key="Basic">
-                            Basic 初級
-                        </option>
-                        <option value={1} key="Intermediate">
-                            Intermediate 中級
-                        </option>
-                        <option value={2} key="Advanced">
-                            Advanced 進階
-                        </option>
-                    </select>
                 </div>
+                
+                <div className={'levelSection'}>
+                    <div>
+                        <div className={'levelSelector'}>
+                            <InputLabel key={'FormControl8'} id="demo-simple-select-outlined-label">
+                                Level
+                            </InputLabel>
 
-                <div className={'levelSelector'}>
-                    <InputLabel key={'FormControl8'} id="demo-simple-select-outlined-label">
-                        Time
-                    </InputLabel>
-
-                    <select 
-                        name="classLevel"
-                        key="classLevel"
-                        onChange={e => setTiming(`${e.target.value}00`)}
-                    >
-                    {
-                        timeOptions.map((timeOption, index) => {
-
-                            const indexStr = index.toString()
-                            const value = 
-                                indexStr.length === 1 
-                                ? `0${indexStr}`
-                                : indexStr
-
-                            return (
-                                <option key={index} value={value}>
-                                    {timeOption}
+                            <select
+                                name="classLevel"
+                                onChange={e => handleSelectLevel(e)}
+                                value={selectLevel}
+                                key="classLevel"
+                            >
+                                <option value={0} key="Basic">
+                                    Basic 初級
                                 </option>
-                            )
-                        })
-                    }
-                    </select>
-                </div>
-
-                <div className={'levelSelector'}>
-                    <InputLabel key={'FormControl8'} id="demo-simple-select-outlined-label">
-                        Number of participants: 
-                    </InputLabel>
-
-                    <select 
-                        name="classLevel"
-                        key="classLevel"
-                        onChange={e => setNumberOfParticipants(parseInt(e.target.value))}
-                    >
-                    {
-                        participantsOptions.map((option, index) => {
-                            return (
-                                <option key={index} value={option}>
-                                {
-                                    option === '666'
-                                    ? 'Unlimited'
-                                    : option
-                                }
+                                <option value={1} key="Intermediate">
+                                    Intermediate 中級
                                 </option>
-                            )
-                        })
-                    }
-                    </select>                 
+                                <option value={2} key="Advanced">
+                                    Advanced 進階
+                                </option>
+                            </select>
+                        </div>
+
+                        <div className={'levelSelector'}>
+                            <InputLabel key={'FormControl8'} id="demo-simple-select-outlined-label">
+                                Time
+                            </InputLabel>
+
+                            <select 
+                                name="classLevel"
+                                key="classLevel"
+                                onChange={e => setTiming(`${e.target.value}00`)}
+                            >
+                            {
+                                timeOptions.map((timeOption, index) => {
+
+                                    const indexStr = index.toString()
+                                    const value = 
+                                        indexStr.length === 1 
+                                        ? `0${indexStr}`
+                                        : indexStr
+
+                                    return (
+                                        <option key={index} value={value}>
+                                            {timeOption}
+                                        </option>
+                                    )
+                                })
+                            }
+                            </select>
+                        </div>
+
+                        <div className={'levelSelector'}>
+                            <InputLabel key={'FormControl8'} id="demo-simple-select-outlined-label">
+                                Number of participants: 
+                            </InputLabel>
+
+                            <select 
+                                name="classLevel"
+                                key="classLevel"
+                                onChange={e => setNumberOfParticipants(parseInt(e.target.value))}
+                            >
+                            {
+                                participantsOptions.map((option, index) => {
+                                    return (
+                                        <option key={index} value={option}>
+                                        {
+                                            option === '666'
+                                            ? 'Unlimited'
+                                            : option
+                                        }
+                                        </option>
+                                    )
+                                })
+                            }
+                            </select>                 
+                        </div>
+                    </div>
+
+                    <TextareaAutosize aria-label="minimum height" rowsMin={5} placeholder="Would you like to say something ? :)"
+                        style={{width: '250px', height: '90px', resize: 'none', overflowY: 'scroll'}}
+                        onChange={e => {
+                            handleInputChange(e, 'note');
+                        }}
+                    />
+
+                    
                 </div>
+
+                
+
+                
 
                 <div className={'cardQuestion'}>
                     <div className="QCols">
@@ -376,7 +429,7 @@ const CardNoContent = (props) => {
                                         key={`Questiion${i + 1}`}
                                         label={`Questiion${i + 1}`}
                                         style={{ margin: 8, paddingRight: '37px' }}
-                                        placeholder="Please provide at least 3 questions"
+                                        placeholder="Please provide your question here"
                                         defaultValue={item}
                                         fullWidth
                                         multiline

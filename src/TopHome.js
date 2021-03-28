@@ -294,9 +294,15 @@ function TopHome(props) {
                 </div>
                 <div id="Calendar">
                     <div id="intro">
-                        <h2>正在進行...</h2>
+                        {
+                            props.location.state !== undefined  && props.location.state.isEnglish
+                            ?
+                            <h2>Monthly Schedule</h2>
+                            :                            
+                            <h2>正在進行...</h2>
+                        }                        
                         <hr />
-                        <p>Monthly Schedule</p>
+                        
                     </div>
                     <Home {...props} isOffset={false} />
                 </div>

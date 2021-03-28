@@ -37,7 +37,7 @@ function App(props) {
     const [ActiveNav, setActiveNav] = useState(0)    
     const [anchorEl, setAnchorEl] = React.useState(null);
     const history = useHistory();
-    const [isEnglish, setIsEnglish] = useState(true);    
+    const [isEnglish, setIsEnglish] = useState(false);    
 
     const handleClick = (event) => {
         if (anchorEl !== event.currentTarget) {
@@ -51,10 +51,10 @@ function App(props) {
     const handleLanguage = lang => {  
                 
         
-
+        const pathname = window.location.pathname;
         handleClose();
         setIsEnglish(lang === "EN" ? true : false);
-        history.push({pathname: "/TopHome", state: { isEnglish: lang === "EN" }});
+        history.push({pathname: pathname, state: { isEnglish: lang === "EN" }});
     }
 
     const userWithoutData = () => {

@@ -83,7 +83,7 @@ const Signup = ({ classes, dispatch, isAuthenticated }) => {
             email === '' ||
             password === '' ||
             level === '' ||
-            skypeID === '' ||
+            //skypeID === '' ||
             userName === ''
         ) {
             alert('Please fill in the form completely!')

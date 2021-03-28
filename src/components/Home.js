@@ -462,7 +462,7 @@ You can get 10 beads for reward only if you participate punctually!')
                     isOffset={isOffset}
                 />
             </div>
-            {isAuthenticated ? (
+            {/* {isAuthenticated ? (
                 <div className="skQRcode">
                     <ul>
                         <li onClick={() => skOnclick(0)}>
@@ -476,7 +476,7 @@ You can get 10 beads for reward only if you participate punctually!')
                         </li>
                     </ul>
                 </div>
-            ) : null}
+            ) : null} */}
 
             {isLoggingOut && <p>Logging Out....</p>}
             {logoutError && <p>Error logging out</p>}

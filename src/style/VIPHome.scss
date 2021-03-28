@@ -204,6 +204,18 @@
                         }
                     }
                 }
+                .GoogleMeet {
+                    position: relative;
+                    .meetBtn {
+                        position: absolute;
+                        cursor: pointer;
+                        top: 27px;
+                        right: 0px;
+                    }
+                }
+                .levelSection {
+                    display: flex;
+                }
             }
         }
     }

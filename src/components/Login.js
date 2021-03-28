@@ -54,7 +54,7 @@ const Login = ({ dispatch, classes, loginError, isAuthenticated }) => {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Login in
+                        Login
                     </Typography>
                     <TextField
                         variant="outlined"

@@ -688,7 +688,9 @@ nav a:hover {
 }
 
 .faq-question {
-    font-weight: bold;
+    font-family: Georgia;
+    font-size: 21px;
+    color: #5c5655;
 }
 
 .faq-link {
@@ -699,6 +701,20 @@ nav a:hover {
 
 .faq-answer {
     margin-top: 20px;
+    margin-left: 30px;
+    font-family: 'TimesNew Roman';
+    font-size: 16px;
+    color: #5c5655;
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    table {
+        width: 100%;
+    }
+    td {
+        width: 25%;
+    }
 }
 .top-title {
     display: flex;

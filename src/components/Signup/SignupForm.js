@@ -20,12 +20,12 @@ const SignupForm = ({ handleOnChange, levelVal }) => {
     const labelObj = {
         userName: 'Name 英文名字',
         level: 'Your English level? 自身英文程度',
-        skypeID: 'Skype ID Skype 帳號',
+        //skypeID: 'Skype ID Skype 帳號',
     }
     const type = [
         'userName', 
         'level', 
-        'skypeID'
+        //'skypeID'
     ]
     const LEVEL = ['Basic 初級', 'Intermediate 中級', 'Advanced 進階', 'Other']
 

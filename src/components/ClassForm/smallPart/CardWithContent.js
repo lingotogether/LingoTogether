@@ -14,8 +14,11 @@ import { hendleDBactions } from '../../../actions/handleDB'
 import TextField from '@material-ui/core/TextField'
 import InputLabel from '@material-ui/core/InputLabel'
 import Button from '@material-ui/core/Button'
-import { cBoxController, saveBookingData, saveALLMemberData } from '../../../actions'
+import { cBoxController, saveBookingData, saveALLMemberData, saveBeadsRecordData } from '../../../actions'
 import DeleteIcon from '@material-ui/icons/Delete'
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import dayjs from 'dayjs'
+import * as firebase from 'firebase/app'
 
 import { parseTime } from '../../../utils/helpers'
 
@@ -69,6 +72,8 @@ export default function CardWithContent(props) {
         whoJoin,
         whoJoinEmail,
         settlement,
+        GoogleLink,
+        note,
     } = props
 
     const classes = useStyles()
@@ -87,11 +92,19 @@ export default function CardWithContent(props) {
         PhotoOrVideo || 'https://miro.medium.com/max/3600/1*ORHmMQBfcVlNMvW_FOt-uA.png'
     )
     const [iMaterial, setiMaterial] = useState(Material)
+    const [iGoogleLink, setiGoogleLink] = useState(GoogleLink);
+    const [iNote, setiNote] = useState(note);
     const [iTime, setiTime] = useState(time)
     const [iNumberOfParticipants, setiNumberOfParticipants] = useState(maxParticipants)
 
 
     const level = ['B', 'I', 'A']
+
+    const classLvMap = [
+		'-Ba-',
+		'-In-',
+		'-Adv-'
+	]    
 
     useEffect(() => {
         if (CurrentUser && isAdminAccount) {
@@ -152,32 +165,103 @@ export default function CardWithContent(props) {
         const limit = maxParticipants ? maxParticipants : Number.MAX_VALUE
 
         const { memberData, email } = CurrentUser
-        const { UserName } = memberData
+        const { UserName, Bead } = memberData
 
         let cloneWhoJoin = JSON.parse(JSON.stringify(iwhoJoin))
         let cloneWhoJoinEmail = JSON.parse(JSON.stringify(iwhoJoinEmail))
         let cloneSettlement = JSON.parse(JSON.stringify(iSettlement))
         
         const targetEmail = cloneWhoJoinEmail.indexOf(email)
-
+        const bookingTime = 
+            dayjs()
+                .year(date.substring(0, 4))
+                .month(date.substring(5, 7))
+                .date(date.substring(8, 10))
+                .subtract(1, 'month')
+                .hour(time.substring(0, 2))
+                .minute(time.substring(2, 4))
+                .second('0');
+        const LimitTime = bookingTime.subtract(60, 'minute');// 會議前1小時
+        const currentTime = dayjs()
+        
         if (!isJoin) {
             if(iwhoJoin.length >= limit) {
-                return alert('Max participants')
+                return alert('Max participants');
+            }
+            else if (Bead < 10){
+                return alert('點數不足，請聯絡我們');
             }
             cloneWhoJoin.push(UserName)
             cloneWhoJoinEmail.push(email)
             cloneSettlement.push(false)
+
+            hendleDBactions('beadsRecord',
+                currentTime + classLvMap[classLv] + 'deposit-' + CurrentUser.uid, {
+                    Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                    Level: classLv,
+                    Bead: -10,
+                    Title: "Being a participant",
+                    Status: "Deposit",
+                    FromUserID: "system",
+                    ToUserID: CurrentUser.uid,
+                }, 'SET',
+            )
+
+            hendleDBactions('memberCard',
+                email, {                
+                    Bead: Bead - 10,
+                }, 'UPDATE',
+            )
+            alert('We received your 10 beads deposit.');
             setIsJoin(true)
         } else {
+            if (currentTime.isAfter(LimitTime)){
+                return alert("You can't cancel the meeting an hour before it starts");
+            }
+            
             cloneWhoJoin.splice(targetEmail, 1)
             cloneWhoJoinEmail.splice(targetEmail, 1)
             cloneSettlement.splice(targetEmail, 1)
+
+            hendleDBactions('beadsRecord',
+                currentTime + classLvMap[classLv] + 'deposit-' + CurrentUser.uid, {
+                    Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                    Level: classLv,
+                    Bead: 10,
+                    Title: "Being a participant",
+                    Status: "Return deposit",
+                    FromUserID: "system",
+                    ToUserID: CurrentUser.uid,
+                }, 'SET',
+            )
+
+            hendleDBactions('memberCard',
+                email, {                
+                    Bead: Bead + 10,
+                }, 'UPDATE',
+            )
+            alert('Your 10 beads deposit has been returned to your account.');
             setIsJoin(false)
         }
+        
 
         const updateOBJ = { whoJoin: cloneWhoJoin, whoJoinEmail: cloneWhoJoinEmail, settlement: cloneSettlement }
         
         hendleDBactions('booking', DataID, updateOBJ, 'UPDATE')
+
+        // hendleDBactions('beadsRecord',
+        //     bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[classLv] + 'deposit-' + CurrentUser.uid, {
+        //         Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+        //         Level: classLv,
+        //         Bead: 10,
+        //         Title: "Being a participant",
+        //         Status: "Participant punctual",
+        //         FromUserID: "system",
+        //         ToUserID: participantMemberData.uid,
+        //     }, 'SET',
+        // )
+        
+        
 
         setiWhoJoin(cloneWhoJoin)
         setiWhoJoinEmail(cloneWhoJoinEmail)
@@ -187,6 +271,7 @@ export default function CardWithContent(props) {
         setTimeout(function() {
             hendleDBactions('booking', '', '', '', resetBookingData)
             hendleDBactions('memberCard', '', '', '', resetMemberData)
+            hendleDBactions('beadsRecord', '', {}, '', resetBeadsRecordData)
         }, 3000)
     }
     const resetBookingData = d => {
@@ -194,6 +279,9 @@ export default function CardWithContent(props) {
     }
     const resetMemberData = d => {
         dispatch(saveALLMemberData(d))
+    }
+    const resetBeadsRecordData = d => {
+        dispatch(saveBeadsRecordData(d))
     }
     const handleInputChange = (e, type) => {
         const { value } = e.currentTarget
@@ -213,6 +301,12 @@ export default function CardWithContent(props) {
                 cloneiQuestion.splice(index, 1, e.target.value)
                 setiQuestion(cloneiQuestion)
                 break
+            case 'googleLink':
+                setiGoogleLink(value);
+                break;
+            case 'note':
+                setiNote(value);
+                break;
             default:
                 return
         }
@@ -257,7 +351,9 @@ export default function CardWithContent(props) {
                 PhotoOrVideo: iPhotoOrVideo,
                 Material: iMaterial === undefined ? "" : iMaterial,
                 maxParticipants: iNumberOfParticipants,
-                time: timeData[1]
+                time: timeData[1],
+                GoogleLink: iGoogleLink,
+                note: iNote
             },
             'UPDATE'
         )
@@ -279,6 +375,339 @@ export default function CardWithContent(props) {
         if(maxParticipants === 666) return 'Unlimited'
         return maxParticipants
     }
+
+//     const updatePoints = (booking, level, today) => {
+
+//         if (isAdminAccount) {
+//             alert('管理員身分：無聊天室之進入限制。')
+//             window.open(skRoomUrl[level])
+//             return
+//         }
+
+//         const isHost = booking.CreateUserID === CurrentUser.uid
+//         const index = booking.whoJoinEmail.indexOf(CurrentUser.email)
+
+//         const bookingTime = 
+//             dayjs()
+//                 .year(booking.date.substring(0, 4))
+//                 .month(booking.date.substring(5, 7))
+//                 .date(booking.date.substring(8, 10))
+//                 .subtract(1, 'month')
+//                 .hour(booking.time.substring(0, 2))
+//                 .minute(booking.time.substring(2, 4))
+//                 .second('0')
+//         const StartLimitTime = bookingTime.subtract(15, 'minute')
+//         const LateTime = bookingTime.add(15, 'minute')
+//         const EndLimitTime = bookingTime.add(20, 'minute')
+//         const currentTime = dayjs()
+//         // const currentTime = dayjs().hour(22).minute(17) // For testing
+
+//         let status = ""
+//         // Early
+//         if (currentTime.isBefore(StartLimitTime)) status = "EARLY"
+//         // Late
+//         else if (currentTime.isAfter(LateTime) && currentTime.isBefore(EndLimitTime)) status = "LATE"
+//         // On time
+//         else if (currentTime.isAfter(StartLimitTime) && currentTime.isBefore(EndLimitTime)) status = "ON TIME"
+//         // Absent
+//         else status = "ABSENT"
+
+//         if (status === "EARLY" && today) {
+//             alert('Please wait until 15 minutes before the start of discussion~')
+//         }
+//         else if (status === "ABSENT") {
+
+//             // Alert
+//             if (isHost && !booking.hostSettlement && today) {
+//                 alert('Sorry... You are late for more than ㄉ0 minutes...\n \
+// In this case, system regards you as absent.\n \
+// We will take 30 beads away from you as a punishment.')
+//             }
+//             else if (!booking.settlement[index] && today) {
+//                 alert('Sorry... You are late for more than 20 minutes...\n \
+// In this case, system regards you as absent.\n \
+// We will take 20 beads away from you as a punishment.')
+//             }
+//             else if (today) alert('You can\'t enter discussion that started over 20 minutes')
+
+//             // Settle host and participants who haven't enter discussion yet
+//             async function settleHostAndParticipants() {
+
+//                 if (!booking.hostSettlement) {
+
+//                     const hostMemberData = initALLMemberData.filter(data => {
+//                         return data.uid === booking.CreateUserID
+//                     })[0]
+
+//                     hendleDBactions('beadsRecord',
+//                         bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + hostMemberData.uid, {
+//                             Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+//                             Level: booking.classLv,
+//                             Bead: -30,
+//                             Title: "Being a host",
+//                             Status: "Host absent",
+//                             FromUserID: "system",
+//                             ToUserID: booking.CreateUserID,
+//                         }, 'SET',
+//                     )
+
+//                     hendleDBactions('memberCard',
+//                         hostMemberData.DataID, {
+//                             ...hostMemberData,
+//                             Bead: hostMemberData.Bead - 30,
+//                         }, 'UPDATE',
+//                     )
+
+//                     hendleDBactions('booking',
+//                         booking.DataID, {
+//                             ...booking,
+//                             hostSettlement: true,
+//                         }, 'UPDATE',
+//                     )
+
+//                     booking.hostSettlement = true
+//                     await new Promise(r => setTimeout(r, 3000));
+//                 }
+
+//                 for (var i = 0; i < booking.settlement.length; i++) {
+
+//                     if (!booking.settlement[i]) {
+
+//                         const participantMemberData = initALLMemberData.filter(data => {
+//                             return data.Email === booking.whoJoinEmail[i]
+//                         })[0]
+                        
+//                         hendleDBactions('beadsRecord',
+//                             bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + participantMemberData.uid, {
+//                                 Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+//                                 Level: booking.classLv,
+//                                 Bead: -20,
+//                                 Title: "Being a participant",
+//                                 Status: "Participant absent",
+//                                 FromUserID: "system",
+//                                 ToUserID: participantMemberData.uid,
+//                             }, 'SET',
+//                         )
+        
+//                         hendleDBactions('memberCard',
+//                             participantMemberData.DataID, {
+//                                 ...participantMemberData,
+//                                 Bead: participantMemberData.Bead - 20,
+//                             }, 'UPDATE',
+//                         )
+        
+//                         hendleDBactions('booking',
+//                             booking.DataID, {
+//                                 ...booking,
+//                                 settlement: booking.settlement.map((item, j) => {
+//                                     if (j === i) return true
+//                                     else return item
+//                                 }),
+//                             }, 'UPDATE',
+//                         )
+
+//                         booking.settlement[i] = true
+//                         await new Promise(r => setTimeout(r, 3000));
+//                     }
+//                 }
+
+//                 hendleDBactions('beadsRecord', '', {}, '', resetBeadsRecordData)
+//                 hendleDBactions('memberCard', '', {}, '', resetMemberData)
+//                 hendleDBactions('booking', '', {}, '', resetBookingData)
+//             }
+
+//             settleHostAndParticipants()
+//         }
+//         else {
+
+//             if (status === "ON TIME") {
+
+//                 async function settleHostAndParticipants() {
+                    
+//                     if (isHost && !booking.hostSettlement) {
+
+//                         if (today) alert('Great! You are on time!\nYou will get 20 beads as a reward.')
+
+//                         const hostMemberData = initALLMemberData.filter(data => {
+//                             return data.uid === booking.CreateUserID
+//                         })[0]
+    
+//                         hendleDBactions('beadsRecord',
+//                             bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + hostMemberData.uid, {
+//                                 Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+//                                 Level: booking.classLv,
+//                                 Bead: 20,
+//                                 Title: "Being a host",
+//                                 Status: "Host punctual",
+//                                 FromUserID: "system",
+//                                 ToUserID: booking.CreateUserID,
+//                             }, 'SET',
+//                         )
+    
+//                         hendleDBactions('memberCard',
+//                             hostMemberData.DataID, {
+//                                 ...hostMemberData,
+//                                 Bead: hostMemberData.Bead + 20,
+//                             }, 'UPDATE',
+//                         )
+    
+//                         hendleDBactions('booking',
+//                             booking.DataID, {
+//                                 ...booking,
+//                                 hostSettlement: true,
+//                             }, 'UPDATE',
+//                         )
+    
+//                         booking.hostSettlement = true
+//                         await new Promise(r => setTimeout(r, 3000));
+//                     }
+//                     else if (!booking.settlement[index]) {
+
+//                         if (today) alert('Great! You are on time!\nYou will get 10 beads as a reward.')
+
+//                         const participantMemberData = initALLMemberData.filter(data => {
+//                             return data.Email === booking.whoJoinEmail[index]
+//                         })[0]
+                        
+//                         hendleDBactions('beadsRecord',
+//                             bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + participantMemberData.uid, {
+//                                 Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+//                                 Level: booking.classLv,
+//                                 Bead: 10,
+//                                 Title: "Being a participant",
+//                                 Status: "Participant punctual",
+//                                 FromUserID: "system",
+//                                 ToUserID: participantMemberData.uid,
+//                             }, 'SET',
+//                         )
+        
+//                         hendleDBactions('memberCard',
+//                             participantMemberData.DataID, {
+//                                 ...participantMemberData,
+//                                 Bead: participantMemberData.Bead + 10,
+//                             }, 'UPDATE',
+//                         )
+        
+//                         hendleDBactions('booking',
+//                             booking.DataID, {
+//                                 ...booking,
+//                                 settlement: booking.settlement.map((item, j) => {
+//                                     if (j === index) return true
+//                                     else return item
+//                                 }),
+//                             }, 'UPDATE',
+//                         )
+
+//                         booking.settlement[index] = true
+//                         await new Promise(r => setTimeout(r, 3000));
+//                     }
+
+//                     hendleDBactions('beadsRecord', '', {}, '', resetBeadsRecordData)
+//                     hendleDBactions('memberCard', '', {}, '', resetMemberData)
+//                     hendleDBactions('booking', '', {}, '', resetBookingData)
+//                 }
+                
+//                 settleHostAndParticipants()
+//             }
+//             else if (status === "LATE") {
+
+//                 async function settleHostAndParticipants() {
+                    
+//                     if (isHost && !booking.hostSettlement) {
+
+//                         if (today) alert('Oops! You are late for more than 15 minutes...\n \
+// You can get 20 beads for reward only if you host punctually!')
+
+//                         const hostMemberData = initALLMemberData.filter(data => {
+//                             return data.uid === booking.CreateUserID
+//                         })[0]
+    
+//                         hendleDBactions('beadsRecord',
+//                             bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + hostMemberData.uid, {
+//                                 Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+//                                 Level: booking.classLv,
+//                                 Bead: 0,
+//                                 Title: "Being a host",
+//                                 Status: "Host tardy",
+//                                 FromUserID: "system",
+//                                 ToUserID: booking.CreateUserID,
+//                             }, 'SET',
+//                         )
+    
+//                         // hendleDBactions('memberCard',
+//                         //     hostMemberData.DataID, {
+//                         //         ...hostMemberData,
+//                         //         Bead: hostMemberData.Bead + 20,
+//                         //     }, 'UPDATE',
+//                         // )
+    
+//                         hendleDBactions('booking',
+//                             booking.DataID, {
+//                                 ...booking,
+//                                 hostSettlement: true,
+//                             }, 'UPDATE',
+//                         )
+    
+//                         booking.hostSettlement = true
+//                         await new Promise(r => setTimeout(r, 3000));
+//                     }
+//                     else if (!booking.settlement[index]) {
+
+//                         if (today) alert('Oops! You are late for more than 15 minutes...\n \
+// You can get 10 beads for reward only if you participate punctually!')
+
+//                         const participantMemberData = initALLMemberData.filter(data => {
+//                             return data.Email === booking.whoJoinEmail[index]
+//                         })[0]
+                        
+//                         hendleDBactions('beadsRecord',
+//                             bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + participantMemberData.uid, {
+//                                 Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+//                                 Level: booking.classLv,
+//                                 Bead: 0,
+//                                 Title: "Being a participant",
+//                                 Status: "Participant tardy",
+//                                 FromUserID: "system",
+//                                 ToUserID: participantMemberData.uid,
+//                             }, 'SET',
+//                         )
+        
+//                         // hendleDBactions('memberCard',
+//                         //     participantMemberData.DataID, {
+//                         //         ...participantMemberData,
+//                         //         Bead: participantMemberData.Bead,
+//                         //     }, 'UPDATE',
+//                         // )
+        
+//                         hendleDBactions('booking',
+//                             booking.DataID, {
+//                                 ...booking,
+//                                 settlement: booking.settlement.map((item, j) => {
+//                                     if (j === index) return true
+//                                     else return item
+//                                 }),
+//                             }, 'UPDATE',
+//                         )
+
+//                         booking.settlement[index] = true
+//                         await new Promise(r => setTimeout(r, 3000));
+//                     }
+
+//                     hendleDBactions('beadsRecord', '', {}, '', resetBeadsRecordData)
+//                     // hendleDBactions('memberCard', '', {}, '', resetMemberData)
+//                     hendleDBactions('booking', '', {}, '', resetBookingData)
+//                 }
+                
+//                 settleHostAndParticipants()
+//             }
+
+//             if (today)
+//                 if (window.confirm('Please remember to LEAVE the room after your discussion!'))
+//                     window.open(skRoomUrl[level])
+//         }
+
+//         return
+//     }
 
     const iconclassName =
         props.classLv === 0
@@ -362,81 +791,119 @@ export default function CardWithContent(props) {
                         </div>
                     </CardContent>
                     <CardContent>
-                        <div className="ParticipantText">
-                            <span className="CardLabel">Host:</span> {CreateUserName}
+                        <div className="iGoogleLink">
+                            <span className="CardLabel">{`Google Meet: `}</span>
+                            <a href={iGoogleLink} target="_blank" rel="noopener noreferrer" 
+                                onClick={e => {
+                                    
+                                }}
+                            >
+                                {iGoogleLink}{' '}
+                                
+                            </a>
                         </div>
                     </CardContent>
-                    <CardContent>
-                        <div className="ParticipantText">
-                            <span className="CardLabel"># of participants: </span> {getProperMaxParticipants(iNumberOfParticipants) || '(None)'}
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <div style={{width: '50%'}}>
+                            <CardContent>
+                                <div className="ParticipantText">
+                                    <span className="CardLabel">Host:</span> {CreateUserName}
+                                </div>
+                            </CardContent>
+                            <CardContent>
+                                <div className="ParticipantText">
+                                    <span className="CardLabel"># of participants: </span> {getProperMaxParticipants(iNumberOfParticipants) || '(None)'}
+                                </div>
+                            </CardContent>
+                            <CardContent>
+                                <div className="ParticipantText">
+                                    <span className="CardLabel">Participants: </span> {iwhoJoin.join(', ')}
+                                </div>
+                            </CardContent>
                         </div>
-                    </CardContent>
-                    <CardContent>
-                        <div className="ParticipantText">
-                            <span className="CardLabel">Participants: </span> {iwhoJoin.join(', ')}
+                        <div style={{width: '50%'}}>
+                            <TextareaAutosize aria-label="minimum height" rowsMin={5} value={note}
+                                style={{width: '250px', height: '90px', resize: 'none', overflowY: 'scroll'}}
+                                readOnly
+                            />
                         </div>
-                    </CardContent>
+                    </div>
+                    
                 </div>
             ) : (
                 <div className="EdtingCardContent">
-                    <InputLabel key={'FormControl_time'} id="demo-simple-select-outlined-label">
-                        Time:
-                    </InputLabel>
-                    <div style={{ marginBottom: '10px' }}>
-                        <select 
-                            name="classLevel"
-                            key="classLevel"
-                            value={iTime.substring(0, 2)}
-                            onChange={e => setiTime(`${e.target.value}00`)}
-                        >
-                            <option value="00">12:00 am</option>
-                            <option value="01">1:00 am</option>
-                            <option value="02">2:00 am</option>
-                            <option value="03">3:00 am</option>
-                            <option value="04">4:00 am</option>
-                            <option value="05">5:00 am</option>
-                            <option value="06">6:00 am</option>
-                            <option value="07">7:00 am</option>
-                            <option value="08">8:00 am</option>
-                            <option value="09">9:00 am</option>
-                            <option value="10">10:00 am</option>
-                            <option value="11">11:00 am</option>
-                            <option value="12">12:00 pm</option>
-                            <option value="13">1:00 pm</option>
-                            <option value="14">2:00 pm</option>
-                            <option value="15">3:00 pm</option>
-                            <option value="16">4:00 pm</option>
-                            <option value="17">5:00 pm</option>
-                            <option value="18">6:00 pm</option>
-                            <option value="19">7:00 pm</option>
-                            <option value="20">8:00 pm</option>
-                            <option value="21">9:00 pm</option>
-                            <option value="22">10:00 pm</option>
-                            <option value="23">11:00 pm</option>
-                        </select>                 
+                    <div style={{display: 'flex'}}>
+                        <div>
+                            <InputLabel key={'FormControl_time'} id="demo-simple-select-outlined-label">
+                                Time:
+                            </InputLabel>
+                            <div style={{ marginBottom: '10px' }}>
+                                <select 
+                                    name="classLevel"
+                                    key="classLevel"
+                                    value={iTime.substring(0, 2)}
+                                    onChange={e => setiTime(`${e.target.value}00`)}
+                                >
+                                    <option value="00">12:00 am</option>
+                                    <option value="01">1:00 am</option>
+                                    <option value="02">2:00 am</option>
+                                    <option value="03">3:00 am</option>
+                                    <option value="04">4:00 am</option>
+                                    <option value="05">5:00 am</option>
+                                    <option value="06">6:00 am</option>
+                                    <option value="07">7:00 am</option>
+                                    <option value="08">8:00 am</option>
+                                    <option value="09">9:00 am</option>
+                                    <option value="10">10:00 am</option>
+                                    <option value="11">11:00 am</option>
+                                    <option value="12">12:00 pm</option>
+                                    <option value="13">1:00 pm</option>
+                                    <option value="14">2:00 pm</option>
+                                    <option value="15">3:00 pm</option>
+                                    <option value="16">4:00 pm</option>
+                                    <option value="17">5:00 pm</option>
+                                    <option value="18">6:00 pm</option>
+                                    <option value="19">7:00 pm</option>
+                                    <option value="20">8:00 pm</option>
+                                    <option value="21">9:00 pm</option>
+                                    <option value="22">10:00 pm</option>
+                                    <option value="23">11:00 pm</option>
+                                </select>                 
+                            </div>
+
+                            <InputLabel key={'FormControl_num_of_participants'} id="demo-simple-select-outlined-label">
+                                Number of participants: 
+                            </InputLabel>
+                            <div style={{ marginBottom: '10px' }}>
+                                <select 
+                                    name="classLevel"
+                                    key="classLevel"
+                                    value={iNumberOfParticipants}
+                                    onChange={e => setiNumberOfParticipants(parseInt(e.target.value))}
+                                >
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="666">Unlimited</option>
+                                </select>                 
+                            </div>
+                        </div>
+                        <div style={{marginLeft: '50px'}}>
+                            <TextareaAutosize aria-label="minimum height" rowsMin={5} value={iNote}
+                                style={{width: '250px', height: '90px', resize: 'none', overflowY: 'scroll'}}
+                                onChange={e => {
+                                    handleInputChange(e, 'note');
+                                }}
+                            />
+                        </div>
                     </div>
 
-                    <InputLabel key={'FormControl_num_of_participants'} id="demo-simple-select-outlined-label">
-                        Number of participants: 
-                    </InputLabel>
-                    <div style={{ marginBottom: '10px' }}>
-                        <select 
-                            name="classLevel"
-                            key="classLevel"
-                            value={iNumberOfParticipants}
-                            onChange={e => setiNumberOfParticipants(parseInt(e.target.value))}
-                        >
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="666">Unlimited</option>
-                        </select>                 
-                    </div>
+                    
                     <TextField
                         key={`CardUrl`}
                         label={`URL`}
@@ -451,17 +918,17 @@ export default function CardWithContent(props) {
                         onChange={(e, i) => handleInputChange(e, 'url')}
                     />
                     <TextField
-                        key={`CarCover`}
-                        label={`Cover's Link`}
-                        placeholder="This can be blank"
+                        key={`CardGoogleLink`}
+                        label={`Google Meet`}
+                        placeholder="Please provide the link of your meeting"
                         fullWidth
                         multiline
-                        defaultValue={iPhotoOrVideo}
+                        defaultValue={iGoogleLink}
                         margin="normal"
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        onChange={(e, i) => handleInputChange(e, 'cover')}
+                        onChange={(e, i) => handleInputChange(e, 'googleLink')}
                     />
 
                     <div className={'cardQuestion'}>
