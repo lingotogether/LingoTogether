@@ -144,7 +144,7 @@ function Navbar(props) {
                             onClick={() => LocationHash(5, '')}
                         >
                             <Link
-                                to="/"
+                                to="/beads-exchange"
                                 onClick={() => {
                                     setVIPactive(true)
                                 }}

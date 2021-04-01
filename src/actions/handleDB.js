@@ -121,6 +121,25 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                 })
             break
 
+        case 'getScheduleByDateObj':
+            db.collection('schedule')
+                //.where('executeTime', '==', DataObj.executeTime)                
+                .get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.docs.length < 1) {
+                        CallBackFunction && CallBackFunction({ noData: true })
+                    } else {
+                        querySnapshot.forEach(doc => {
+                            CallBackFunction && CallBackFunction({...doc.data(), noData: false})
+                        })
+                    }
+                })
+                .catch(function(error) {
+                    // console.log('Error getting documents: ', error)
+                    CallBackFunction && CallBackFunction({ noData: true })
+                })
+            break
+
         default:
             db.collection(collection)
                 .get()

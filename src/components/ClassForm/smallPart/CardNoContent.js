@@ -9,7 +9,7 @@ import { hendleDBactions } from '../../../actions/handleDB'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
-import { cBoxController, saveBookingData, saveALLMemberData } from '../../../actions'
+import { cBoxController, saveBookingData, saveALLMemberData, saveBeadsRecordData } from '../../../actions'
 import ClearIcon from '@material-ui/icons/Clear'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import CancelIcon from '@material-ui/icons/Cancel'
@@ -19,6 +19,7 @@ import { parseTime } from '../../../utils/helpers'
 import { timeOptions, participantsOptions } from '../../../utils/options'
 import VideocamIcon from '@material-ui/icons/Videocam';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import * as firebase from 'firebase/app'
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -78,6 +79,7 @@ const CardNoContent = (props) => {
         // console.log(AddQuestion)
     }, [AddQuestion, AddQuestionObj])
 
+    console.log(CurrentUser);
     const handleInputChange = (e, type) => {
         const { value } = e.currentTarget
         switch (type) {
@@ -134,7 +136,17 @@ const CardNoContent = (props) => {
                 return item
             })
 
-        const timeData = handleTimeOffset();        
+        const timeData = handleTimeOffset();  
+        const currentTime = dayjs()   
+        const bookingTime = 
+            dayjs()
+                .year(timeData[0].substring(0, 4))
+                .month(timeData[0].substring(5, 7))
+                .date(timeData[0].substring(8, 10))
+                .subtract(1, 'month')
+                .hour(timeData[1].substring(0, 2))
+                .minute(timeData[1].substring(2, 4))
+                .second('0');   
 
         hendleDBactions(
             'booking',
@@ -160,9 +172,29 @@ const CardNoContent = (props) => {
             'SET'
         )
 
+        hendleDBactions('beadsRecord',
+            currentTime + selectLevel + 'deposit-' + CurrentUser.uid, {
+                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                Level: selectLevel,
+                Bead: -10,
+                Title: "Being a host",
+                Status: "Deposit",
+                FromUserID: "system",
+                ToUserID: CurrentUser.uid,
+            }, 'SET',
+        )
+
+        hendleDBactions('memberCard',
+            CurrentUser.email, {                
+                Bead: CurrentUser.Bead - 10,
+            }, 'UPDATE',
+        )
+        alert('We received your 10 beads deposit.');
+
         dispatch(cBoxController(false))
         hendleDBactions('booking', '', '', '', resetBookingData)
         hendleDBactions('memberCard', '', '', '', resetMemberData)
+        hendleDBactions('beadsRecord', '', {}, '', resetBeadsRecordData)
 
         setiStatus(Status)
     }
@@ -172,6 +204,9 @@ const CardNoContent = (props) => {
     }
     const resetMemberData = d => {
         dispatch(saveALLMemberData(d))
+    }
+    const resetBeadsRecordData = d => {
+        dispatch(saveBeadsRecordData(d))
     }
     const handleClickEditing = open => {
         if (!CurrentUser) return
@@ -282,7 +317,7 @@ const CardNoContent = (props) => {
                         onChange={(e, i) => handleInputChange(e, 'title')}
                     />
                 }
-                subheader={`${date} ${parseTime(timing)}`}
+                //subheader={`${date} ${parseTime(timing)}`}
             />
             <div className="EdtingCardContent">
                 <TextField

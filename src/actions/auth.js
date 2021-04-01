@@ -1,3 +1,4 @@
+import { useRadioGroup } from '@material-ui/core';
 import { myFirebase } from '../firebase/firebase';
 // import { db } from '../firebase/firebase';
 import { hendleDBactions } from './handleDB';
@@ -224,7 +225,35 @@ export const loginUser = (email, password) => dispatch => {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(user => {
-            dispatch(receiveLogin(user));
+            if (!myFirebase.auth().currentUser.emailVerified){
+                sendEmailVerification();
+                alert('We have sent an email with a confirmation link to your email address.please click the confirmation link.\nIf you do not receive a confirmation email, Please check your spam folder.');
+                dispatch(logoutUser());
+                return;
+            }
+            
+            const receiveMemberData = data => {
+                
+                if (data.isNew !== undefined && data.isNew == true){
+                    alert("Welcome! You got 10 beads.")
+                    data.isNew = false;
+                    data.Bead = 10;
+                    hendleDBactions('memberCard', data.Email, data, 'UPDATE', );
+                    dispatch(receiveLogin(user));
+                }
+                
+            };
+            let getData = () => {
+                return new Promise((resolve, reject) => {
+                    hendleDBactions('memberCard', user.user.email, '', 'getMemberCardByEmail', receiveMemberData);
+                })
+            };
+            getData().then(() => {
+                console.log('finished');
+            });
+            
+            
+            //dispatch(receiveLogin(user));
         })
         .catch(error => {
             // Do something with the error if you want!
@@ -254,8 +283,11 @@ export const signupUser = (email, password, userData) => dispatch => {
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then(user => {
+            sendEmailVerification();
+            alert('We have sent an email with a confirmation link to your email address.please click the confirmation link.\nIf you do not receive a confirmation email, Please check your spam folder.');
             dispatch(receiveSignup(user));
             const setTimeoutWhenDown = () => {
+                dispatch(logoutUser());
                 setTimeout((window.location.href = '/'), 2000);
             };
             hendleDBactions('memberCard', email, userData, 'SET', setTimeoutWhenDown);
@@ -281,10 +313,29 @@ export const resetPassword = email => {
             url: 'https://lingotogether.com',
             handleCodeInApp: true
         }).then(() => {
-            alert('Password reset link has sent. Please check your email address to reset password')
+            alert('Password reset link has been sent. Please check your email address to reset password')
         })
         .catch(err => alert(err.message))
 }
+
+export const sendEmailVerification = () => {
+    myFirebase
+        .auth().languageCode = 'en';
+
+    myFirebase
+        .auth()
+        .currentUser
+        .sendEmailVerification()
+        .then(() => {
+            
+        })
+        .catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(errorMessage);
+        });
+};
 
 // export const signupWithGoogle = () => {
 //     myFirebase.auth().signInWithPopup(provider).then(function (result) {

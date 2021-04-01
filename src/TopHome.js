@@ -100,7 +100,7 @@ function TopHome(props) {
                                         title="uniq"
                                         width="100%"
                                         height="315"
-                                        src="https://www.youtube.com/embed/0_sQS_w3S24"
+                                        src="https://www.youtube.com/embed/3iiHV2c2Ubs"
                                         frameBorder="0"
                                         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
@@ -242,17 +242,17 @@ function TopHome(props) {
                             </div>
                         </div>
                     </div>
-                    <div className="row">
+                    <div className="">
                         {
                             props.location.state !== undefined  && props.location.state.isEnglish
                             ?
-                            <div className="col-12">
+                            <div className="">
                                 <Grid item xs={12}>
-                                    <p>
+                                    <p style={{textAlign: "center"}}>
                                         <b>Time: Schedule your own time(based on your time zone)</b>
                                     </p>
-                                    <p>Host：20 beads / Participant：10 beads</p>
-                                    <Grid container spacing={3}>
+                                    <p style={{textAlign: "center"}}>Host：20 beads / Participant：10 beads</p>
+                                    {/* <Grid container spacing={3}>
                                         <Grid item xs={6}>
                                             <h2 className="title">Being a Host</h2>
                                             <hr />
@@ -263,28 +263,74 @@ function TopHome(props) {
                                             <hr />
                                             <p dangerouslySetInnerHTML={{ __html: rulesF }}></p>
                                         </Grid>
+                                    </Grid> */}
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={6}>
+                                            <i class="fas fa-circle fa-xs"></i>&emsp;
+                                            When you attend on time
+                                            <br/>
+                                            &emsp;&emsp;<i class="fas fa-arrow-right"></i>&emsp;
+                                            Host : +20 beads
+                                            &amp;
+                                            full refund of your deposit
+                                            <br/>
+                                            &emsp;&emsp;<i class="fas fa-arrow-right"></i>&emsp;
+                                            Participants : +10 beads
+                                            &amp; 
+                                            full refund of your deposit
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <i class="fas fa-circle fa-xs"></i>&emsp;
+                                            No-show (without cancelling 1 hour prior to the discussion)
+                                            <br/>
+                                            &emsp;&emsp;<i class="fas fa-arrow-right"></i>&emsp;
+                                            Host : -30 beads
+                                            &amp;
+                                            no refund of your deposit
+                                            <br/>
+                                            &emsp;&emsp;<i class="fas fa-arrow-right"></i>&emsp;
+                                            Participants : -30 beads.
+                                            &amp; 
+                                            5 beads from your deposit will be given to the host and the other 5 beads will be forfeited.
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </div>
                             :
                             <div className="col-12">
                                 <Grid item xs={12}>
-                                    <p>
+                                    <p style={{textAlign: "center"}}>
                                         <b>時間： 自由選擇時間(根據你的時區)</b>
                                     </p>
-                                    <p>主持人：20 beads / 參加者：10 beads</p>
+                                    <p style={{textAlign: "center"}}>主持人：20 beads / 參加者：10 beads</p>
                                     <Grid container spacing={3}>
                                         <Grid item xs={6}>
-                                            <h2 className="title">擔任主持人</h2>
-                                            <hr />
-                                            <p dangerouslySetInnerHTML={{ __html: rulesC }}></p>
+                                            <i class="fas fa-circle fa-xs"></i>&emsp;
+                                            準時出席
+                                            <br/>
+                                            &emsp;&emsp;&emsp;&emsp;<i class="fas fa-arrow-right"></i>&emsp;
+                                            主持人 ： +20點
+                                            &amp;
+                                            訂金退回
+                                            <br/>
+                                            &emsp;&emsp;&emsp;&emsp;<i class="fas fa-arrow-right"></i>&emsp;
+                                            參與者 ： +10點 
+                                            &amp;
+                                            訂金退回                                                                                        
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <h2 className="title">參加討論者</h2>
-                                            <hr />
-                                            <p>- 點擊日曆旁圖示進入聊天室</p>
-                                            <p>- 準時出現在聊天室</p>
-                                            <p>- 想要取消當次討論，再點擊一次“join”</p>
+                                            <i class="fas fa-circle fa-xs"></i>&emsp;
+                                            未出席、未取消 
+                                            <br/>
+                                            &emsp;&emsp;&emsp;&emsp;<i class="fas fa-arrow-right"></i>&emsp;
+                                            主持人 ： -30點
+                                            &amp;
+                                            訂金不退回
+                                            <br/>
+                                            &emsp;&emsp;&emsp;&emsp;<i class="fas fa-arrow-right"></i>&emsp;
+                                            參與者 ： -30點
+                                            &amp;
+                                            訂金5給該場主持人、5給系統。
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -302,8 +348,15 @@ function TopHome(props) {
                             <h2>正在進行...</h2>
                         }                        
                         <hr />
-                        
+                        {
+                            props.location.state !== undefined  && props.location.state.isEnglish
+                            ?
+                            <h4>(Based on your time zone)</h4>
+                            :                            
+                            <h4>(根據你的時區)</h4>
+                        }  
                     </div>
+                    
                     <Home {...props} isOffset={false} />
                 </div>
                 <div id="Steps">

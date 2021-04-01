@@ -15,6 +15,16 @@
 * {
     box-sizing: 'border-boxz';
 }
+
+html {
+  scroll-behavior: smooth;
+}
+:target:before {
+    content: "";
+    display: block;
+    height: 110px;
+    margin: -110px 0 0;
+}
 body {
     font-family: 'Quicksand', '微軟正黑體', sans-serif;
     font-size: 1rem;
@@ -299,7 +309,7 @@ nav a:hover {
 .thumbnail .cover {
     position: absolute;
     width: 100%;
-    height: 550px;
+    height: 300px;
     border: 20px solid $color3;
     top: 0;
     right: 0;
@@ -513,6 +523,9 @@ nav a:hover {
     padding: 10px;
     line-height: 40px;
 }
+#go-faq a:hover {
+    background-color: #F6F7FF;
+}
 
 #go-top {
     position: fixed;
@@ -684,24 +697,28 @@ nav a:hover {
 }
 
 .faq-header {
-    color: #3ab3a9
+    color: #3ab3a9;
+    font-size: 32px;
+    font-family: Georgia;
 }
 
 .faq-question {
     font-family: Georgia;
     font-size: 21px;
     color: #5c5655;
+    font-weight: 700;
 }
 
 .faq-link {
     margin-top: 20px;
     color: black;
     font-weight: bold;
+    font-family: Georgia;
 }
 
 .faq-answer {
     margin-top: 20px;
-    margin-left: 30px;
+    
     font-family: 'TimesNew Roman';
     font-size: 16px;
     color: #5c5655;
@@ -726,5 +743,7 @@ nav a:hover {
     font-size: 32px;
     font-weight: 500;
     margin-top: 30px;
-    color: white;    
+    height: 200px;
+    color: white;   
+    font-family: Georgia; 
 }

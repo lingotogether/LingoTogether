@@ -70,6 +70,7 @@ const Signup = ({ classes, dispatch, isAuthenticated }) => {
             Level: level,
             isPassed: false,
             InfoSource: infoSource,
+            isNew: true
         }
 
         if (isValid()) {

@@ -19,6 +19,8 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import dayjs from 'dayjs'
 import * as firebase from 'firebase/app'
+import CancelIcon from '@material-ui/icons/Cancel'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 
 import { parseTime } from '../../../utils/helpers'
 
@@ -74,6 +76,7 @@ export default function CardWithContent(props) {
         settlement,
         GoogleLink,
         note,
+        initALLMemberData
     } = props
 
     const classes = useStyles()
@@ -96,7 +99,11 @@ export default function CardWithContent(props) {
     const [iNote, setiNote] = useState(note);
     const [iTime, setiTime] = useState(time)
     const [iNumberOfParticipants, setiNumberOfParticipants] = useState(maxParticipants)
+    const [AddQuestion, setAddQuestion] = useState([])  
+    const [AddQuestionObj, setAddQuestionObj] = useState({})  
+    const [QuestionObj] = useState({})
 
+    
 
     const level = ['B', 'I', 'A']
 
@@ -137,6 +144,60 @@ export default function CardWithContent(props) {
         }
     }, [])
 
+    useEffect(() => {
+        // console.log(AddQuestion)
+    }, [AddQuestion, AddQuestionObj])
+
+    // 新增 Question 欄位
+    const handleAddQuestionCol = e => {
+        // 有空白不給新增
+        let hasBlank = AddQuestion.indexOf('') === -1 ? false : true
+
+        if (hasBlank) return
+        let newArr = AddQuestion.concat([])
+        newArr.push('')
+
+        setAddQuestion(newArr)
+    }
+
+    const DeleteAddQuestionCol = e => {
+        let newArr = AddQuestion.concat([])
+        const lastI = newArr.length - 1
+
+        if (window.confirm('Are you sure you want to permanently delete the last Question?')) {
+            DeleteTriggerClear(lastI)
+        } else {
+            return
+        }
+    }
+
+    const DeleteTriggerClear = i => {
+        if (!CurrentUser) return
+        AddQuestion.pop()
+        let newObj = {}
+        for (let i in AddQuestion) {
+            newObj[i] = AddQuestion[i]
+        }
+        setAddQuestionObj(newObj)
+        let newArr = []
+        Object.keys(newObj).forEach(item => {
+            newArr[item] = newObj[item]
+        })
+        setAddQuestion(newArr)
+    }
+    const handleInputQuestion = (e, type, i) => {
+        const index = type === 'clear' ? i : e.target.getAttribute('name')
+        let WhichQusetionObj = type !== 'Add' ? QuestionObj : AddQuestionObj
+        WhichQusetionObj[index] = type === 'clear' ? '' : e.target.value
+
+        let newArr = []
+        Object.keys(WhichQusetionObj).forEach(item => {
+            newArr[item] = WhichQusetionObj[item]
+        })
+
+        type === 'Add' ? setAddQuestion(newArr) : setiQuestion(newArr)
+    }
+
     const handleTimeOffset = () => {
         let t = iTime;
         let dd = date;
@@ -158,6 +219,31 @@ export default function CardWithContent(props) {
         
         return [dd, tempTime.toString().padStart(2, "0") + "00"];        
     }
+
+    const getTwTime = () => {        
+        //time, date已經offset成當地時間丟到此component
+        let t = time;
+        let dd = date;
+
+        let offset = (new Date().getTimezoneOffset() / 60) + 8; // 跟台灣的時差(hr)
+        let tempTime = parseInt(t.substring(0, 2)) + offset;
+        if(tempTime < 0){
+            tempTime += 24;
+            let d = new Date(dd);
+            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString();              
+            dd = newD;                      
+        }
+        else if (tempTime > 23) {
+            tempTime -= 24;
+            let d = new Date(dd);
+            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString();            
+            dd = newD;            
+        }                
+        
+        return [dd, tempTime.toString().padStart(2, "0") + "00"];
+    }   
+    console.log(getTwTime()[0]);
+    console.log(getTwTime()[1]); 
 
     const handleJoinClick = event => {
         if (!CurrentUser) return
@@ -215,9 +301,9 @@ export default function CardWithContent(props) {
             alert('We received your 10 beads deposit.');
             setIsJoin(true)
         } else {
-            if (currentTime.isAfter(LimitTime)){
-                return alert("You can't cancel the meeting an hour before it starts");
-            }
+            // if (currentTime.isAfter(LimitTime)){
+            //     return alert("You can't cancel the meeting an hour before it starts");
+            // }
             
             cloneWhoJoin.splice(targetEmail, 1)
             cloneWhoJoinEmail.splice(targetEmail, 1)
@@ -341,12 +427,19 @@ export default function CardWithContent(props) {
         setEditing(false)
         const timeData = handleTimeOffset();
 
+        let totalQ = iQuestion.concat([])
+        Object.keys(AddQuestionObj).length > 0 &&
+            Object.keys(AddQuestionObj).map(item => {
+                totalQ.push(AddQuestionObj[item])
+                return item
+            })
+
         hendleDBactions(
             'booking',
             DataID,
             {
                 date: timeData[0],
-                questions: iQuestion,
+                questions: totalQ,
                 Title: iTitle,
                 PhotoOrVideo: iPhotoOrVideo,
                 Material: iMaterial === undefined ? "" : iMaterial,
@@ -376,338 +469,440 @@ export default function CardWithContent(props) {
         return maxParticipants
     }
 
-//     const updatePoints = (booking, level, today) => {
+    const updatePoints = (booking, level, today, e) => {
 
-//         if (isAdminAccount) {
-//             alert('管理員身分：無聊天室之進入限制。')
-//             window.open(skRoomUrl[level])
-//             return
-//         }
+        if (isAdminAccount) {
+            alert('管理員身分：無聊天室之進入限制。')
+            window.open(iGoogleLink);
+            return
+        }
 
-//         const isHost = booking.CreateUserID === CurrentUser.uid
-//         const index = booking.whoJoinEmail.indexOf(CurrentUser.email)
+        const isHost = booking.CreateUserID === CurrentUser.uid
+        const index = booking.whoJoinEmail.indexOf(CurrentUser.email)
 
-//         const bookingTime = 
-//             dayjs()
-//                 .year(booking.date.substring(0, 4))
-//                 .month(booking.date.substring(5, 7))
-//                 .date(booking.date.substring(8, 10))
-//                 .subtract(1, 'month')
-//                 .hour(booking.time.substring(0, 2))
-//                 .minute(booking.time.substring(2, 4))
-//                 .second('0')
-//         const StartLimitTime = bookingTime.subtract(15, 'minute')
-//         const LateTime = bookingTime.add(15, 'minute')
-//         const EndLimitTime = bookingTime.add(20, 'minute')
-//         const currentTime = dayjs()
-//         // const currentTime = dayjs().hour(22).minute(17) // For testing
+        const twTime = getTwTime();
+        const twDate = twTime[0];
+        const d = new Date(twDate);
+        const twTiming = twTime[1];
+        const hour = parseInt(twTiming.substring(0, 2));
+        const twDateObject = new Date(d.setHours(d.getHours() + hour + 1));// 取台灣時間延後1小時
 
-//         let status = ""
-//         // Early
-//         if (currentTime.isBefore(StartLimitTime)) status = "EARLY"
-//         // Late
-//         else if (currentTime.isAfter(LateTime) && currentTime.isBefore(EndLimitTime)) status = "LATE"
-//         // On time
-//         else if (currentTime.isAfter(StartLimitTime) && currentTime.isBefore(EndLimitTime)) status = "ON TIME"
-//         // Absent
-//         else status = "ABSENT"
+        const bookingTime = 
+            dayjs()
+                .year(booking.date.substring(0, 4))
+                .month(booking.date.substring(5, 7))
+                .date(booking.date.substring(8, 10))
+                .subtract(1, 'month')
+                .hour(booking.time.substring(0, 2))
+                .minute(booking.time.substring(2, 4))
+                .second('0')
+        const StartLimitTime = bookingTime.subtract(15, 'minute')
+        const LateTime = bookingTime.add(15, 'minute')
+        const EndLimitTime = bookingTime.add(20, 'minute')
+        const currentTime = dayjs()
+        // const currentTime = dayjs().hour(22).minute(17) // For testing
 
-//         if (status === "EARLY" && today) {
-//             alert('Please wait until 15 minutes before the start of discussion~')
-//         }
-//         else if (status === "ABSENT") {
+        let status = ""
+        // Early
+        if (currentTime.isBefore(StartLimitTime)) status = "EARLY"
+        // Late
+        else if (currentTime.isAfter(LateTime) && currentTime.isBefore(EndLimitTime)) status = "LATE"
+        // On time
+        else if (currentTime.isAfter(StartLimitTime) && currentTime.isBefore(EndLimitTime)) status = "ON TIME"
+        // Absent
+        else status = "ABSENT"
 
-//             // Alert
-//             if (isHost && !booking.hostSettlement && today) {
-//                 alert('Sorry... You are late for more than ㄉ0 minutes...\n \
-// In this case, system regards you as absent.\n \
-// We will take 30 beads away from you as a punishment.')
-//             }
-//             else if (!booking.settlement[index] && today) {
-//                 alert('Sorry... You are late for more than 20 minutes...\n \
-// In this case, system regards you as absent.\n \
-// We will take 20 beads away from you as a punishment.')
-//             }
-//             else if (today) alert('You can\'t enter discussion that started over 20 minutes')
+        if (status === "EARLY" && today) {
+            alert('Please wait until 15 minutes before the start of discussion~')
+            e.preventDefault();
+            return;
+        }
+        else if (status === "ABSENT") {
 
-//             // Settle host and participants who haven't enter discussion yet
-//             async function settleHostAndParticipants() {
+            // Alert
+            if (isHost && !booking.hostSettlement && today) {
+                alert('Sorry... You are late for more than ㄉ0 minutes...\n \
+In this case, system regards you as absent.\n \
+We will take 30 beads away from you as a punishment.')                
+            }
+            else if (!booking.settlement[index] && today) {
+                alert('Sorry... You are late for more than 20 minutes...\n \
+In this case, system regards you as absent.\n \
+We will take 20 beads away from you as a punishment.')                
+            }
+            else if (today){
+                alert('You can\'t enter discussion that started over 20 minutes')                
+            } 
 
-//                 if (!booking.hostSettlement) {
+            // Settle host and participants who haven't enter discussion yet
+            async function settleHostAndParticipants() {
 
-//                     const hostMemberData = initALLMemberData.filter(data => {
-//                         return data.uid === booking.CreateUserID
-//                     })[0]
+                if (!booking.hostSettlement) {
 
-//                     hendleDBactions('beadsRecord',
-//                         bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + hostMemberData.uid, {
-//                             Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-//                             Level: booking.classLv,
-//                             Bead: -30,
-//                             Title: "Being a host",
-//                             Status: "Host absent",
-//                             FromUserID: "system",
-//                             ToUserID: booking.CreateUserID,
-//                         }, 'SET',
-//                     )
+                    const hostMemberData = initALLMemberData.filter(data => {
+                        return data.uid === booking.CreateUserID
+                    })[0]
 
-//                     hendleDBactions('memberCard',
-//                         hostMemberData.DataID, {
-//                             ...hostMemberData,
-//                             Bead: hostMemberData.Bead - 30,
-//                         }, 'UPDATE',
-//                     )
+                    hendleDBactions('beadsRecord',
+                        bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + hostMemberData.uid, {
+                            Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                            Level: booking.classLv,
+                            Bead: -30,
+                            Title: "Being a host",
+                            Status: "Host absent",
+                            FromUserID: "system",
+                            ToUserID: booking.CreateUserID,
+                        }, 'SET',
+                    )
 
-//                     hendleDBactions('booking',
-//                         booking.DataID, {
-//                             ...booking,
-//                             hostSettlement: true,
-//                         }, 'UPDATE',
-//                     )
+                    hendleDBactions('memberCard',
+                        hostMemberData.DataID, {
+                            ...hostMemberData,
+                            Bead: hostMemberData.Bead - 30,
+                        }, 'UPDATE',
+                    )
 
-//                     booking.hostSettlement = true
-//                     await new Promise(r => setTimeout(r, 3000));
-//                 }
+                    // hendleDBactions('schedule',
+                    //     hostMemberData.DataID, {
+                    //         booking: booking,
+                    //         initALLMemberData: initALLMemberData,
+                    //         status: status,
+                    //         executeTime: twDateObject
+                    //     }, 'SET',
+                    // )
 
-//                 for (var i = 0; i < booking.settlement.length; i++) {
+                    // console.log({
+                    //     booking: booking,
+                    //     initALLMemberData: initALLMemberData,
+                    //     status: status,
+                    //     executeTime: twDateObject
+                    // });
 
-//                     if (!booking.settlement[i]) {
+                    hendleDBactions('booking',
+                        booking.DataID, {
+                            ...booking,
+                            hostSettlement: true,
+                        }, 'UPDATE',
+                    )
 
-//                         const participantMemberData = initALLMemberData.filter(data => {
-//                             return data.Email === booking.whoJoinEmail[i]
-//                         })[0]
+                    booking.hostSettlement = true
+                    await new Promise(r => setTimeout(r, 3000));
+                }
+
+                for (var i = 0; i < booking.settlement.length; i++) {
+
+                    if (!booking.settlement[i]) {
+
+                        const participantMemberData = initALLMemberData.filter(data => {
+                            return data.Email === booking.whoJoinEmail[i]
+                        })[0]
+
+                        const hostMemberData = initALLMemberData.filter(data => {
+                            return data.uid === booking.CreateUserID
+                        })[0]
                         
-//                         hendleDBactions('beadsRecord',
-//                             bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + participantMemberData.uid, {
-//                                 Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-//                                 Level: booking.classLv,
-//                                 Bead: -20,
-//                                 Title: "Being a participant",
-//                                 Status: "Participant absent",
-//                                 FromUserID: "system",
-//                                 ToUserID: participantMemberData.uid,
-//                             }, 'SET',
-//                         )
+                        hendleDBactions('beadsRecord',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + participantMemberData.uid, {
+                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                                Level: booking.classLv,
+                                Bead: -30,
+                                Title: "Being a participant",
+                                Status: "Participant absent",
+                                FromUserID: "system",
+                                ToUserID: participantMemberData.uid,
+                            }, 'SET',
+                        )
         
-//                         hendleDBactions('memberCard',
-//                             participantMemberData.DataID, {
-//                                 ...participantMemberData,
-//                                 Bead: participantMemberData.Bead - 20,
-//                             }, 'UPDATE',
-//                         )
+                        hendleDBactions('memberCard',
+                            participantMemberData.DataID, {
+                                ...participantMemberData,
+                                Bead: participantMemberData.Bead - 30,
+                            }, 'UPDATE',
+                        )
+
+                        // 訂金5點給主持人
+                        hendleDBactions('beadsRecord',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + hostMemberData.uid, {
+                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                                Level: booking.classLv,
+                                Bead: 5,
+                                Title: "Being a host",
+                                Status: "Participant absent",
+                                FromUserID: "system",
+                                ToUserID: booking.CreateUserID,
+                            }, 'SET',
+                        )
+
+                        hendleDBactions('memberCard',
+                            hostMemberData.DataID, {
+                                ...hostMemberData,
+                                Bead: hostMemberData.Bead + 5,
+                            }, 'UPDATE',
+                        )
         
-//                         hendleDBactions('booking',
-//                             booking.DataID, {
-//                                 ...booking,
-//                                 settlement: booking.settlement.map((item, j) => {
-//                                     if (j === i) return true
-//                                     else return item
-//                                 }),
-//                             }, 'UPDATE',
-//                         )
+                        hendleDBactions('booking',
+                            booking.DataID, {
+                                ...booking,
+                                settlement: booking.settlement.map((item, j) => {
+                                    if (j === i) return true
+                                    else return item
+                                }),
+                            }, 'UPDATE',
+                        )
 
-//                         booking.settlement[i] = true
-//                         await new Promise(r => setTimeout(r, 3000));
-//                     }
-//                 }
+                        booking.settlement[i] = true
+                        await new Promise(r => setTimeout(r, 3000));
+                    }
+                }
 
-//                 hendleDBactions('beadsRecord', '', {}, '', resetBeadsRecordData)
-//                 hendleDBactions('memberCard', '', {}, '', resetMemberData)
-//                 hendleDBactions('booking', '', {}, '', resetBookingData)
-//             }
+                hendleDBactions('beadsRecord', '', {}, '', resetBeadsRecordData)
+                hendleDBactions('memberCard', '', {}, '', resetMemberData)
+                hendleDBactions('booking', '', {}, '', resetBookingData)
+            }
 
-//             settleHostAndParticipants()
-//         }
-//         else {
+            settleHostAndParticipants()
+        }
+        else {
 
-//             if (status === "ON TIME") {
+            if (status === "ON TIME") {
 
-//                 async function settleHostAndParticipants() {
+                async function settleHostAndParticipants() {
                     
-//                     if (isHost && !booking.hostSettlement) {
+                    if (isHost && !booking.hostSettlement) {
 
-//                         if (today) alert('Great! You are on time!\nYou will get 20 beads as a reward.')
+                        if (today) alert('Great! You are on time!\nYou will get 20 beads as a reward.')
 
-//                         const hostMemberData = initALLMemberData.filter(data => {
-//                             return data.uid === booking.CreateUserID
-//                         })[0]
+                        const hostMemberData = initALLMemberData.filter(data => {
+                            return data.uid === booking.CreateUserID
+                        })[0]
     
-//                         hendleDBactions('beadsRecord',
-//                             bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + hostMemberData.uid, {
-//                                 Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-//                                 Level: booking.classLv,
-//                                 Bead: 20,
-//                                 Title: "Being a host",
-//                                 Status: "Host punctual",
-//                                 FromUserID: "system",
-//                                 ToUserID: booking.CreateUserID,
-//                             }, 'SET',
-//                         )
+                        // +20點&10點訂金
+                        hendleDBactions('beadsRecord',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + hostMemberData.uid, {
+                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                                Level: booking.classLv,
+                                Bead: 30,
+                                Title: "Being a host",
+                                Status: "Host punctual",
+                                FromUserID: "system",
+                                ToUserID: booking.CreateUserID,
+                            }, 'SET',
+                        )
     
-//                         hendleDBactions('memberCard',
-//                             hostMemberData.DataID, {
-//                                 ...hostMemberData,
-//                                 Bead: hostMemberData.Bead + 20,
-//                             }, 'UPDATE',
-//                         )
+                        hendleDBactions('memberCard',
+                            hostMemberData.DataID, {
+                                ...hostMemberData,
+                                Bead: hostMemberData.Bead + 30,
+                            }, 'UPDATE',
+                        )
     
-//                         hendleDBactions('booking',
-//                             booking.DataID, {
-//                                 ...booking,
-//                                 hostSettlement: true,
-//                             }, 'UPDATE',
-//                         )
+                        hendleDBactions('booking',
+                            booking.DataID, {
+                                ...booking,
+                                hostSettlement: true,
+                            }, 'UPDATE',
+                        )
     
-//                         booking.hostSettlement = true
-//                         await new Promise(r => setTimeout(r, 3000));
-//                     }
-//                     else if (!booking.settlement[index]) {
+                        booking.hostSettlement = true
+                        await new Promise(r => setTimeout(r, 3000));
+                    }
+                    else if (!booking.settlement[index]) {
 
-//                         if (today) alert('Great! You are on time!\nYou will get 10 beads as a reward.')
+                        if (today) alert('Great! You are on time!\nYou will get 10 beads as a reward.')
 
-//                         const participantMemberData = initALLMemberData.filter(data => {
-//                             return data.Email === booking.whoJoinEmail[index]
-//                         })[0]
+                        const participantMemberData = initALLMemberData.filter(data => {
+                            return data.Email === booking.whoJoinEmail[index]
+                        })[0]
                         
-//                         hendleDBactions('beadsRecord',
-//                             bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + participantMemberData.uid, {
-//                                 Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-//                                 Level: booking.classLv,
-//                                 Bead: 10,
-//                                 Title: "Being a participant",
-//                                 Status: "Participant punctual",
-//                                 FromUserID: "system",
-//                                 ToUserID: participantMemberData.uid,
-//                             }, 'SET',
-//                         )
+                        // +10點&10點訂金
+                        hendleDBactions('beadsRecord',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + participantMemberData.uid, {
+                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                                Level: booking.classLv,
+                                Bead: 20,
+                                Title: "Being a participant",
+                                Status: "Participant punctual",
+                                FromUserID: "system",
+                                ToUserID: participantMemberData.uid,
+                            }, 'SET',
+                        )
         
-//                         hendleDBactions('memberCard',
-//                             participantMemberData.DataID, {
-//                                 ...participantMemberData,
-//                                 Bead: participantMemberData.Bead + 10,
-//                             }, 'UPDATE',
-//                         )
+                        hendleDBactions('memberCard',
+                            participantMemberData.DataID, {
+                                ...participantMemberData,
+                                Bead: participantMemberData.Bead + 20,
+                            }, 'UPDATE',
+                        )
         
-//                         hendleDBactions('booking',
-//                             booking.DataID, {
-//                                 ...booking,
-//                                 settlement: booking.settlement.map((item, j) => {
-//                                     if (j === index) return true
-//                                     else return item
-//                                 }),
-//                             }, 'UPDATE',
-//                         )
+                        hendleDBactions('booking',
+                            booking.DataID, {
+                                ...booking,
+                                settlement: booking.settlement.map((item, j) => {
+                                    if (j === index) return true
+                                    else return item
+                                }),
+                            }, 'UPDATE',
+                        )
 
-//                         booking.settlement[index] = true
-//                         await new Promise(r => setTimeout(r, 3000));
-//                     }
+                        booking.settlement[index] = true
+                        await new Promise(r => setTimeout(r, 3000));
+                    }
 
-//                     hendleDBactions('beadsRecord', '', {}, '', resetBeadsRecordData)
-//                     hendleDBactions('memberCard', '', {}, '', resetMemberData)
-//                     hendleDBactions('booking', '', {}, '', resetBookingData)
-//                 }
+                    hendleDBactions('beadsRecord', '', {}, '', resetBeadsRecordData)
+                    hendleDBactions('memberCard', '', {}, '', resetMemberData)
+                    hendleDBactions('booking', '', {}, '', resetBookingData)
+                }
                 
-//                 settleHostAndParticipants()
-//             }
-//             else if (status === "LATE") {
+                settleHostAndParticipants()
+            }
+            else if (status === "LATE") {
 
-//                 async function settleHostAndParticipants() {
+                async function settleHostAndParticipants() {
                     
-//                     if (isHost && !booking.hostSettlement) {
+                    if (isHost && !booking.hostSettlement) {
 
-//                         if (today) alert('Oops! You are late for more than 15 minutes...\n \
-// You can get 20 beads for reward only if you host punctually!')
+                        if (today) alert('Oops! You are late for more than 15 minutes...\n \
+You can get 20 beads for reward only if you host punctually!')
 
-//                         const hostMemberData = initALLMemberData.filter(data => {
-//                             return data.uid === booking.CreateUserID
-//                         })[0]
+                        const hostMemberData = initALLMemberData.filter(data => {
+                            return data.uid === booking.CreateUserID
+                        })[0]
     
-//                         hendleDBactions('beadsRecord',
-//                             bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + hostMemberData.uid, {
-//                                 Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-//                                 Level: booking.classLv,
-//                                 Bead: 0,
-//                                 Title: "Being a host",
-//                                 Status: "Host tardy",
-//                                 FromUserID: "system",
-//                                 ToUserID: booking.CreateUserID,
-//                             }, 'SET',
-//                         )
+                        // 歸還10點訂金
+                        hendleDBactions('beadsRecord',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + hostMemberData.uid, {
+                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                                Level: booking.classLv,
+                                Bead: 10,
+                                Title: "Being a host",
+                                Status: "Host tardy & Return deposit",
+                                FromUserID: "system",
+                                ToUserID: booking.CreateUserID,
+                            }, 'SET',
+                        )
     
-//                         // hendleDBactions('memberCard',
-//                         //     hostMemberData.DataID, {
-//                         //         ...hostMemberData,
-//                         //         Bead: hostMemberData.Bead + 20,
-//                         //     }, 'UPDATE',
-//                         // )
+                        hendleDBactions('memberCard',
+                            hostMemberData.DataID, {
+                                ...hostMemberData,
+                                Bead: hostMemberData.Bead + 10,
+                            }, 'UPDATE',
+                        )
     
-//                         hendleDBactions('booking',
-//                             booking.DataID, {
-//                                 ...booking,
-//                                 hostSettlement: true,
-//                             }, 'UPDATE',
-//                         )
+                        hendleDBactions('booking',
+                            booking.DataID, {
+                                ...booking,
+                                hostSettlement: true,
+                            }, 'UPDATE',
+                        )
     
-//                         booking.hostSettlement = true
-//                         await new Promise(r => setTimeout(r, 3000));
-//                     }
-//                     else if (!booking.settlement[index]) {
+                        booking.hostSettlement = true
+                        await new Promise(r => setTimeout(r, 3000));
+                    }
+                    else if (!booking.settlement[index]) {
 
-//                         if (today) alert('Oops! You are late for more than 15 minutes...\n \
-// You can get 10 beads for reward only if you participate punctually!')
+                        if (today) alert('Oops! You are late for more than 15 minutes...\n \
+You can get 10 beads for reward only if you participate punctually!')
 
-//                         const participantMemberData = initALLMemberData.filter(data => {
-//                             return data.Email === booking.whoJoinEmail[index]
-//                         })[0]
+                        const participantMemberData = initALLMemberData.filter(data => {
+                            return data.Email === booking.whoJoinEmail[index]
+                        })[0]
                         
-//                         hendleDBactions('beadsRecord',
-//                             bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + participantMemberData.uid, {
-//                                 Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-//                                 Level: booking.classLv,
-//                                 Bead: 0,
-//                                 Title: "Being a participant",
-//                                 Status: "Participant tardy",
-//                                 FromUserID: "system",
-//                                 ToUserID: participantMemberData.uid,
-//                             }, 'SET',
-//                         )
+                        // 歸還10點訂金
+                        hendleDBactions('beadsRecord',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + participantMemberData.uid, {
+                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                                Level: booking.classLv,
+                                Bead: 10,
+                                Title: "Being a participant",
+                                Status: "Participant tardy & Return deposit",
+                                FromUserID: "system",
+                                ToUserID: participantMemberData.uid,
+                            }, 'SET',
+                        )
         
-//                         // hendleDBactions('memberCard',
-//                         //     participantMemberData.DataID, {
-//                         //         ...participantMemberData,
-//                         //         Bead: participantMemberData.Bead,
-//                         //     }, 'UPDATE',
-//                         // )
+                        hendleDBactions('memberCard',
+                            participantMemberData.DataID, {
+                                ...participantMemberData,
+                                Bead: participantMemberData.Bead + 10,
+                            }, 'UPDATE',
+                        )
         
-//                         hendleDBactions('booking',
-//                             booking.DataID, {
-//                                 ...booking,
-//                                 settlement: booking.settlement.map((item, j) => {
-//                                     if (j === index) return true
-//                                     else return item
-//                                 }),
-//                             }, 'UPDATE',
-//                         )
+                        hendleDBactions('booking',
+                            booking.DataID, {
+                                ...booking,
+                                settlement: booking.settlement.map((item, j) => {
+                                    if (j === index) return true
+                                    else return item
+                                }),
+                            }, 'UPDATE',
+                        )
 
-//                         booking.settlement[index] = true
-//                         await new Promise(r => setTimeout(r, 3000));
-//                     }
+                        booking.settlement[index] = true
+                        await new Promise(r => setTimeout(r, 3000));
+                    }
 
-//                     hendleDBactions('beadsRecord', '', {}, '', resetBeadsRecordData)
-//                     // hendleDBactions('memberCard', '', {}, '', resetMemberData)
-//                     hendleDBactions('booking', '', {}, '', resetBookingData)
-//                 }
+                    hendleDBactions('beadsRecord', '', {}, '', resetBeadsRecordData)
+                    hendleDBactions('memberCard', '', {}, '', resetMemberData)
+                    hendleDBactions('booking', '', {}, '', resetBookingData)
+                }
                 
-//                 settleHostAndParticipants()
-//             }
+                settleHostAndParticipants()
+            }
+            
+            if (today)
+                if (window.confirm('Please remember to LEAVE the room after your discussion!')){
+                    var mywin = window.open('_blank', "redirect");
+                    mywin.open(iGoogleLink, "redirect");
+                }
+                    //window.open(skRoomUrl[level])
+        }
 
-//             if (today)
-//                 if (window.confirm('Please remember to LEAVE the room after your discussion!'))
-//                     window.open(skRoomUrl[level])
-//         }
+        return
+    }
 
-//         return
-//     }
+    // Click the link of Goolge Meet
+    const googleMeetOnclick = (e, level) => {
+        
+        
+        e.preventDefault();
+        // Beads rewarding
+        hendleDBactions(
+            'booking',
+            '',
+            {
+                date: dayjs().format('YYYY/MM/DD'),
+                level: level
+            },
+            'getBookingByDateAndLevel',
+            booking => {
+
+                const isHost = booking.CreateUserID === CurrentUser.uid
+                if (!isJoin && !isHost){
+                    alert("You need to click the “join” before  entering  the discussion room.");                    
+                }
+
+                // console.log(booking)
+                if (isAdminAccount) updatePoints(booking, level, true, e)
+                else if (booking.noData)
+                    alert('今天沒有這個難度的讀書會喔！\nThere\'s no discussion of this level today!')
+                else if (booking.CreateUserID !== CurrentUser.uid && booking.whoJoinEmail.indexOf(CurrentUser.email) === -1) 
+                    alert('您並沒有報名這場讀書會喔～\nYou didn\'t join this discussion so you are not allowed to get in~')
+                else updatePoints(booking, level, true, e)
+            }
+        )
+
+        // Check for last discussion's reward settlements
+        hendleDBactions(
+            'booking',
+            '',
+            dayjs().format('YYYY/MM/DD'),
+            'getLastBookingBeforeDate',
+            booking => {
+                if (booking.noData) return
+                updatePoints(booking, level, false, e)
+            }
+        )
+    }
 
     const iconclassName =
         props.classLv === 0
@@ -795,7 +990,7 @@ export default function CardWithContent(props) {
                             <span className="CardLabel">{`Google Meet: `}</span>
                             <a href={iGoogleLink} target="_blank" rel="noopener noreferrer" 
                                 onClick={e => {
-                                    
+                                    googleMeetOnclick(e, iLevel);                                                                       
                                 }}
                             >
                                 {iGoogleLink}{' '}
@@ -955,23 +1150,63 @@ export default function CardWithContent(props) {
                                 )
                             })}
                         </div>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            size="small"
-                            onClick={() => handleEditingSave()}
-                        >
-                            Save
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            size="small"
-                            onClick={() => handleClickEditing(false)}
-                        >
-                            Cancel
-                        </Button>
+                        <div className="AddedQCols">
+                            {AddQuestion.map((item, i) => {
+                                return (
+                                    <Fragment>
+                                        <TextField
+                                            key={`Questiion${i + 4}`}
+                                            label={`Questiion${i + 4}`}
+                                            style={{ margin: 8, paddingRight: '37px' }}
+                                            defaultValue={item}
+                                            fullWidth
+                                            multiline
+                                            margin="normal"
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                            value={AddQuestion[i]}
+                                            required
+                                            name={i.toString()}
+                                            onChange={e => {
+                                                handleInputQuestion(e, 'Add')
+                                            }}
+                                            // inputRef={AddCol_Ref}
+                                        />
+                                    </Fragment>
+                                )
+                            })}
+                        </div>
+                        {AddQuestion.length > 0 ? (
+                            <CancelIcon
+                                onClick={e => {
+                                    DeleteAddQuestionCol(e)
+                                }}
+                            ></CancelIcon>
+                        ) : null}
+                        <AddCircleOutlineIcon
+                            onClick={e => {
+                                handleAddQuestionCol(e)
+                            }}
+                        ></AddCircleOutlineIcon>
+                        
                     </div>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        size="small"
+                        onClick={() => handleEditingSave()}
+                    >
+                        Save
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        size="small"
+                        onClick={() => handleClickEditing(false)}
+                    >
+                        Cancel
+                    </Button>
                 </div>
             )}
 
