@@ -502,19 +502,42 @@ function TopHome(props) {
                     </div>
                 </div>
                 <div id="FAQ">
-                    <h1>Frequently asked questions</h1>
+                    {
+                        props.location.state !== undefined  && props.location.state.isEnglish
+                        ?
+                        <h1>Frequently asked questions</h1>
+                        :
+                        <h1>常見問題</h1>
+                    }
+                    
                     <Accordion>
                         <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                         >
-                            <Typography variant="h6">每天都有討論會嗎？ 可是我看日曆上沒有每一天都有耶？</Typography>
+                            {
+                                props.location.state !== undefined  && props.location.state.isEnglish
+                                ?
+                                <Typography variant="h6">Will there be a discussion everyday? Why is there no discussion scheduled in the calendar everyday?</Typography>                                
+                                :
+                                <Typography variant="h6">每天都有討論會嗎？ 可是我看日曆上沒有每一天都有耶？</Typography>
+                            }
+                            
                         </AccordionSummary>
                         <AccordionDetails>
-                            <Typography variant="body1">
-                            因為這是「自主練習」的環境，沒有人開場， 當然就不會有練習的機會。 你也可以考慮自己主持一場來練習 。
-                            </Typography>
+                            {
+                                props.location.state !== undefined  && props.location.state.isEnglish
+                                ?
+                                <Typography variant="body1">
+                                As Lingotogether is a self-directed learning/ practice platform, if there is no one to initiate the topic, then there would obviously be no discussion available to join. However, you can always start one!
+                                </Typography>
+                                :                                
+                                <Typography variant="body1">
+                                因為這是「自主練習」的環境，沒有人開場， 當然就不會有練習的機會。 你也可以考慮自己主持一場來練習 。
+                                </Typography>
+                            }
+                            
                         </AccordionDetails>
                     </Accordion>
                     <Accordion>
@@ -523,12 +546,28 @@ function TopHome(props) {
                         aria-controls="panel2a-content"
                         id="panel2a-header"
                         >
-                            <Typography variant="h6">網站上有初級、中級、進階的標準是什麼？</Typography>
+                            {
+                                props.location.state !== undefined  && props.location.state.isEnglish
+                                ?
+                                <Typography variant="h6">Can I join an advanced or intermediate discussion if I am not fluent enough?</Typography>
+                                :
+                                <Typography variant="h6">我英文口說不太流利，是不是不能參加中階、進階討論會？</Typography>
+                            }
+                            
                         </AccordionSummary>
                         <AccordionDetails>
-                            <Typography variant="body1">
-                            當次討論會內容的難易度。
-                            </Typography>
+                            {
+                                props.location.state !== undefined  && props.location.state.isEnglish
+                                ?
+                                <Typography variant="body1">
+                                Absolutely. You still can join the discussion. The standard of the level is
+                                based on the content of the selected material and not your English proficiency.
+                                </Typography>
+                                :
+                                <Typography variant="body1">
+                                英文口說不太流利當然還是可以參加啊！因為場次會分等級只是給你一個參考當次討論內容、題目的難易度而已。
+                                </Typography>
+                            }                            
                         </AccordionDetails>
                     </Accordion>   
                     <div id="go-faq"> 

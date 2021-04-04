@@ -301,9 +301,9 @@ export default function CardWithContent(props) {
             alert('We received your 10 beads deposit.');
             setIsJoin(true)
         } else {
-            // if (currentTime.isAfter(LimitTime)){
-            //     return alert("You can't cancel the meeting an hour before it starts");
-            // }
+            if (currentTime.isAfter(LimitTime)){
+                return alert("You can't cancel the meeting an hour before it starts");
+            }
             
             cloneWhoJoin.splice(targetEmail, 1)
             cloneWhoJoinEmail.splice(targetEmail, 1)

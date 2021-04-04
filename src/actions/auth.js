@@ -1,7 +1,9 @@
 import { useRadioGroup } from '@material-ui/core';
+import dayjs from 'dayjs';
 import { myFirebase } from '../firebase/firebase';
 // import { db } from '../firebase/firebase';
 import { hendleDBactions } from './handleDB';
+import * as firebase from 'firebase/app'
 
 // broken each action up into three parts to track the asynchronous state within our application.
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
@@ -230,30 +232,52 @@ export const loginUser = (email, password) => dispatch => {
                 alert('We have sent an email with a confirmation link to your email address.please click the confirmation link.\nIf you do not receive a confirmation email, Please check your spam folder.');
                 dispatch(logoutUser());
                 return;
-            }
+            }            
             
             const receiveMemberData = data => {
+
+                if (data.noData){
+                    dispatch(receiveLogin(user));
+                    return;
+                }
                 
-                if (data.isNew !== undefined && data.isNew == true){
-                    alert("Welcome! You got 10 beads.")
-                    data.isNew = false;
-                    data.Bead = 10;
-                    hendleDBactions('memberCard', data.Email, data, 'UPDATE', );
+                if (data.isNew == undefined || data.isNew == true){
+                    
+                    if (data.Bead !== NaN){
+                        alert("Welcome! You got 10 beads.")
+                        data.isNew = false;
+                        data.Bead = data.Bead + 10;
+                        hendleDBactions('memberCard', data.Email, data, 'UPDATE', );
+
+                        hendleDBactions('beadsRecord',
+                            'emailVerification-' + data.uid, {
+                                Date: firebase.firestore.Timestamp.fromMillis(dayjs().valueOf()),
+                                Level: 0,
+                                Bead: 10,
+                                Title: "Email Verification",
+                                Status: "Get 10 Beads",
+                                FromUserID: "system",
+                                ToUserID: data.uid,
+                            }, 'SET',
+                        )
+                        initBeadsRecordData(dispatch);
+                        initALLMemberData(dispatch);
+                        
+                        dispatch(setCurrentUser({
+                            ...user.user,
+                            memberData: {
+                                ...data
+                            }}))
+                    }
+                    
                     dispatch(receiveLogin(user));
                 }
                 
             };
-            let getData = () => {
-                return new Promise((resolve, reject) => {
-                    hendleDBactions('memberCard', user.user.email, '', 'getMemberCardByEmail', receiveMemberData);
-                })
-            };
-            getData().then(() => {
-                console.log('finished');
-            });
-            
-            
-            //dispatch(receiveLogin(user));
+
+            hendleDBactions('memberCard', user.user.email, '', 'getMemberCardByEmail', receiveMemberData);
+                                    
+            dispatch(receiveLogin(user));
         })
         .catch(error => {
             // Do something with the error if you want!
