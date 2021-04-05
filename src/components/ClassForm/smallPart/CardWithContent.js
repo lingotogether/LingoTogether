@@ -242,8 +242,8 @@ export default function CardWithContent(props) {
         
         return [dd, tempTime.toString().padStart(2, "0") + "00"];
     }   
-    console.log(getTwTime()[0]);
-    console.log(getTwTime()[1]); 
+    //console.log(getTwTime()[0]);
+    //console.log(getTwTime()[1]); 
 
     const handleJoinClick = event => {
         if (!CurrentUser) return
@@ -448,9 +448,10 @@ export default function CardWithContent(props) {
                 GoogleLink: iGoogleLink,
                 note: iNote
             },
-            'UPDATE'
+            'UPDATE',
+            hendleDBactions('booking', '', '', '', resetBookingData)
         )
-        resetBookingData()
+        //resetBookingData()
         setiLevel(classLv)
     }
 
@@ -496,7 +497,7 @@ export default function CardWithContent(props) {
                 .hour(booking.time.substring(0, 2))
                 .minute(booking.time.substring(2, 4))
                 .second('0')
-        const StartLimitTime = bookingTime.subtract(15, 'minute')
+        const StartLimitTime = bookingTime.subtract(3, 'minute')
         const LateTime = bookingTime.add(15, 'minute')
         const EndLimitTime = bookingTime.add(20, 'minute')
         const currentTime = dayjs()
@@ -513,7 +514,7 @@ export default function CardWithContent(props) {
         else status = "ABSENT"
 
         if (status === "EARLY" && today) {
-            alert('Please wait until 15 minutes before the start of discussion~')
+            alert('Please go into the discussion room 3 minutes before it starts.')
             e.preventDefault();
             return;
         }
@@ -521,7 +522,7 @@ export default function CardWithContent(props) {
 
             // Alert
             if (isHost && !booking.hostSettlement && today) {
-                alert('Sorry... You are late for more than ㄉ0 minutes...\n \
+                alert('Sorry... You are late for more than 20 minutes...\n \
 In this case, system regards you as absent.\n \
 We will take 30 beads away from you as a punishment.')                
             }
@@ -876,10 +877,7 @@ You can get 10 beads for reward only if you participate punctually!')
             'getBookingByDateAndLevel',
             booking => {
 
-                const isHost = booking.CreateUserID === CurrentUser.uid
-                if (!isJoin && !isHost){
-                    alert("You need to click the “join” before  entering  the discussion room.");                    
-                }
+                
 
                 // console.log(booking)
                 if (isAdminAccount) updatePoints(booking, level, true, e)
@@ -887,7 +885,14 @@ You can get 10 beads for reward only if you participate punctually!')
                     alert('今天沒有這個難度的讀書會喔！\nThere\'s no discussion of this level today!')
                 else if (booking.CreateUserID !== CurrentUser.uid && booking.whoJoinEmail.indexOf(CurrentUser.email) === -1) 
                     alert('您並沒有報名這場讀書會喔～\nYou didn\'t join this discussion so you are not allowed to get in~')
-                else updatePoints(booking, level, true, e)
+                else {
+                    const isHost = booking.CreateUserID === CurrentUser.uid
+                    if (!isJoin && !isHost){
+                        alert("You need to click the “join” before  entering  the discussion room.");                    
+                    }
+
+                    updatePoints(booking, level, true, e)
+                } 
             }
         )
 

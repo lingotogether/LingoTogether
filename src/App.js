@@ -112,7 +112,7 @@ function App(props) {
                     </div>                    
                     {
                         isMobile ? (
-                            <div className="mNavbar">
+                            <div className="mNavbar" style={{display: noShow ? "flex" : "", flexDirection: 'row-reverse', alignItems: "center"}}>
                                 <ul className="hamberIconContainer">
                                     <li onClick={() => setNoShow(!noShow)}>
                                         <div className="hamberBorder">
@@ -120,18 +120,36 @@ function App(props) {
                                         </div>
                                     </li>
                                 </ul>
+                                <div style={{display: "flex", alignItems: "center", marginTop: noShow ? "" : "30px"}}>
+                                    <i className="fas fa-language fa-2x"
+                                        style={{width: '30px', marginRight: '20px', color: '#3AB3A9', cursor: "pointer"}}
+                                        aria-owns={anchorEl ? "simple-menu" : undefined}    
+                                        onMouseOver={handleClick}                                                       
+                                    ></i>
+                                    <span style={{ width: '20px', textDecoration: 'underline', color: '#3AB3A9', marginRight: '20px'}}>{isEnglish ? "EN" : "CH"}</span>
+                                </div>
+                                
+                                
+                                <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} role={undefined} transition style={{zIndex: "100"}}> 
+                                    <Paper>
+                                        <MenuList
+                                            id="simple-menu"                                            
+                                            onMouseLeave={handleClose}
+                                        >
+                                            <MenuItem>Language</MenuItem>
+                                            <MenuItem onClick={() => handleLanguage("EN")}>EN</MenuItem>
+                                            <MenuItem onClick={() => handleLanguage("CH")}>CH</MenuItem>                                    
+                                        </MenuList>
+                                    </Paper>
+                                </Popper> 
+
                                 <div className={cx('BarHiddenPart', { noShow: noShow })}>
-                                    <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} />
+                                    <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} />                                    
                                 </div>
                             </div>
                         ) : (
                             <div style={{display: "flex", flexDirection: 'row-reverse', alignItems: "center"}}>
-                                <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} isEnglish={isEnglish} />
-                                {/* <img src={require('./img/united-kingdom.png')}
-                                    style={{width: '30px', marginRight: '20px'}}
-                                    aria-owns={anchorEl ? "simple-menu" : undefined}    
-                                    onMouseOver={handleClick}                                                                       
-                                />   */}
+                                <Navbar {...props} deviceM={isMobile} ActiveNav={ActiveNav} isEnglish={isEnglish} />                                
                                 <span style={{ width: '20px', textDecoration: 'underline', color: '#3AB3A9', marginRight: '20px'}}>{isEnglish ? "EN" : "CH"}</span>
                                 <i className="fas fa-language fa-2x"
                                     style={{width: '30px', marginRight: '20px', color: '#3AB3A9', cursor: "pointer"}}

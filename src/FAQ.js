@@ -32,7 +32,6 @@ function FAQ(props) {
             setMargin('0%');
         }
     }
-    //let isEnglish = props.location.state !== undefined  && props.location.state.isEnglish;
     
     const wordingEn = `It depends on the level of difficulty of the selected material.<br/>
                     <table>
@@ -866,10 +865,15 @@ function FAQ(props) {
                                         answer = {
                                             isEnglish
                                             ?
-                                            "Providing a safe environment for language learners.<br/>Get motivated to practice and learn<br/>Lowing the economic threshold for learning a new language."
+                                            `<i class="fas fa-circle fa-xs"></i>&emsp;Providing a safe environment for language learners.<br/>
+                                            <i class="fas fa-circle fa-xs"></i>&emsp;Get motivated to practice and learn<br/>
+                                            <i class="fas fa-circle fa-xs"></i>&emsp;Lowing the economic threshold for learning a new language.`
                                             :
-                                            "提供外語學習者安全的練習環境<br/>凝聚學習動力<br/>降低學習經濟門檻"
-                                        } 
+                                            `<i class="fas fa-circle fa-xs"></i>&emsp;提供外語學習者安全的練習環境<br/>
+                                            <i class="fas fa-circle fa-xs"></i>&emsp;凝聚學習動力<br/>
+                                            <i class="fas fa-circle fa-xs"></i>&emsp;降低學習經濟門檻`
+                                        }
+                                        useImg = { isEnglish ? 'En' : 'Ch' }
                                     ></FAQContent>
                                 </div>                             
                             </div>                    

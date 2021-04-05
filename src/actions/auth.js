@@ -227,7 +227,7 @@ export const loginUser = (email, password) => dispatch => {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(user => {
-            if (!myFirebase.auth().currentUser.emailVerified){
+            if (!myFirebase.auth().currentUser.emailVerified && user.user.email !== 'admin@lingo.com'){
                 sendEmailVerification();
                 alert('We have sent an email with a confirmation link to your email address.please click the confirmation link.\nIf you do not receive a confirmation email, Please check your spam folder.');
                 dispatch(logoutUser());
