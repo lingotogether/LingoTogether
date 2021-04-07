@@ -544,40 +544,64 @@ We will take 20 beads away from you as a punishment.')
                         return data.uid === booking.CreateUserID
                     })[0]
 
-                    hendleDBactions('beadsRecord',
-                        bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + hostMemberData.uid, {
-                            Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-                            Level: booking.classLv,
-                            Bead: -30,
-                            Title: "Being a host",
-                            Status: "Host absent",
-                            FromUserID: "system",
-                            ToUserID: booking.CreateUserID,
-                        }, 'SET',
-                    )
-
-                    hendleDBactions('memberCard',
-                        hostMemberData.DataID, {
-                            ...hostMemberData,
-                            Bead: hostMemberData.Bead - 30,
-                        }, 'UPDATE',
-                    )
-
-                    // hendleDBactions('schedule',
-                    //     hostMemberData.DataID, {
-                    //         booking: booking,
-                    //         initALLMemberData: initALLMemberData,
-                    //         status: status,
-                    //         executeTime: twDateObject
+                    // hendleDBactions('beadsRecord',
+                    //     bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + hostMemberData.uid, {
+                    //         Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                    //         Level: booking.classLv,
+                    //         Bead: -30,
+                    //         Title: "Being a host",
+                    //         Status: "Host absent",
+                    //         FromUserID: "system",
+                    //         ToUserID: booking.CreateUserID,
                     //     }, 'SET',
                     // )
 
-                    // console.log({
-                    //     booking: booking,
-                    //     initALLMemberData: initALLMemberData,
-                    //     status: status,
-                    //     executeTime: twDateObject
-                    // });
+                    // hendleDBactions('memberCard',
+                    //     hostMemberData.DataID, {
+                    //         ...hostMemberData,
+                    //         Bead: hostMemberData.Bead - 30,
+                    //     }, 'UPDATE',
+                    // )
+
+                    
+                    // Insert schedule - beadsRecord
+                    hendleDBactions('schedule',
+                        bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-absent-' + hostMemberData.uid, {
+                            key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-absent-' + hostMemberData.uid,
+                            collection: 'beadsRecord',
+                            DataID: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + hostMemberData.uid,
+                            DataObj: {
+                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.add(1, 'hour').valueOf()),
+                                Level: booking.classLv,
+                                Bead: -30,
+                                Title: "Being a host",
+                                Status: "Host absent",
+                                FromUserID: "system",
+                                ToUserID: booking.CreateUserID,
+                            },
+                            Bead: -30,
+                            type: 'SET',
+                            executeTime: twDateObject,
+                            isExecute: false
+                        }, 'SET',
+                    )
+
+                    // Insert schedule - memberCard
+                    hendleDBactions('schedule',
+                        bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard-absent-' + hostMemberData.uid, {
+                            key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard-absent-' + hostMemberData.uid,
+                            collection: 'memberCard',
+                            DataID: hostMemberData.DataID,
+                            DataObj: {
+                                ...hostMemberData
+                            },
+                            Bead: -30,// to calculate
+                            type: 'UPDATE',
+                            executeTime: twDateObject,
+                            isExecute: false
+                        }, 'SET',
+                    )   
+                                  
 
                     hendleDBactions('booking',
                         booking.DataID, {
@@ -602,44 +626,122 @@ We will take 20 beads away from you as a punishment.')
                             return data.uid === booking.CreateUserID
                         })[0]
                         
-                        hendleDBactions('beadsRecord',
-                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + participantMemberData.uid, {
-                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-                                Level: booking.classLv,
+                        // hendleDBactions('beadsRecord',
+                        //     bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + participantMemberData.uid, {
+                        //         Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                        //         Level: booking.classLv,
+                        //         Bead: -30,
+                        //         Title: "Being a participant",
+                        //         Status: "Participant absent",
+                        //         FromUserID: "system",
+                        //         ToUserID: participantMemberData.uid,
+                        //     }, 'SET',
+                        // )
+        
+                        // hendleDBactions('memberCard',
+                        //     participantMemberData.DataID, {
+                        //         ...participantMemberData,
+                        //         Bead: participantMemberData.Bead - 30,
+                        //     }, 'UPDATE',
+                        // )
+
+                        // Insert schedule - beadsRecord
+                        hendleDBactions('schedule',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-parti-absent-' + participantMemberData.uid, {
+                                key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-parti-absent-' + participantMemberData.uid,
+                                collection: 'beadsRecord',
+                                DataID: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + participantMemberData.uid,
+                                DataObj: {
+                                    Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                                    Level: booking.classLv,
+                                    Bead: -30,
+                                    Title: "Being a participant",
+                                    Status: "Participant absent",
+                                    FromUserID: "system",
+                                    ToUserID: participantMemberData.uid,
+                                },
                                 Bead: -30,
-                                Title: "Being a participant",
-                                Status: "Participant absent",
-                                FromUserID: "system",
-                                ToUserID: participantMemberData.uid,
+                                type: 'SET',
+                                executeTime: twDateObject,
+                                isExecute: false
                             }, 'SET',
                         )
-        
-                        hendleDBactions('memberCard',
-                            participantMemberData.DataID, {
-                                ...participantMemberData,
-                                Bead: participantMemberData.Bead - 30,
-                            }, 'UPDATE',
+
+                        // Insert schedule - memberCard
+                        hendleDBactions('schedule',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard-parti-absent-' + participantMemberData.uid, {
+                                key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard-parti-absent-' + participantMemberData.uid,
+                                collection: 'memberCard',
+                                DataID: participantMemberData.DataID,
+                                DataObj: {
+                                    ...participantMemberData
+                                },
+                                Bead: -30,// to calculate
+                                type: 'UPDATE',
+                                executeTime: twDateObject,
+                                isExecute: false
+                            }, 'SET',
                         )
 
                         // 訂金5點給主持人
-                        hendleDBactions('beadsRecord',
-                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + hostMemberData.uid, {
-                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-                                Level: booking.classLv,
+                        // hendleDBactions('beadsRecord',
+                        //     bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + hostMemberData.uid, {
+                        //         Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                        //         Level: booking.classLv,
+                        //         Bead: 5,
+                        //         Title: "Being a host",
+                        //         Status: "Participant absent",
+                        //         FromUserID: "system",
+                        //         ToUserID: booking.CreateUserID,
+                        //     }, 'SET',
+                        // )
+
+                        // hendleDBactions('memberCard',
+                        //     hostMemberData.DataID, {
+                        //         ...hostMemberData,
+                        //         Bead: hostMemberData.Bead + 5,
+                        //     }, 'UPDATE',
+                        // )
+
+                        // 訂金5點給主持人
+                        // Insert schedule - beadsRecord
+                        hendleDBactions('schedule',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-parti-absent-deposit-' + participantMemberData.uid, {
+                                key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-parti-absent-deposit-' + participantMemberData.uid,
+                                collection: 'beadsRecord',
+                                DataID: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'absent-' + hostMemberData.uid,
+                                DataObj: {
+                                    Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                                    Level: booking.classLv,
+                                    Bead: 5,
+                                    Title: "Being a host",
+                                    Status: "Participant absent",
+                                    FromUserID: "system",
+                                    ToUserID: booking.CreateUserID,
+                                },
                                 Bead: 5,
-                                Title: "Being a host",
-                                Status: "Participant absent",
-                                FromUserID: "system",
-                                ToUserID: booking.CreateUserID,
+                                type: 'SET',
+                                executeTime: twDateObject,
+                                isExecute: false
                             }, 'SET',
                         )
 
-                        hendleDBactions('memberCard',
-                            hostMemberData.DataID, {
-                                ...hostMemberData,
-                                Bead: hostMemberData.Bead + 5,
-                            }, 'UPDATE',
+                        // Insert schedule - memberCard
+                        hendleDBactions('schedule',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard--parti-absent-deposit-' + participantMemberData.uid, {
+                                key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard--parti-absent-deposit-' + participantMemberData.uid,
+                                collection: 'memberCard',
+                                DataID: hostMemberData.DataID,
+                                DataObj: {
+                                    ...hostMemberData
+                                },
+                                Bead: 5,// to calculate
+                                type: 'UPDATE',
+                                executeTime: twDateObject,
+                                isExecute: false
+                            }, 'SET',
                         )
+
         
                         hendleDBactions('booking',
                             booking.DataID, {
@@ -678,23 +780,62 @@ We will take 20 beads away from you as a punishment.')
                         })[0]
     
                         // +20點&10點訂金
-                        hendleDBactions('beadsRecord',
-                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + hostMemberData.uid, {
-                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-                                Level: booking.classLv,
+                        // hendleDBactions('beadsRecord',
+                        //     bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + hostMemberData.uid, {
+                        //         Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                        //         Level: booking.classLv,
+                        //         Bead: 30,
+                        //         Title: "Being a host",
+                        //         Status: "Host punctual",
+                        //         FromUserID: "system",
+                        //         ToUserID: booking.CreateUserID,
+                        //     }, 'SET',
+                        // )
+    
+                        // hendleDBactions('memberCard',
+                        //     hostMemberData.DataID, {
+                        //         ...hostMemberData,
+                        //         Bead: hostMemberData.Bead + 30,
+                        //     }, 'UPDATE',
+                        // )
+
+                        // +20點&10點訂金
+                        // Insert schedule - beadsRecord
+                        hendleDBactions('schedule',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-punctual-' + hostMemberData.uid, {
+                                key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-punctual-' + hostMemberData.uid,
+                                collection: 'beadsRecord',
+                                DataID: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + hostMemberData.uid,
+                                DataObj: {
+                                    Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                                    Level: booking.classLv,
+                                    Bead: 30,
+                                    Title: "Being a host",
+                                    Status: "Host punctual",
+                                    FromUserID: "system",
+                                    ToUserID: booking.CreateUserID,
+                                },
                                 Bead: 30,
-                                Title: "Being a host",
-                                Status: "Host punctual",
-                                FromUserID: "system",
-                                ToUserID: booking.CreateUserID,
+                                type: 'SET',
+                                executeTime: twDateObject,
+                                isExecute: false
                             }, 'SET',
                         )
-    
-                        hendleDBactions('memberCard',
-                            hostMemberData.DataID, {
-                                ...hostMemberData,
-                                Bead: hostMemberData.Bead + 30,
-                            }, 'UPDATE',
+
+                        // Insert schedule - memberCard
+                        hendleDBactions('schedule',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard-punctual-' + hostMemberData.uid, {
+                                key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard-punctual-' + hostMemberData.uid,
+                                collection: 'memberCard',
+                                DataID: hostMemberData.DataID,
+                                DataObj: {
+                                    ...hostMemberData
+                                },
+                                Bead: 30,// to calculate
+                                type: 'UPDATE',
+                                executeTime: twDateObject,
+                                isExecute: false
+                            }, 'SET',
                         )
     
                         hendleDBactions('booking',
@@ -716,23 +857,62 @@ We will take 20 beads away from you as a punishment.')
                         })[0]
                         
                         // +10點&10點訂金
-                        hendleDBactions('beadsRecord',
-                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + participantMemberData.uid, {
-                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-                                Level: booking.classLv,
+                        // hendleDBactions('beadsRecord',
+                        //     bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + participantMemberData.uid, {
+                        //         Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                        //         Level: booking.classLv,
+                        //         Bead: 20,
+                        //         Title: "Being a participant",
+                        //         Status: "Participant punctual",
+                        //         FromUserID: "system",
+                        //         ToUserID: participantMemberData.uid,
+                        //     }, 'SET',
+                        // )
+        
+                        // hendleDBactions('memberCard',
+                        //     participantMemberData.DataID, {
+                        //         ...participantMemberData,
+                        //         Bead: participantMemberData.Bead + 20,
+                        //     }, 'UPDATE',
+                        // )
+                        
+                        // +10點&10點訂金
+                        // Insert schedule - beadsRecord
+                        hendleDBactions('schedule',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-punctual-' + participantMemberData.uid, {
+                                key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-punctual-' + participantMemberData.uid,
+                                collection: 'beadsRecord',
+                                DataID: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'punctual-' + participantMemberData.uid,
+                                DataObj: {
+                                    Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                                    Level: booking.classLv,
+                                    Bead: 20,
+                                    Title: "Being a participant",
+                                    Status: "Participant punctual",
+                                    FromUserID: "system",
+                                    ToUserID: participantMemberData.uid,
+                                },
                                 Bead: 20,
-                                Title: "Being a participant",
-                                Status: "Participant punctual",
-                                FromUserID: "system",
-                                ToUserID: participantMemberData.uid,
+                                type: 'SET',
+                                executeTime: twDateObject,
+                                isExecute: false
                             }, 'SET',
                         )
-        
-                        hendleDBactions('memberCard',
-                            participantMemberData.DataID, {
-                                ...participantMemberData,
-                                Bead: participantMemberData.Bead + 20,
-                            }, 'UPDATE',
+
+                        // Insert schedule - memberCard
+                        hendleDBactions('schedule',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard-punctual-' + participantMemberData.uid, {
+                                key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard-punctual-' + participantMemberData.uid,
+                                collection: 'memberCard',
+                                DataID: participantMemberData.DataID,
+                                DataObj: {
+                                    ...participantMemberData
+                                },
+                                Bead: 20,// to calculate
+                                type: 'UPDATE',
+                                executeTime: twDateObject,
+                                isExecute: false
+                            }, 'SET',
                         )
         
                         hendleDBactions('booking',
@@ -770,23 +950,62 @@ You can get 20 beads for reward only if you host punctually!')
                         })[0]
     
                         // 歸還10點訂金
-                        hendleDBactions('beadsRecord',
-                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + hostMemberData.uid, {
-                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-                                Level: booking.classLv,
+                        // hendleDBactions('beadsRecord',
+                        //     bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + hostMemberData.uid, {
+                        //         Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                        //         Level: booking.classLv,
+                        //         Bead: 10,
+                        //         Title: "Being a host",
+                        //         Status: "Host tardy & Return deposit",
+                        //         FromUserID: "system",
+                        //         ToUserID: booking.CreateUserID,
+                        //     }, 'SET',
+                        // )
+    
+                        // hendleDBactions('memberCard',
+                        //     hostMemberData.DataID, {
+                        //         ...hostMemberData,
+                        //         Bead: hostMemberData.Bead + 10,
+                        //     }, 'UPDATE',
+                        // )
+
+                        // 歸還10點訂金
+                        // Insert schedule - beadsRecord
+                        hendleDBactions('schedule',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-tardy-' + hostMemberData.uid, {
+                                key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-tardy-' + hostMemberData.uid,
+                                collection: 'beadsRecord',
+                                DataID: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + hostMemberData.uid,
+                                DataObj: {
+                                    Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                                    Level: booking.classLv,
+                                    Bead: 10,
+                                    Title: "Being a host",
+                                    Status: "Host tardy & Return deposit",
+                                    FromUserID: "system",
+                                    ToUserID: booking.CreateUserID,
+                                },
                                 Bead: 10,
-                                Title: "Being a host",
-                                Status: "Host tardy & Return deposit",
-                                FromUserID: "system",
-                                ToUserID: booking.CreateUserID,
+                                type: 'SET',
+                                executeTime: twDateObject,
+                                isExecute: false
                             }, 'SET',
                         )
-    
-                        hendleDBactions('memberCard',
-                            hostMemberData.DataID, {
-                                ...hostMemberData,
-                                Bead: hostMemberData.Bead + 10,
-                            }, 'UPDATE',
+
+                        // Insert schedule - memberCard
+                        hendleDBactions('schedule',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard-tardy-' + hostMemberData.uid, {
+                                key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard-tardy-' + hostMemberData.uid,
+                                collection: 'memberCard',
+                                DataID: hostMemberData.DataID,
+                                DataObj: {
+                                    ...hostMemberData
+                                },
+                                Bead: 10,// to calculate
+                                type: 'UPDATE',
+                                executeTime: twDateObject,
+                                isExecute: false
+                            }, 'SET',
                         )
     
                         hendleDBactions('booking',
@@ -809,23 +1028,62 @@ You can get 10 beads for reward only if you participate punctually!')
                         })[0]
                         
                         // 歸還10點訂金
-                        hendleDBactions('beadsRecord',
-                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + participantMemberData.uid, {
-                                Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
-                                Level: booking.classLv,
+                        // hendleDBactions('beadsRecord',
+                        //     bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + participantMemberData.uid, {
+                        //         Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                        //         Level: booking.classLv,
+                        //         Bead: 10,
+                        //         Title: "Being a participant",
+                        //         Status: "Participant tardy & Return deposit",
+                        //         FromUserID: "system",
+                        //         ToUserID: participantMemberData.uid,
+                        //     }, 'SET',
+                        // )
+        
+                        // hendleDBactions('memberCard',
+                        //     participantMemberData.DataID, {
+                        //         ...participantMemberData,
+                        //         Bead: participantMemberData.Bead + 10,
+                        //     }, 'UPDATE',
+                        // )
+
+                        // 歸還10點訂金
+                        // Insert schedule - beadsRecord
+                        hendleDBactions('schedule',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-tardy-' + participantMemberData.uid, {
+                                key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'beadsRecord-tardy-' + participantMemberData.uid,
+                                collection: 'beadsRecord',
+                                DataID: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'tardy-' + participantMemberData.uid,
+                                DataObj: {
+                                    Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                                    Level: booking.classLv,
+                                    Bead: 10,
+                                    Title: "Being a participant",
+                                    Status: "Participant tardy & Return deposit",
+                                    FromUserID: "system",
+                                    ToUserID: participantMemberData.uid,
+                                },
                                 Bead: 10,
-                                Title: "Being a participant",
-                                Status: "Participant tardy & Return deposit",
-                                FromUserID: "system",
-                                ToUserID: participantMemberData.uid,
+                                type: 'SET',
+                                executeTime: twDateObject,
+                                isExecute: false
                             }, 'SET',
                         )
-        
-                        hendleDBactions('memberCard',
-                            participantMemberData.DataID, {
-                                ...participantMemberData,
-                                Bead: participantMemberData.Bead + 10,
-                            }, 'UPDATE',
+
+                        // Insert schedule - memberCard
+                        hendleDBactions('schedule',
+                            bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard-tardy-' + participantMemberData.uid, {
+                                key: bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[booking.classLv] + 'memberCard-tardy-' + participantMemberData.uid,
+                                collection: 'memberCard',
+                                DataID: participantMemberData.DataID,
+                                DataObj: {
+                                    ...participantMemberData
+                                },
+                                Bead: 10,// to calculate
+                                type: 'UPDATE',
+                                executeTime: twDateObject,
+                                isExecute: false
+                            }, 'SET',
                         )
         
                         hendleDBactions('booking',
@@ -878,8 +1136,8 @@ You can get 10 beads for reward only if you participate punctually!')
             booking => {
 
                 
-
-                // console.log(booking)
+                console.log("booking");
+                console.log(booking)
                 if (isAdminAccount) updatePoints(booking, level, true, e)
                 else if (booking.noData)
                     alert('今天沒有這個難度的讀書會喔！\nThere\'s no discussion of this level today!')
@@ -890,7 +1148,7 @@ You can get 10 beads for reward only if you participate punctually!')
                     if (!isJoin && !isHost){
                         alert("You need to click the “join” before  entering  the discussion room.");                    
                     }
-
+                    console.log('begin update point');
                     updatePoints(booking, level, true, e)
                 } 
             }

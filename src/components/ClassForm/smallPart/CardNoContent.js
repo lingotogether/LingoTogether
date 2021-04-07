@@ -186,7 +186,7 @@ const CardNoContent = (props) => {
 
         hendleDBactions('memberCard',
             CurrentUser.email, {                
-                Bead: CurrentUser.Bead - 10,
+                Bead: CurrentUser.memberData.Bead - 10,
             }, 'UPDATE',
         )
         alert('We received your 10 beads deposit.');

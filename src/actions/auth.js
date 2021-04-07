@@ -243,7 +243,7 @@ export const loginUser = (email, password) => dispatch => {
                 
                 if (data.isNew == undefined || data.isNew == true){
                     
-                    if (data.Bead !== NaN){
+                    if (!isNaN(data.Bead)){
                         alert("Welcome! You got 10 beads.")
                         data.isNew = false;
                         data.Bead = data.Bead + 10;
