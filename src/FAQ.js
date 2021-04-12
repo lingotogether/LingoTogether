@@ -17,7 +17,7 @@ function FAQ(props) {
         if (props.location.state !== undefined){
             setIsEnglish(props.location.state.isEnglish);
         }        
-    }, )
+    }, [props.location.state])
     const handleScroll = e => {
         // console.log(e.path[1].scrollY, 'clientHeight')
         const scrollY = e.path[1].scrollY

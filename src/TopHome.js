@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Home from './components/Home';
 import { Wordings } from './wording';
-import { Autocomplete } from '@material-ui/lab';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -10,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {hendleDBactions} from './actions/handleDB';
 
-const { aboutUs1, aboutUs2, aboutUs3, aboutUs1_EN, aboutUs2_EN, aboutUs3_EN, rulesIntroE, rulesIntroC, rulesE, rulesC, rulesF } = Wordings;
+const { aboutUs1, aboutUs2, aboutUs3, aboutUs1_EN, aboutUs2_EN, aboutUs3_EN } = Wordings;
 
 function TopHome(props) {     
     const [annoucement, setAnnoucement] = useState();       
@@ -30,7 +29,7 @@ function TopHome(props) {
 
     const handleAnnoucementData = () => {
         hendleDBactions('annoucement', '', '', '',
-        (data) => { setAnnoucement(data.find(d=>d.DataID == 'annoucementID').Annoucement); }
+        (data) => { setAnnoucement(data.find(d=>d.DataID === 'annoucementID').Annoucement); }
         );
     }
 
@@ -53,13 +52,12 @@ function TopHome(props) {
                         fontWeight: '600'
                         }}>
                     <div>
-                        <img src={require('./img/notice_icon.png')}
+                        <img alt='notice' src={require('./img/notice_icon.png')}
                             style={{
                                 'margin-top': '10px',
                                 position: 'absolute',
                                 top: '0',
-                                left: '0',
-                                width: 'auto',
+                                left: '0',                                
                                 width: '50px',
                             }}
                         />

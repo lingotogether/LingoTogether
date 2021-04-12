@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField';
@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme) => ({
 const Scroll = (props) => {
 
 	const {
-		dispatch, CurrentUser, deviceIsMobile, 
-		initALLMemberData, isAdminAccount, PrizeData, 
+		deviceIsMobile, 
+		isAdminAccount
 	} = props
 
 	const classes = useStyles()
@@ -80,8 +80,7 @@ const Scroll = (props) => {
 										label="Announcement"
 										type="string"
 										className={classes.textField}
-										fullWidth
-										margin="normal"
+										fullWidth										
 										margin="dense"
 										variant="outlined"
 									/>

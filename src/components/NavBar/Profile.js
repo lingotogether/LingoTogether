@@ -58,7 +58,7 @@ const Profile = ({ CurrentUser, dispatch }) => {
 				<CustomMenuItem title="Reward host" to="/reward-host"/>
 				<CustomMenuItem title="Beads exchange" to="/beads-exchange"/>
 				{
-					(uid !== null && uid == 'Y5YCs5zQk3OJnfMixnr6XfvoBC02') // 'Y5YCs5zQk3OJnfMixnr6XfvoBC02' is uid of admin 
+					(uid !== null && uid === 'Y5YCs5zQk3OJnfMixnr6XfvoBC02') // 'Y5YCs5zQk3OJnfMixnr6XfvoBC02' is uid of admin 
 					?
 					<CustomMenuItem title="Scroll" to="/scroll"/>
 					:

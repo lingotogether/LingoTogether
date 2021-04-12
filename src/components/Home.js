@@ -28,6 +28,14 @@ const Home = (props) => {
                 // (data) => console.log('setCurrentUser: ', data)
             )
         setCurrentUser(props.CurrentUser)
+
+        if (cBoxShow){
+            document.body.style.overflow = 'hidden';
+        }
+        else {
+            document.body.style.overflow = 'scroll';
+        }
+
     }, [props.cBoxShow, props.CurrentUser])
 
     const {
@@ -38,7 +46,7 @@ const Home = (props) => {
         initBookingData,
         isAdminAccount,
         deviceIsMobile,
-        isAuthenticated,
+        //isAuthenticated,
         dispatch,
         initALLMemberData,
     } = props

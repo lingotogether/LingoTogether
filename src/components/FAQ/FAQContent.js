@@ -10,7 +10,7 @@ const FAQContent = ({ question, answer, useImg }) => {
                 {
                     useImg !== undefined
                     ?
-                    useImg == 'Ch'
+                    useImg === 'Ch'
                     ?
                     <div>
                         <p>串聯知識輸入、輸出平台</p><br />

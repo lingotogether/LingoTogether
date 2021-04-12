@@ -65,7 +65,7 @@ const CardNoContent = (props) => {
     const [iMaterial, setiMaterial] = useState(Material)
     const [AddQuestion, setAddQuestion] = useState([])
     const [iGoogleLink, setiGoogleLink] = useState();
-    const [iNote, setiNote] = useState();
+    const [iNote, setiNote] = useState('');
 
     const [timing, setTiming] = useState('2200')
     const [selectLevel, setSelectLevel] = useState(1)
