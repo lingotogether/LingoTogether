@@ -267,7 +267,7 @@ const PracticeCalendar = (props) => {
 								<tr className="row-title">
 									<th></th>
 									<th>Level</th>
-									<th>Practice<br/>time needs</th>
+									<th>Practice<br/>times needs</th>
 								</tr>
 								{
 									practiceTimeNeeds.map((item, i) => {
