@@ -271,13 +271,13 @@ const CardNoContent = (props) => {
         if(tempTime < 0){
             tempTime += 24;
             let d = new Date(dd);
-            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString();              
+            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString('zh-TW');              
             dd = newD;                      
         }
         else if (tempTime > 23) {
             tempTime -= 24;
             let d = new Date(dd);
-            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString();            
+            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString('zh-TW');            
             dd = newD;            
         }                
         
