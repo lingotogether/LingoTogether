@@ -275,7 +275,7 @@ export const loginUser = (email, password) => dispatch => {
                 
             };
 
-            //hendleDBactions('memberCard', user.user.email, '', 'getMemberCardByEmail', receiveMemberData);
+            hendleDBactions('memberCard', user.user.email, '', 'getMemberCardByEmail', receiveMemberData);
                                     
             dispatch(receiveLogin(user));
         })

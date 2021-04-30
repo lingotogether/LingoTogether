@@ -79,7 +79,7 @@ const CardNoContent = (props) => {
         // console.log(AddQuestion)
     }, [AddQuestion, AddQuestionObj])
 
-    console.log(CurrentUser);
+    //console.log(CurrentUser);
     const handleInputChange = (e, type) => {
         const { value } = e.currentTarget
         switch (type) {
@@ -271,18 +271,17 @@ const CardNoContent = (props) => {
         if(tempTime < 0){
             tempTime += 24;
             let d = new Date(dd);
-            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString('zh-TW');              
-            dd = newD;                      
+            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString('zh-TW').split('/');              
+            dd = newD[0] + '/' + newD[1].padStart(2, '0') + '/' + newD[2].padStart(2, '0');                      
         }
         else if (tempTime > 23) {
             tempTime -= 24;
             let d = new Date(dd);
-            let newD = new Date(d.setDate(d.getDate() - 1)).toLocaleDateString('zh-TW');            
-            dd = newD;            
-        }                
-        
+            let newD = new Date(d.setDate(d.getDate() + 1)).toLocaleDateString('zh-TW').split('/');            
+            dd = newD[0] + '/' + newD[1].padStart(2, '0') + '/' + newD[2].padStart(2, '0');            
+        }                        
         return [dd, tempTime.toString().padStart(2, "0") + "00"];        
-    }
+    }    
 
     return (
         <Card className={classes.card}>
