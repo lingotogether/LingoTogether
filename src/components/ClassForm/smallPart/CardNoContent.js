@@ -173,7 +173,7 @@ const CardNoContent = (props) => {
         )
 
         hendleDBactions('beadsRecord',
-            currentTime + selectLevel + 'deposit-' + CurrentUser.uid, {
+            DataId, {
                 Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
                 Level: selectLevel,
                 Bead: -10,

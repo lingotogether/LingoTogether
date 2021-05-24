@@ -60,6 +60,8 @@ export const checkDate = data => {
     let dateRule = /\d{4}\/(?:0[1-9]|[1][012])\/(?:0[1-9]|[1-2][0-9]|3[0-1])/;
     let regExp = new RegExp(dateRule);
     let notVolid = data.some(item => {
+        // if(regExp.test(item.date) === false)
+        //     console.log(item);
         return regExp.test(item.date) === false;
     });
     return notVolid;

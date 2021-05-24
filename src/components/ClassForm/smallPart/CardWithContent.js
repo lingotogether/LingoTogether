@@ -76,7 +76,8 @@ export default function CardWithContent(props) {
         settlement,
         GoogleLink,
         note,
-        initALLMemberData
+        initALLMemberData,
+        hostSettlement
     } = props
 
     const classes = useStyles()
@@ -102,9 +103,7 @@ export default function CardWithContent(props) {
     const [AddQuestion, setAddQuestion] = useState([])  
     const [AddQuestionObj, setAddQuestionObj] = useState({})  
     const [QuestionObj] = useState({})
-
-    
-
+            
     const level = ['B', 'I', 'A']
 
     const classLvMap = [
@@ -268,7 +267,8 @@ export default function CardWithContent(props) {
                 .minute(time.substring(2, 4))
                 .second('0');
         const LimitTime = bookingTime.subtract(60, 'minute');// 會議前1小時
-        const currentTime = dayjs()
+        const offset = (new Date().getTimezoneOffset() / 60) + 8; // 跟台灣的時差(hr)
+        const currentTime = dayjs().add(offset, 'hour');
         
         if (!isJoin) {
             if(iwhoJoin.length >= limit) {
@@ -282,7 +282,7 @@ export default function CardWithContent(props) {
             cloneSettlement.push(false)
 
             hendleDBactions('beadsRecord',
-                currentTime + classLvMap[classLv] + 'deposit-' + CurrentUser.uid, {
+                currentTime.format('YYYYMMDD-HHmmss') + classLvMap[classLv] + 'deposit-' + CurrentUser.uid, {
                     Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
                     Level: classLv,
                     Bead: -10,
@@ -310,7 +310,7 @@ export default function CardWithContent(props) {
             cloneSettlement.splice(targetEmail, 1)
 
             hendleDBactions('beadsRecord',
-                currentTime + classLvMap[classLv] + 'deposit-' + CurrentUser.uid, {
+                currentTime.format('YYYYMMDD-HHmmss') + classLvMap[classLv] + 'deposit-' + CurrentUser.uid, {
                     Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
                     Level: classLv,
                     Bead: 10,
@@ -400,6 +400,35 @@ export default function CardWithContent(props) {
     const handleDeleteData = () => {
         if (window.confirm('Are you sure you want to permanently delete this data?')) {
             hendleDBactions('booking', DataID, {}, 'DELETE')
+
+            let beads = CurrentUser.memberData.Bead;
+            if (!hostSettlement){
+                const bookingTime = 
+                    dayjs()
+                        .year(date.substring(0, 4))
+                        .month(date.substring(5, 7))
+                        .date(date.substring(8, 10))
+                        .subtract(1, 'month')
+                        .hour(time.substring(0, 2))
+                        .minute(time.substring(2, 4))
+                        .second('0');
+
+                hendleDBactions('beadsRecord',
+                    DataID + '-delete booking data', {
+                        Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                        Level: classLv,
+                        Bead: 10,
+                        Title: "Return deposit",
+                        Status: "Deposit",
+                        FromUserID: "system",
+                        ToUserID: CurrentUser.uid,
+                    }, 'SET',
+                )
+                alert('Your 10 beads deposit has been returned to your account.');
+
+                beads = beads + 10;
+            }            
+
             setEditing(false)
 
             dispatch(cBoxController(false))
@@ -408,10 +437,11 @@ export default function CardWithContent(props) {
                 CurrentUser.email,
                 {
                     ...CurrentUser.memberData,
+                    Bead: beads,
                     pendingHost: false,
                 },
                 'UPDATE'
-            )
+            )            
 
             setTimeout(function() {
                 hendleDBactions('booking', '', '', '', resetBookingData)
@@ -454,7 +484,7 @@ export default function CardWithContent(props) {
         dispatch(cBoxController(false));
         //resetBookingData()
         setiLevel(classLv)
-        window.location.reload();
+        //window.location.reload();
     }
 
     const handleClickEditing = open => {
@@ -502,7 +532,8 @@ export default function CardWithContent(props) {
         const StartLimitTime = bookingTime.subtract(3, 'minute')
         const LateTime = bookingTime.add(15, 'minute')
         const EndLimitTime = bookingTime.add(20, 'minute')
-        const currentTime = dayjs()
+        const offset = (new Date().getTimezoneOffset() / 60) + 8; // 跟台灣的時差(hr)
+        const currentTime = dayjs().add(offset, 'hour');
         // const currentTime = dayjs().hour(22).minute(17) // For testing
 
         let status = ""
@@ -1139,7 +1170,7 @@ You can get 10 beads for reward only if you participate punctually!')
                 level: level
             },
             'getBookingByDateAndLevel',
-            booking => {                                                
+            booking => {   
                 
                 if (isAdminAccount) updatePoints(booking, level, true, e)
                 else if (booking.noData)
