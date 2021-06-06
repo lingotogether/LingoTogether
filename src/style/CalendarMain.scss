@@ -161,7 +161,7 @@ header {
         overflow: hidden;
     }
     .oneDate.hasDate {
-        pointer-events: none;
+        pointer-events: auto;
     }
     .oneDate.calendars_daymode {
         width: calc(100% / 7);

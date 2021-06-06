@@ -110,7 +110,7 @@ export default function CardWithContent(props) {
 		'-Ba-',
 		'-In-',
 		'-Adv-'
-	]    
+	]        
 
     useEffect(() => {
         if (CurrentUser && isAdminAccount) {
@@ -402,6 +402,7 @@ export default function CardWithContent(props) {
             hendleDBactions('booking', DataID, {}, 'DELETE')
 
             let beads = CurrentUser.memberData.Bead;
+            // Delete the discussion will return deposit if the discussion hasn't start yet
             if (!hostSettlement){
                 const bookingTime = 
                     dayjs()
@@ -427,6 +428,33 @@ export default function CardWithContent(props) {
                 alert('Your 10 beads deposit has been returned to your account.');
 
                 beads = beads + 10;
+
+                // Return deposti to participants
+                for (var i = 0; i < iSettlement.length; i++) {
+                    
+                    const participantMemberData = initALLMemberData.filter(data => {
+                        return data.Email === iwhoJoinEmail[i]
+                    })[0]
+
+                    hendleDBactions('beadsRecord',
+                        bookingTime.format('YYYYMMDD-HHmmss') + classLvMap[classLv] + 'delete booking data-' + participantMemberData.uid, {
+                            Date: firebase.firestore.Timestamp.fromMillis(bookingTime.valueOf()),
+                            Level: classLv,
+                            Bead: 10,
+                            Title: "Return deposit",
+                            Status: "Deposit",
+                            FromUserID: "system",
+                            ToUserID: participantMemberData.uid,
+                        }, 'SET',
+                    )
+
+                    hendleDBactions('memberCard',
+                        participantMemberData.DataID, {
+                            ...participantMemberData,
+                            Bead: participantMemberData.Bead + 10,
+                        }, 'UPDATE',
+                    )
+                }
             }            
 
             setEditing(false)
@@ -448,7 +476,7 @@ export default function CardWithContent(props) {
                 hendleDBactions('memberCard', '', '', '', resetMemberData)
             }, 3000)
         } else {
-            alert('Error, please contact to our cuscomer service via Line')
+            //alert('Error, please contact to our cuscomer service via Line')
             setEditing(true)
         }
     }
@@ -1158,7 +1186,7 @@ You can get 10 beads for reward only if you participate punctually!')
 
     // Click the link of Goolge Meet
     const googleMeetOnclick = (e, level) => {
-        
+        const timeData = handleTimeOffset();
         
         e.preventDefault();
         // Beads rewarding
@@ -1166,17 +1194,21 @@ You can get 10 beads for reward only if you participate punctually!')
             'booking',
             '',
             {
-                date: date,
-                level: level
+                date: timeData[0],
+                level: level,
+                time: timeData[1]
             },
-            'getBookingByDateAndLevel',
-            booking => {   
-                
-                if (isAdminAccount) updatePoints(booking, level, true, e)
-                else if (booking.noData)
-                    alert('今天沒有這個難度的讀書會喔！\nThere\'s no discussion of this level today!')
-                else if (booking.CreateUserID !== CurrentUser.uid && booking.whoJoinEmail.indexOf(CurrentUser.email) === -1) 
-                    alert('您並沒有報名這場讀書會喔～\nYou didn\'t join this discussion so you are not allowed to get in~')
+            'getBookingByDateLevelandTime',
+            booking => {                   
+                if (isAdminAccount) {
+                    updatePoints(booking, level, true, e);
+                }
+                else if (booking.noData) {
+                    alert('今天沒有這個難度的讀書會喔！\nThere\'s no discussion of this level today!');
+                }                    
+                else if (booking.CreateUserID !== CurrentUser.uid && booking.whoJoinEmail.indexOf(CurrentUser.email) === -1) {
+                    alert('您並沒有報名這場讀書會喔～\nYou didn\'t join this discussion so you are not allowed to get in~');
+                }                    
                 else {
                     const isHost = booking.CreateUserID === CurrentUser.uid
                     if (!isJoin && !isHost){

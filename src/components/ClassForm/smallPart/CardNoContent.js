@@ -119,7 +119,7 @@ const CardNoContent = (props) => {
 
         //Section limit check (three per date)
         if(thisDateBookings.length >= 3) {
-            return alert('There are already have three sections today.')
+            return alert('There are already have three discussions today.')
         }
 
         //Class level conflict check

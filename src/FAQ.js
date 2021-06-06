@@ -740,6 +740,38 @@ function FAQ(props) {
                                         question = {
                                             isEnglish
                                             ?
+                                            "Verify your Lingotogether account"
+                                            :
+                                            "Email驗證你的聆果帳號"
+                                        } 
+                                        answer = {
+                                            isEnglish
+                                            ?
+                                            "When you’re setting up a Lingotogether account, we'll send a verification link to the email address you used to create the account. Once you verify the account, you will receive 10 beads."
+                                            :
+                                            "當你在聆果註冊帳號後， 我們會寄送一封驗證信到你註冊此帳號的信箱。當你驗證完帳號後，你將會得到10點。"
+                                        } 
+                                    ></FAQContent>
+                                    <FAQContent 
+                                        question = {
+                                            isEnglish
+                                            ?
+                                            "I have already verified my account but I didn’t receive 10 beads."
+                                            :
+                                            "為什麼我驗證過帳號， 還是沒有得到10點呢？"
+                                        } 
+                                        answer = {
+                                            isEnglish
+                                            ?
+                                            "Please <span style='color: red;'>sign out</span> of your Lingotogether account and <span style='color: red;'>sign in again</span> so that you will receive 10 beads. If it doesn’t work, <a href='mailto:lingotogether@gmail.com'>email us</a>."
+                                            :
+                                            "要麻煩你將帳號 「登出 再登入」就會看到10點了。 如果還是有問題， 麻煩<a href='mailto:lingotogether@gmail.com'>Email我們</a>"
+                                        } 
+                                    ></FAQContent>
+                                    <FAQContent 
+                                        question = {
+                                            isEnglish
+                                            ?
                                             "What can I do with the beads that I have accumulated?"
                                             :
                                             "點數可以做什麼？"

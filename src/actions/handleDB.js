@@ -140,6 +140,27 @@ export function hendleDBactions(collection, DataID, DataObj, type, CallBackFunct
                 })
             break
 
+        case 'getBookingByDateLevelandTime':
+            db.collection('booking')
+                .where('date', '==', DataObj.date)
+                .where('classLv', '==', DataObj.level)
+                .where('time', '==', DataObj.time)
+                .get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.docs.length < 1) {
+                        CallBackFunction && CallBackFunction({ noData: true })
+                    } else {
+                        querySnapshot.forEach(doc => {
+                            CallBackFunction && CallBackFunction({...doc.data(), DataID: doc.id})
+                        })
+                    }
+                })
+                .catch(function(error) {
+                    // console.log('Error getting documents: ', error)
+                    CallBackFunction && CallBackFunction({ noData: true })
+                })
+            break
+
         default:
             db.collection(collection)
                 .get()
