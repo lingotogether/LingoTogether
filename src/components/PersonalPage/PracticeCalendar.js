@@ -29,7 +29,7 @@ const PracticeCalendar = (props) => {
 
 	// Chart data
 	const DEFAULT_START_DATE = dayjs('2020-01-01')
-	const yearList = Array(dayjs().year() - DEFAULT_START_DATE.year() + 1).fill(0).map((item, index) => {
+	const yearList = Array(dayjs().year() - DEFAULT_START_DATE.year() + 10).fill(0).map((item, index) => {
 		return DEFAULT_START_DATE.add(index, 'year').format('YYYY')
 	})
 	const monthList = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
@@ -57,13 +57,13 @@ const PracticeCalendar = (props) => {
 	})
 
 	beadsRecordData.forEach(record => {
-		if (record.ToUserID === CurrentUser.uid && record.FromUserID === "system") {
-			const monthIndex = dayjs(record.Date.toMillis()).month() - DEFAULT_START_DATE.month()
-			if (record.Status === "Host punctual" || record.Status === "Host tardy") {
+		if (record.ToUserID === CurrentUser.uid && record.FromUserID === "system") {			
+			const monthIndex = dayjs(record.Date.toMillis()).diff('2020-01-01', 'month');			
+			if (record.Status === "Host punctual" || record.Status === "Host tardy" || record.Status === "Host tardy & Return deposit") {
 				monthPractice[monthIndex] += 1
 				monthHost[monthIndex] += 1
 			}
-			else if (record.Status === "Participant punctual" || record.Status === "Participant tardy") {
+			else if (record.Status === "Participant punctual" || record.Status === "Participant tardy" || record.Status === "Participant tardy & Return deposit") {
 				monthPractice[monthIndex] += 1
 				monthParticipant[monthIndex] += 1
 			}
